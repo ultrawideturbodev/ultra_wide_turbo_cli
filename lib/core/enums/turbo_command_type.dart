@@ -44,7 +44,7 @@ Formats and fixes Dart code in lib/ and test/ directories.
     }
   }
 
-  String script({required Set<TurboFlagType> activeFlags}) {
+  String? script({required Set<TurboFlagType> activeFlags}) {
     switch (this) {
       case TurboCommandType.fix:
         return '''

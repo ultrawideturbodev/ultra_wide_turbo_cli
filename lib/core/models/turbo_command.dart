@@ -28,7 +28,7 @@ class TurboCommand extends Command<int> with TurboLogger {
   Future<int> run() async {
     switch (_type) {
       case TurboCommandType.fix:
-        return ScriptService.locate.run(_type.script(activeFlags: argResults?.activeFlags ?? {}));
+        return ScriptService.locate.run(_type.script(activeFlags: argResults?.activeFlags ?? {})!);
     }
   }
 

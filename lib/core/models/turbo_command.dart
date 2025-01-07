@@ -1,9 +1,8 @@
 import 'package:args/command_runner.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
-import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
-import 'package:ultra_wide_turbo_cli/core/services/turbo_script_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/script_service.dart';
 
 class TurboCommand extends Command<int> with TurboLogger {
   TurboCommand({
@@ -29,8 +28,7 @@ class TurboCommand extends Command<int> with TurboLogger {
   Future<int> run() async {
     switch (_type) {
       case TurboCommandType.fix:
-        return TurboScriptService.locate
-            .run(_type.script(activeFlags: argResults?.activeFlags ?? {}));
+        return ScriptService.locate.run(_type.script(activeFlags: argResults?.activeFlags ?? {}));
     }
   }
 

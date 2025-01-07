@@ -1,10 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:mason_logger/mason_logger.dart';
 
-class TurboLoggerService {
-  static TurboLoggerService get locate => GetIt.I.get();
-  static void registerSingleton() =>
-      GetIt.I.registerSingleton<TurboLoggerService>(TurboLoggerService());
+class LoggerService {
+  static LoggerService get locate => GetIt.I.get();
+  static void registerSingleton() => GetIt.I.registerSingleton<LoggerService>(LoggerService());
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 

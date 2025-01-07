@@ -6,10 +6,12 @@ class Locator {
   static void _registerFactories() {}
 
   static void _registerLazySingletons() {
-    TurboCommandService.registerLazySingleton();
+    CommandService.registerLazySingleton();
+    ScriptService.registerLazySingleton();
+    LocalStorageService.registerLazySingleton();
   }
 
   static void _registerSingletons() {
-    TurboLoggerService.registerSingleton();
+    LoggerService.registerSingleton();
   }
 }

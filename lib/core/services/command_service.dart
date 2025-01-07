@@ -8,19 +8,20 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/constants/k_version.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
+import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/models/turbo_command.dart';
 
-class TurboCommandService extends CommandRunner<int> with TurboLogger {
-  TurboCommandService() : super(Environment.packageName, Environment.packageTitle) {
+class CommandService extends CommandRunner<int> with TurboLogger {
+  CommandService() : super(Environment.packageName, Environment.packageTitle) {
     initialise();
   }
 
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
-  static TurboCommandService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(TurboCommandService.new);
+  static CommandService get locate => GetIt.I.get();
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(CommandService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -67,18 +68,16 @@ class TurboCommandService extends CommandRunner<int> with TurboLogger {
 
   @override
   Future<int?> runCommand(ArgResults topLevelResults) async {
-    for (final flag in TurboFlagType.values) {
-      if (topLevelResults.flag(flag.argument)) {
-        switch (flag) {
-          case TurboFlagType.verbose:
-            log.level = Level.verbose;
-            break;
-          case TurboFlagType.version:
-            log.info(packageVersion);
-            return ExitCode.success.code;
-          case TurboFlagType.clean:
-            break;
-        }
+    for (final flag in topLevelResults.activeFlags) {
+      switch (flag) {
+        case TurboFlagType.verbose:
+          log.level = Level.verbose;
+          break;
+        case TurboFlagType.version:
+          log.info(packageVersion);
+          return ExitCode.success.code;
+        case TurboFlagType.clean:
+          break;
       }
     }
     return super.runCommand(topLevelResults);

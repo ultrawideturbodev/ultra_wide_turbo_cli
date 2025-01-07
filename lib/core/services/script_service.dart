@@ -4,13 +4,13 @@ import 'package:get_it/get_it.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 
-class TurboScriptService with TurboLogger {
-  TurboScriptService._();
+class ScriptService with TurboLogger {
+  ScriptService._();
 
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
-  static TurboScriptService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(TurboScriptService._);
+  static ScriptService get locate => GetIt.I.get();
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(ScriptService._);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\

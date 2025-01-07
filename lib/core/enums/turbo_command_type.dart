@@ -48,13 +48,11 @@ Formats and fixes Dart code in lib/ and test/ directories.
     switch (this) {
       case TurboCommandType.fix:
         return '''
-cd ../lib || exit
-
 ${activeFlags.hasClean ? 'bash scripts/clean.sh\n' : ''}
 bash scripts/fix.sh
 
-cd ../test || exit
-bash ../lib/scripts/fix.sh
+cd test || exit
+bash ../scripts/fix.sh
 ''';
     }
   }

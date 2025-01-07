@@ -9,7 +9,6 @@ abstract class Environment {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
   static EnvironmentType? _environmentOverride;
-  static String currentVersion = '0.0.1';
   static const String _emulators = 'emulators';
   static const String _prod = 'prod';
   static const argumentKey = 'env';
@@ -34,7 +33,6 @@ abstract class Environment {
     }
     return _environmentOverride!;
   }
-
 
   static bool get isEmulators => current == EnvironmentType.emulators;
   static bool get isProd => current == EnvironmentType.prod;

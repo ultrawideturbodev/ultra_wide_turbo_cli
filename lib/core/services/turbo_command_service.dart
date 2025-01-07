@@ -5,9 +5,12 @@ import 'package:args/command_runner.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
-import 'package:ultra_wide_turbo_cli/core/enums/turbo_flags.dart';
+import 'package:ultra_wide_turbo_cli/core/constants/k_version.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/models/turbo_command.dart';
 
 class TurboCommandService extends CommandRunner<int> with TurboLogger {
   TurboCommandService() : super(Environment.packageName, Environment.packageTitle) {
@@ -24,7 +27,8 @@ class TurboCommandService extends CommandRunner<int> with TurboLogger {
 
   Future<void> initialise() async {
     try {
-      _initFlags();
+      _initGlobalFlags();
+      _initCommands();
     } catch (error, _) {
       log.err(
         '$error caught while trying to initialise CommandService!',
@@ -63,15 +67,17 @@ class TurboCommandService extends CommandRunner<int> with TurboLogger {
 
   @override
   Future<int?> runCommand(ArgResults topLevelResults) async {
-    for (final flag in TurboFlags.values) {
-      if (topLevelResults.flag(flag.pName)) {
+    for (final flag in TurboFlagType.values) {
+      if (topLevelResults.flag(flag.argument)) {
         switch (flag) {
-          case TurboFlags.verbose:
+          case TurboFlagType.verbose:
             log.level = Level.verbose;
             break;
-          case TurboFlags.version:
-            log.info(Environment.currentVersion);
+          case TurboFlagType.version:
+            log.info(packageVersion);
             return ExitCode.success.code;
+          case TurboFlagType.clean:
+            break;
         }
       }
     }
@@ -88,45 +94,47 @@ class TurboCommandService extends CommandRunner<int> with TurboLogger {
   Future get isReady => _isReady.future;
 
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
+  // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  void _addFlag(
-    String name, {
-    String? abbr,
-    String? help,
-    bool? defaultsTo = false,
-    bool negatable = true,
-    void Function(bool)? callback,
-    bool hide = false,
-    List<String> aliases = const [],
-  }) {
-    try {
-      argParser.addFlag(
-        name,
-        abbr: abbr,
-        help: help,
-        defaultsTo: defaultsTo,
-        negatable: negatable,
-        callback: callback,
-        hide: hide,
-        aliases: aliases,
-      );
-    } catch (error, _) {
-      log.err(
-        '$error caught while trying to add flag $name!',
-      );
+  void _initGlobalFlags() {
+    for (final flag in TurboFlagType.globalValues) {
+      try {
+        argParser.addFlag(
+          flag.argument,
+          abbr: flag.abbr,
+          help: flag.help,
+          negatable: flag.negatable,
+        );
+      } catch (error, _) {
+        log.err(
+          '$error caught while trying to add flag ${flag.argument}!',
+        );
+      }
     }
   }
 
-  // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
-
-  void _initFlags() {
-    for (final flag in TurboFlags.values) {
-      _addFlag(
-        flag.pName,
-        help: flag.help,
-        negatable: flag.negatable,
-        abbr: flag.abbr,
-      );
+  void _initCommands() {
+    for (final command in TurboCommandType.values) {
+      try {
+        final turboCommand = TurboCommand(
+          type: command,
+        );
+        for (final flag in command.flags) {
+          turboCommand.argParser.addFlag(
+            flag.argument,
+            help: flag.help,
+            abbr: flag.abbr,
+            negatable: flag.negatable,
+          );
+        }
+        addCommand(
+          turboCommand,
+        );
+      } catch (error, _) {
+        log.err(
+          '$error caught while trying to initialise command ${command.pName}!',
+        );
+      }
     }
   }
 }

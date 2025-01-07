@@ -8,7 +8,9 @@ import 'package:ultra_wide_turbo_cli/core/services/turbo_logger_service.dart';
 Future<void> main(List<String> args) async {
   try {
     await AppSetup.initialise();
-    await TurboCommandService.locate.run(args);
+    final turboCommandService = TurboCommandService.locate;
+    await turboCommandService.isReady;
+    await turboCommandService.run(args);
   } catch (error) {
     TurboLoggerService.locate.log.err('$error');
     exit(ExitCode.software.code);

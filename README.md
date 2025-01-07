@@ -4,7 +4,14 @@ A powerful command-line interface tool designed to enhance development workflows
 
 ## Features
 
-- TBA
+- **Code Maintenance**
+  - Format and fix Dart code
+  - Clean and refresh dependencies
+  - Run build_runner with safe options
+- **Workspace Management**
+  - Clone workspace templates
+  - Automatic file renaming
+  - Force mode for overwriting
 
 ## Installation
 
@@ -17,6 +24,25 @@ dart pub global activate ultra_wide_turbo_cli
 ```bash
 turbo <command> [arguments]
 ```
+
+### Available Commands
+
+#### fix
+Format and fix code in lib/ and test/ directories.
+```bash
+turbo fix [--clean]
+```
+Options:
+- `--clean`: Clean and refresh dependencies before fixing
+
+#### clone workspace
+Clone a new Ultra Wide Turbo workspace.
+```bash
+turbo clone workspace [--target=<dir>] [--force]
+```
+Options:
+- `-t, --target`: Target directory for the clone (default: "./")
+- `-f, --force`: Force clone even if directory exists
 
 ## Architecture
 

@@ -12,3 +12,10 @@ Initial release 🎉
 - Environment configuration and type management
 - Utility extensions for enhanced functionality
 - Clean architecture with abstractions and services
+- Clone workspace command with file renaming support
+- Comprehensive test suite for commands
+- Force flag and target option support
+
+### Changed
+- Improved script service stream handling
+- Enhanced command service for consistent option and flag handling

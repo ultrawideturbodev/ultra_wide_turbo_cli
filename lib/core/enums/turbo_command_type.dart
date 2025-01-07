@@ -1,11 +1,14 @@
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 
 enum TurboCommandType {
-  fix;
+  fix,
+  clone;
 
   String get pName {
     switch (this) {
       case TurboCommandType.fix:
+      case TurboCommandType.clone:
         return name;
     }
   }
@@ -14,6 +17,8 @@ enum TurboCommandType {
     switch (this) {
       case TurboCommandType.fix:
         return 'Format and fix code in lib/ and test/ directories.';
+      case TurboCommandType.clone:
+        return 'Clone various ultra wide turbo components.';
     }
   }
 
@@ -27,12 +32,20 @@ Formats and fixes Dart code in lib/ and test/ directories.
 - Formats all Dart files with specified exclusions
 - Applies dart fix suggestions
 ''';
+      case TurboCommandType.clone:
+        return '''
+Clone various Ultra Wide Turbo components.
+Usage: turbo clone <type>
+Available types:
+- workspace: Clone a new ultra wide turbo (AI agent) workspace
+''';
     }
   }
 
   List<String> get aliases {
     switch (this) {
       case TurboCommandType.fix:
+      case TurboCommandType.clone:
         return [];
     }
   }
@@ -41,6 +54,17 @@ Formats and fixes Dart code in lib/ and test/ directories.
     switch (this) {
       case TurboCommandType.fix:
         return [TurboFlagType.clean];
+      case TurboCommandType.clone:
+        return [TurboFlagType.force];
+    }
+  }
+
+  List<TurboOption> get options {
+    switch (this) {
+      case TurboCommandType.fix:
+        return [];
+      case TurboCommandType.clone:
+        return [TurboOption.target];
     }
   }
 
@@ -54,6 +78,8 @@ bash scripts/fix.sh
 cd test || exit
 bash ../scripts/fix.sh
 ''';
+      case TurboCommandType.clone:
+        return null;
     }
   }
 }

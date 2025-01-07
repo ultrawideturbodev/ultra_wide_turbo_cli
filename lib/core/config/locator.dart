@@ -1,14 +1,15 @@
 part of 'app_setup.dart';
 
-class Locator {
+abstract class Locator {
   static void _registerAPIs() {}
 
   static void _registerFactories() {}
 
   static void _registerLazySingletons() {
     CommandService.registerLazySingleton();
-    ScriptService.registerLazySingleton();
     LocalStorageService.registerLazySingleton();
+    ScriptService.registerLazySingleton();
+    WorkspaceService.registerLazySingleton();
   }
 
   static void _registerSingletons() {

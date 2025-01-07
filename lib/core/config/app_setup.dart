@@ -4,6 +4,7 @@ import 'package:ultra_wide_turbo_cli/core/services/command_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/local_storage_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/logger_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/script_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/workspace_service.dart';
 
 part 'locator.dart';
 

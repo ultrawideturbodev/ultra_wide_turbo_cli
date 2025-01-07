@@ -8,6 +8,7 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/constants/k_version.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
@@ -77,6 +78,7 @@ class CommandService extends CommandRunner<int> with TurboLogger {
           log.info(packageVersion);
           return ExitCode.success.code;
         case TurboFlagType.clean:
+        case TurboFlagType.force:
           break;
       }
     }
@@ -118,6 +120,8 @@ class CommandService extends CommandRunner<int> with TurboLogger {
         final turboCommand = TurboCommand(
           type: command,
         );
+
+        // Add command-specific flags
         for (final flag in command.flags) {
           turboCommand.argParser.addFlag(
             flag.argument,
@@ -126,9 +130,19 @@ class CommandService extends CommandRunner<int> with TurboLogger {
             negatable: flag.negatable,
           );
         }
-        addCommand(
-          turboCommand,
-        );
+
+        // Add command-specific options
+        for (final option in command.options) {
+          turboCommand.argParser.addOption(
+            option.name,
+            abbr: option.abbr,
+            help: option.help,
+            defaultsTo: option.defaultsTo,
+            valueHelp: option.valueHelp,
+          );
+        }
+
+        addCommand(turboCommand);
       } catch (error, _) {
         log.err(
           '$error caught while trying to initialise command ${command.pName}!',

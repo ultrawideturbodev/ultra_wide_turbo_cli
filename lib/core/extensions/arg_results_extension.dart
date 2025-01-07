@@ -1,11 +1,12 @@
 import 'package:args/args.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 
-extension ArgResultsExtensionExtension on ArgResults {
+extension ArgResultsExtension on ArgResults {
   Set<TurboFlagType> get activeFlags {
     return {
-      for (final rFlag in TurboFlagType.values)
-        if (hasFlag(rFlag)) rFlag,
+      for (final flag in TurboFlagType.values)
+        if (hasFlag(flag)) flag,
     };
   }
 
@@ -16,4 +17,13 @@ extension ArgResultsExtensionExtension on ArgResults {
       return false;
     }
   }
+
+  Map<TurboOption, dynamic> get activeOptions {
+    return {
+      for (final option in TurboOption.values)
+        if (wasParsed(option.name)) option: this[option.name],
+    };
+  }
+
+  T? getOption<T>(TurboOption option) => this[option.name] as T?;
 }

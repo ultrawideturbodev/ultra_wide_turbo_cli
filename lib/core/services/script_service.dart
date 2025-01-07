@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' as io;
 
 import 'package:get_it/get_it.dart';
 import 'package:mason_logger/mason_logger.dart';
@@ -21,47 +21,51 @@ class ScriptService with TurboLogger {
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
 
   Future<int> run(String script) async {
-    StreamSubscription? stdoutSubscription;
-    StreamSubscription? stderrSubscription;
+    StreamSubscription? stdoutSub;
+    StreamSubscription? stderrSub;
 
     try {
-      log.info('Running script...');
+      final process = await io.Process.start(
+        'bash',
+        ['-c', script],
+        mode: io.ProcessStartMode.normal,
+      );
 
-      final process = await Process.start('bash', ['-c', script]);
+      // Use broadcast streams to allow multiple listeners
+      final stdout = process.stdout.asBroadcastStream();
+      final stderr = process.stderr.asBroadcastStream();
 
-      // Stream stdout in real-time
-      stdoutSubscription = process.stdout.transform(const SystemEncoding().decoder).listen((data) {
-        if (data.trim().isNotEmpty) {
-          log.info(data.trim());
-        }
-      });
+      // Pass through stdout directly
+      stdoutSub = stdout.listen(
+        io.stdout.add,
+        cancelOnError: true,
+      );
 
-      // Stream stderr in real-time
-      stderrSubscription = process.stderr.transform(const SystemEncoding().decoder).listen((data) {
-        if (data.trim().isNotEmpty) {
-          log.err(data.trim());
-        }
-      });
+      // Pass through stderr directly
+      stderrSub = stderr.listen(
+        io.stderr.add,
+        cancelOnError: true,
+      );
 
       final exitCode = await process.exitCode;
 
       // Clean up subscriptions
       await Future.wait([
-        stdoutSubscription.cancel(),
-        stderrSubscription.cancel(),
+        stdoutSub.cancel(),
+        stderrSub.cancel(),
       ]);
 
-      if (exitCode != 0) {
+      if (exitCode != 0 && exitCode != -15) {
+        // -15 is SIGTERM (Ctrl+C)
         throw Exception('Script failed with exit code $exitCode');
       }
 
-      log.success('Script completed successfully');
       return exitCode;
     } catch (error) {
       // Clean up subscriptions in case of error
       await Future.wait([
-        if (stdoutSubscription != null) stdoutSubscription.cancel(),
-        if (stderrSubscription != null) stderrSubscription.cancel(),
+        if (stdoutSub != null) stdoutSub.cancel(),
+        if (stderrSub != null) stderrSub.cancel(),
       ]);
 
       log.err('Error running script: $error');

@@ -3,12 +3,14 @@ import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 
 enum TurboCommandType {
   fix,
-  clone;
+  clone,
+  archive;
 
   String get pName {
     switch (this) {
       case TurboCommandType.fix:
       case TurboCommandType.clone:
+      case TurboCommandType.archive:
         return name;
     }
   }
@@ -19,6 +21,8 @@ enum TurboCommandType {
         return 'Format and fix code in lib/ and test/ directories.';
       case TurboCommandType.clone:
         return 'Clone various ultra wide turbo components.';
+      case TurboCommandType.archive:
+        return 'Archive workspace files to preserve state.';
     }
   }
 
@@ -39,6 +43,14 @@ Usage: turbo clone <type>
 Available types:
 - workspace: Clone a new ultra wide turbo (AI agent) workspace
 ''';
+      case TurboCommandType.archive:
+        return '''
+Archive workspace files to preserve state.
+Usage: turbo archive
+Options:
+  -t, --target    Target directory for the archive (default: "./turbo-archive")
+  -f, --force     Force archive even if directory exists
+''';
     }
   }
 
@@ -46,6 +58,7 @@ Available types:
     switch (this) {
       case TurboCommandType.fix:
       case TurboCommandType.clone:
+      case TurboCommandType.archive:
         return [];
     }
   }
@@ -55,6 +68,7 @@ Available types:
       case TurboCommandType.fix:
         return [TurboFlagType.clean];
       case TurboCommandType.clone:
+      case TurboCommandType.archive:
         return [TurboFlagType.force];
     }
   }
@@ -64,6 +78,7 @@ Available types:
       case TurboCommandType.fix:
         return [];
       case TurboCommandType.clone:
+      case TurboCommandType.archive:
         return [TurboOption.target];
     }
   }
@@ -79,6 +94,7 @@ cd test || exit
 bash ../scripts/fix.sh
 ''';
       case TurboCommandType.clone:
+      case TurboCommandType.archive:
         return null;
     }
   }

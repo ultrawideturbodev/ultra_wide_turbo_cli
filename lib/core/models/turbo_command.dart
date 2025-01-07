@@ -2,9 +2,11 @@ import 'package:args/command_runner.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_clone_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/services/archive_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/script_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/workspace_service.dart';
 
@@ -45,7 +47,7 @@ class TurboCommand extends Command<int> with TurboLogger {
         switch (cloneTypeArg) {
           case 'workspace':
             final targetDir = argResults!.getOption<String>(TurboOption.target)!;
-            final force = argResults!.getOption<bool>(TurboOption.force)!;
+            final force = argResults!.activeFlags.hasForce;
 
             final success = await WorkspaceService.locate.cloneWorkspace(
               targetDir: targetDir,
@@ -59,6 +61,16 @@ class TurboCommand extends Command<int> with TurboLogger {
               'Available types:\n${TurboCloneType.values.map((t) => '- ${t.pName}: ${t.help}').join('\n')}',
             );
         }
+      case TurboCommandType.archive:
+        final targetDir = argResults!.getOption<String>(TurboOption.target) ?? './turbo-archive';
+        final force = argResults!.activeFlags.hasForce;
+
+        final success = await ArchiveService.locate.archiveWorkspace(
+          targetDir: targetDir,
+          force: force,
+        );
+
+        return success ? ExitCode.success.code : ExitCode.software.code;
     }
   }
 

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:get_it/get_it.dart';
+import 'package:ultra_wide_turbo_cli/core/services/archive_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/command_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/local_storage_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/logger_service.dart';

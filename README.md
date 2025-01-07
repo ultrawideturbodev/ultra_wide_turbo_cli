@@ -10,6 +10,7 @@ A command-line tool for managing Ultra Wide Turbo development workflows.
   - Clean and get dependencies when needed
 - **Workspace Management**
   - Clone a fresh GPT agent workspace from [Ultra Wide Turbo Workspace](https://github.com/ultrawideturbodev/ultra_wide_turbo_workspace)
+  - Archive workspace files to preserve state
 
 ## Installation
 
@@ -39,10 +40,15 @@ turbo fix --clean
 | Command | Description | Options |
 |---------|-------------|---------|
 | `clone workspace` | Clone a new workspace from [Ultra Wide Turbo Workspace](https://github.com/ultrawideturbodev/ultra_wide_turbo_workspace) | `-t, --target`: Target directory (default: "./") <br> `-f, --force`: Force clone even if directory exists |
+| `archive` | Archive workspace files to preserve state | `-t, --target`: Target directory (default: "./turbo-archive") <br> `-f, --force`: Force archive even if directory exists |
 
-Example:
+Examples:
 ```bash
+# Clone a workspace
 turbo clone workspace --target=my_workspace --force
+
+# Archive current workspace
+turbo archive --target=my_archive --force
 ```
 
 ### Global Flags

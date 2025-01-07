@@ -1,17 +1,15 @@
 # Ultra Wide Turbo CLI
 
-A powerful command-line interface tool designed to enhance development workflows with automated tasks and intelligent processing.
+A command-line tool for managing Ultra Wide Turbo development workflows.
 
 ## Features
 
 - **Code Maintenance**
-  - Format and fix Dart code
-  - Clean and refresh dependencies
-  - Run build_runner with safe options
+  - Run dart fix and format on lib/ and test/
+  - Run build_runner build with safe options
+  - Clean and get dependencies when needed
 - **Workspace Management**
-  - Clone workspace templates
-  - Automatic file renaming
-  - Force mode for overwriting
+  - Clone a fresh GPT agent workspace from [Ultra Wide Turbo Workspace](https://github.com/ultrawideturbodev/ultra_wide_turbo_workspace)
 
 ## Installation
 
@@ -25,24 +23,34 @@ dart pub global activate ultra_wide_turbo_cli
 turbo <command> [arguments]
 ```
 
-### Available Commands
+### Code Maintenance Commands
 
-#### fix
-Format and fix code in lib/ and test/ directories.
-```bash
-turbo fix [--clean]
-```
-Options:
-- `--clean`: Clean and refresh dependencies before fixing
+| Command | Description | Options |
+|---------|-------------|---------|
+| `fix` | Format and fix code in lib/ and test/ directories | `--clean`: Clean and refresh dependencies before fixing |
 
-#### clone workspace
-Clone a new Ultra Wide Turbo workspace.
+Example:
 ```bash
-turbo clone workspace [--target=<dir>] [--force]
+turbo fix --clean
 ```
-Options:
-- `-t, --target`: Target directory for the clone (default: "./")
-- `-f, --force`: Force clone even if directory exists
+
+### Workspace Commands
+
+| Command | Description | Options |
+|---------|-------------|---------|
+| `clone workspace` | Clone a new workspace from [Ultra Wide Turbo Workspace](https://github.com/ultrawideturbodev/ultra_wide_turbo_workspace) | `-t, --target`: Target directory (default: "./") <br> `-f, --force`: Force clone even if directory exists |
+
+Example:
+```bash
+turbo clone workspace --target=my_workspace --force
+```
+
+### Global Flags
+
+| Flag | Description |
+|------|-------------|
+| `-v, --version` | Print the current version |
+| `--verbose` | Enable verbose logging |
 
 ## Architecture
 

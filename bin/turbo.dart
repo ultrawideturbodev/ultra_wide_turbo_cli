@@ -10,7 +10,8 @@ Future<void> main(List<String> args) async {
     await AppSetup.initialise();
     final turboCommandService = CommandService.locate;
     await turboCommandService.isReady;
-    await turboCommandService.run(['dart-fix']);
+    final exitCode = await turboCommandService.run(args);
+    exit(exitCode);
   } catch (error) {
     LoggerService.locate.log.err('$error');
     exit(ExitCode.software.code);

@@ -11,11 +11,15 @@ Future<void> main(List<String> args) async {
     await AppSetup.initialise();
     final turboCommandService = CommandService.locate;
     await turboCommandService.isReady;
-    final log = LoggerService.locate.log;
 
     // Check for updates
     final updateService = UpdateService.locate;
-    final shouldUpdate = await updateService.checkForUpdates();
+    final updateCheck = await updateService.checkForUpdates();
+    final shouldUpdate = updateCheck.when(
+      success: (response) => response.result,
+      fail: (_) => false,
+    );
+
     if (shouldUpdate) {
       await updateService.update();
       return;

@@ -1,10 +1,19 @@
-# IDE directories
+# IDE files
 .idea/
-.vscode/
+*.iml
 
-# Local files
-*.hive
-*.lock
+# Build files
+build/
+.dart_tool/
 
-# System files
+# Workspace files
+ultra_wide_turbo_workspace/
+
+# Documentation
+turbo_docs/
+
+# Lock files
+pubspec.lock
+
+# OS files
 .DS_Store

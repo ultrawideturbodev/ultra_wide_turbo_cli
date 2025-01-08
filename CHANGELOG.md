@@ -15,6 +15,8 @@ Initial release 🎉
 - Clone workspace command with file renaming support
 - Comprehensive test suite for commands
 - Force flag and target option support
+- Archive workspace command
+- Dart fix command
 
 ### Changed
 - Improved script service stream handling

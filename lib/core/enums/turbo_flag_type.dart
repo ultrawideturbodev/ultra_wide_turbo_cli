@@ -1,3 +1,5 @@
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
+
 enum TurboFlagType {
   version,
   verbose,
@@ -5,6 +7,19 @@ enum TurboFlagType {
   force;
 
   static List<TurboFlagType> get globalValues => values.where((flag) => flag.isGlobal).toList();
+
+  List<String> bashCommands({required TurboCommandType source}) {
+    switch (source) {
+      case TurboCommandType.dartFix:
+        return [
+          'dart clean && dart pub get',
+          'dart pub run build_runner build --delete-conflicting-outputs',
+        ];
+      case TurboCommandType.clone:
+      case TurboCommandType.archive:
+        return [];
+    }
+  }
 
   bool get isGlobal {
     switch (this) {
@@ -34,9 +49,9 @@ enum TurboFlagType {
       case TurboFlagType.verbose:
         return 'Enable verbose logging.';
       case TurboFlagType.clean:
-        return 'Clean and refresh dependencies before execution.';
+        return 'Clean and refresh dependencies before fixing';
       case TurboFlagType.force:
-        return 'Force operation even if target exists.';
+        return 'Force operation even if target exists';
     }
   }
 

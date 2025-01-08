@@ -138,7 +138,10 @@ class LocalStorageService extends Initialisable with TurboLogger {
     return box;
   }
 
-  Future<Box<T>> _initBox<T>({required HiveBox hiveBox, required String userId}) async {
+  Future<Box<T>> _initBox<T>({
+    required HiveBox hiveBox,
+    required String userId,
+  }) async {
     final box = await _openBox<T>(hiveBox: hiveBox);
     _addBoxInMemory(hiveBox: hiveBox, box: box);
     switch (hiveBox) {
@@ -241,7 +244,11 @@ class LocalStorageService extends Initialisable with TurboLogger {
       const hiveBox = HiveBox.localStorageDto;
       final newValue = dtoUpdater(_localStorageDto);
       _localStorageDto = newValue;
-      await _updateBoxContent(hiveBox: hiveBox, value: newValue, userId: userId);
+      await _updateBoxContent(
+        hiveBox: hiveBox,
+        value: newValue,
+        userId: userId,
+      );
       return const TurboResponse.emptySuccess();
     } catch (error, _) {
       log.err(

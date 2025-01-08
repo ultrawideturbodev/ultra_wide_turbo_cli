@@ -3,3 +3,22 @@
 .dart_tool/
 hivebox.localstoragedto.hive
 hivebox.localstoragedto.lock
+
+# Files and directories created by pub
+.packages
+build/
+pubspec.lock
+
+# Directory created by dartdoc
+doc/api/
+
+# dotenv environment variables file
+.env*
+
+# IDE directories
+.idea/
+.vscode/
+
+# Local storage files
+*.hive
+*.lock

@@ -1,10 +1,10 @@
 enum TurboOption {
   target;
 
-  String get name {
+  String get argument {
     switch (this) {
       case TurboOption.target:
-        return 'target';
+        return name;
     }
   }
 

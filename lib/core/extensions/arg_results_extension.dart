@@ -1,6 +1,7 @@
 import 'package:args/args.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_tag_type.dart';
 
 extension ArgResultsExtension on ArgResults {
   Set<TurboFlagType> get activeFlags {
@@ -18,12 +19,33 @@ extension ArgResultsExtension on ArgResults {
     }
   }
 
-  Map<TurboOption, dynamic> get activeOptions {
+  Map<TurboOption, String> get activeOptions {
     return {
       for (final option in TurboOption.values)
-        if (wasParsed(option.name)) option: this[option.name],
+        if (hasOption(option)) option: this[option.argument] as String,
     };
   }
 
-  T? getOption<T>(TurboOption option) => this[option.name] as T?;
+  bool hasOption(TurboOption option) {
+    try {
+      return wasParsed(option.argument);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Set<TurboTagType> get activeTags {
+    return {
+      for (final tag in TurboTagType.values)
+        if (hasTag(tag)) tag,
+    };
+  }
+
+  bool hasTag(TurboTagType turboTagType) {
+    try {
+      return rest.contains(turboTagType.argument);
+    } catch (_) {
+      return false;
+    }
+  }
 }

@@ -3,6 +3,7 @@ import 'dart:io' as io;
 
 import 'package:get_it/get_it.dart';
 import 'package:mason_logger/mason_logger.dart';
+import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 
 class ScriptService with TurboLogger {
@@ -20,7 +21,7 @@ class ScriptService with TurboLogger {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
 
-  Future<int> run(String script) async {
+  Future<TurboResponse> run(String script) async {
     StreamSubscription? stdoutSub;
     StreamSubscription? stderrSub;
 
@@ -60,7 +61,7 @@ class ScriptService with TurboLogger {
         throw Exception('Script failed with exit code $exitCode');
       }
 
-      return exitCode;
+      return const TurboResponse.emptySuccess();
     } catch (error) {
       // Clean up subscriptions in case of error
       await Future.wait([
@@ -69,11 +70,11 @@ class ScriptService with TurboLogger {
       ]);
 
       log.err('Error running script: $error');
-      return ExitCode.software.code;
+      return TurboResponse.fail(error: ExitCode.software.code);
     }
   }
 
-  // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
-  // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
-  // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
+// 🧲 FETCHERS ------------------------------------------------------------------------------ \\
+// 🏗️ HELPERS ------------------------------------------------------------------------------- \\
+// 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 }

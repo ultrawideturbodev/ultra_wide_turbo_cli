@@ -8,7 +8,6 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/constants/k_version.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
-import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
@@ -134,7 +133,7 @@ class CommandService extends CommandRunner<int> with TurboLogger {
         // Add command-specific options
         for (final option in command.options) {
           turboCommand.argParser.addOption(
-            option.name,
+            option.argument,
             abbr: option.abbr,
             help: option.help,
             defaultsTo: option.defaultsTo,
@@ -145,7 +144,7 @@ class CommandService extends CommandRunner<int> with TurboLogger {
         addCommand(turboCommand);
       } catch (error, _) {
         log.err(
-          '$error caught while trying to initialise command ${command.pName}!',
+          '$error caught while trying to initialise command ${command.argument}!',
         );
       }
     }

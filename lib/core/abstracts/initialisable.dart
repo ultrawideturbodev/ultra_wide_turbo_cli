@@ -87,14 +87,20 @@ abstract class Initialisable {
   ///
   /// Throws an [AssertionError] if the instance is not initialized before calling this method.
   void assertInitialised() {
-    assert(isInitialised, 'The instance must be initialized before calling this method.');
+    assert(
+      isInitialised,
+      'The instance must be initialized before calling this method.',
+    );
   }
 
   /// Asserts that the instance is not disposed.
   ///
   /// Throws an [AssertionError] if the instance is disposed before calling this method.
   void assertNotDisposed() {
-    assert(isInitialised, 'The instance must not be disposed before calling this method.');
+    assert(
+      isInitialised,
+      'The instance must not be disposed before calling this method.',
+    );
   }
 
   /// Throws a [StateError] if the instance is not initialized.
@@ -102,7 +108,9 @@ abstract class Initialisable {
   /// Ensures that the instance is initialized before proceeding with operations that require initialization.
   void throwIfNotInitialised() {
     if (!isInitialised) {
-      throw StateError('The instance must be initialized before calling this method.');
+      throw StateError(
+        'The instance must be initialized before calling this method.',
+      );
     }
   }
 
@@ -111,7 +119,9 @@ abstract class Initialisable {
   /// Ensures that the instance is not disposed before proceeding with operations that require an active instance.
   void throwIfDisposed() {
     if (!isInitialised) {
-      throw StateError('The instance must not be disposed before calling this method.');
+      throw StateError(
+        'The instance must not be disposed before calling this method.',
+      );
     }
   }
 }

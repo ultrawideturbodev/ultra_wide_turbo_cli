@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as path;
+import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 
 class WorkspaceService with TurboLogger {
@@ -19,7 +20,7 @@ class WorkspaceService with TurboLogger {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
 
-  Future<bool> cloneWorkspace({
+  Future<TurboResponse> cloneWorkspace({
     required String targetDir,
     required bool force,
   }) async {
@@ -29,7 +30,7 @@ class WorkspaceService with TurboLogger {
 
       if (exists && !force) {
         log.err('Directory already exists. Use --force to overwrite.');
-        return false;
+        return const TurboResponse.emptyFail();
       }
 
       if (exists && force) {
@@ -48,7 +49,7 @@ class WorkspaceService with TurboLogger {
 
       if (!await Directory(sourceDir).exists()) {
         log.err('Source workspace directory not found at: $sourceDir');
-        return false;
+        return const TurboResponse.emptyFail();
       }
 
       log.info('Copying workspace files...');
@@ -70,10 +71,13 @@ class WorkspaceService with TurboLogger {
       }
 
       log.success('Workspace cloned successfully to: $targetDir');
-      return true;
+      return const TurboResponse.emptySuccess();
     } catch (error) {
       log.err('Failed to clone workspace: $error');
-      return false;
+      return TurboResponse.fail(
+        error: error,
+        message: 'Failed to clone workspace',
+      );
     }
   }
 

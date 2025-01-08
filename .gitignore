@@ -9,9 +9,6 @@ hivebox.localstoragedto.lock
 build/
 pubspec.lock
 
-# Directory created by dartdoc
-doc/api/
-
 # dotenv environment variables file
 .env*
 

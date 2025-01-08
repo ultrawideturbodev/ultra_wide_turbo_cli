@@ -2,11 +2,9 @@
 .idea/
 .vscode/
 
-# Test directories
-test_clone/
-test_archive/
-
 # Local files
 *.hive
 *.lock
-your-todo-list.md 
+
+# System files
+.DS_Store

@@ -75,7 +75,7 @@ Available tags:
 - ${TurboTagType.workspace.argument}: Clone a new ultra wide turbo (AI agent) workspace
 
 Options:
-  -t, --target    Target directory for the clone (default: "./")
+  -t, --target    Target directory for the clone (default: "./turbo-workspace")
   -f, --force     Force clone even if directory exists
 
 Example:
@@ -131,8 +131,7 @@ Example:
     switch (this) {
       case TurboCommandType.fix:
         return [
-          if (activeFlags.hasClean)
-            ...TurboFlagType.clean.bashCommands(source: this),
+          if (activeFlags.hasClean) ...TurboFlagType.clean.bashCommands(source: this),
           ...bashCommands(),
         ].join('\n');
       case TurboCommandType.clone:

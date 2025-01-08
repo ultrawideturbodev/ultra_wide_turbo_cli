@@ -49,16 +49,43 @@ turbo fix --clean
 
 | Command | Description | Options |
 |---------|-------------|---------|
-| `clone workspace` | Clone a new workspace from [Ultra Wide Turbo Workspace](https://github.com/ultrawideturbodev/ultra_wide_turbo_workspace) | `-t, --target`: Target directory (default: "./") <br> `-f, --force`: Force clone even if directory exists |
+| `clone workspace` | Clone a new workspace from [Ultra Wide Turbo Workspace](https://github.com/ultrawideturbodev/ultra_wide_turbo_workspace) | `-t, --target`: Target directory (default: "./turbo-workspace") <br> `-f, --force`: Force clone even if directory exists |
 | `archive workspace` | Archive the parent workspace directory | `-t, --target`: Target directory (default: "./turbo-archive") <br> `-f, --force`: Force archive even if directory exists |
 
 Examples:
 ```bash
-# Clone a workspace
-turbo clone workspace --target=my_workspace --force
+# Clone a workspace (uses default ./turbo-workspace)
+turbo clone workspace
+
+# Clone to custom directory
+turbo clone workspace --target=my_workspace
+
+# Force clone to existing directory
+turbo clone workspace --target=existing_workspace --force
 
 # Archive parent workspace
 turbo archive workspace --target=my_archive --force
+```
+
+The cloned workspace will have the following structure:
+```
+turbo-workspace/
+├── knowledge/
+│   └── *.md
+├── processes/
+│   ├── _the-task-process.md
+│   ├── _the-development-process.md
+│   └── ...
+├── protocols/
+│   ├── _plx-start.md
+│   ├── _plx-test.md
+│   └── ...
+├── prompts/
+│   └── _system_prompt.md
+├── your-memory.md
+├── your-requirements.md
+├── your-resources.md
+└── your-todo-list.md
 ```
 
 ### Global Flags

@@ -45,7 +45,6 @@ class WorkspaceService with TurboLogger {
   ///
   /// Creates a new workspace at [targetDir] by copying the template files.
   /// If [force] is true, overwrites the target directory if it exists.
-  /// Automatically removes leading underscores from file names.
   ///
   /// Returns a [TurboResponse] indicating success or failure.
   /// Fails if:
@@ -54,7 +53,7 @@ class WorkspaceService with TurboLogger {
   /// - Any IO operation fails
   ///
   /// ```dart
-  /// // Clone with automatic file renaming
+  /// // Clone workspace
   /// final result = await cloneWorkspace(
   ///   targetDir: 'projects/my_workspace',
   ///   force: false,
@@ -95,21 +94,8 @@ class WorkspaceService with TurboLogger {
 
       log.info('Copying workspace files...');
 
-      // Copy all files
-      await for (final entity in Directory(sourceDir).list()) {
-        final basename = path.basename(entity.path);
-        final targetBasename = basename.startsWith('_') ? basename.substring(1) : basename;
-        final targetPath = path.join(targetDir, targetBasename);
-
-        if (entity is File) {
-          await entity.copy(targetPath);
-          if (basename.startsWith('_')) {
-            log.info('Renamed: $basename -> $targetBasename');
-          }
-        } else if (entity is Directory) {
-          await _copyDirectory(entity.path, targetPath);
-        }
-      }
+      // Copy all files and directories
+      await _copyDirectory(sourceDir, targetDir);
 
       log.success('Workspace cloned successfully to: $targetDir');
       return const TurboResponse.emptySuccess();
@@ -129,10 +115,7 @@ class WorkspaceService with TurboLogger {
         if (entity is! File) continue;
 
         final relativePath = path.relative(entity.path, from: sourceDir);
-        final targetPath = path.join(
-          targetDir,
-          relativePath.startsWith('_') ? relativePath.substring(1) : relativePath,
-        );
+        final targetPath = path.join(targetDir, relativePath);
 
         if (await File(targetPath).exists()) {
           return true;
@@ -146,26 +129,23 @@ class WorkspaceService with TurboLogger {
   }
 
   /// Copies a directory and its contents recursively.
-  /// Logs when files are renamed.
   Future<void> _copyDirectory(String source, String target) async {
     final targetDir = Directory(target);
     if (!await targetDir.exists()) {
       await targetDir.create(recursive: true);
     }
 
-    await for (final entity in Directory(source).list(recursive: false)) {
-      final basename = path.basename(entity.path);
-      final targetBasename = basename.startsWith('_') ? basename.substring(1) : basename;
-      final targetPath = path.join(target, targetBasename);
+    await for (final entity in Directory(source).list(recursive: true)) {
+      if (entity is! File) continue;
 
-      if (entity is Directory) {
-        await _copyDirectory(entity.path, targetPath);
-      } else if (entity is File) {
-        await entity.copy(targetPath);
-        if (basename.startsWith('_')) {
-          log.info('Renamed: $basename -> $targetBasename');
-        }
+      final relativePath = path.relative(entity.path, from: source);
+      final targetPath = path.join(target, relativePath);
+
+      final targetFile = File(targetPath);
+      if (!await targetFile.parent.exists()) {
+        await targetFile.parent.create(recursive: true);
       }
+      await entity.copy(targetPath);
     }
   }
 

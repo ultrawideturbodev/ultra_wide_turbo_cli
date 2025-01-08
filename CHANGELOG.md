@@ -7,6 +7,10 @@
 - Added proper file existence checks
 - Improved error handling for existing files
 - Added force flag support for overwriting
+- Changed default target path to "./turbo-workspace"
+- Improved directory structure preservation
+- Removed underscore renaming logic
+- Enhanced conflict detection for nested directories
 
 ## 0.1.7
 

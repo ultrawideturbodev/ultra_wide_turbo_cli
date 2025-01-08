@@ -11,14 +11,14 @@ enum TurboOption {
   String get help {
     switch (this) {
       case TurboOption.target:
-        return 'Target directory for the operation.';
+        return 'Target directory for the operation (default: ./turbo-workspace).';
     }
   }
 
   String get defaultsTo {
     switch (this) {
       case TurboOption.target:
-        return '.';
+        return './turbo-workspace';
     }
   }
 

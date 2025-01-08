@@ -5,7 +5,6 @@ repository: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli
 homepage: https://ultrawideturbodev.com
 documentation: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli/tree/main/turbo_docs
 issue_tracker: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli/issues
-publish_to: https://pub.dev
 topics:
   - cli
   - development

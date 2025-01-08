@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1
+
+### Fixed
+- Use provided arguments in turbo.dart instead of hardcoded command
+
 ## 0.1.0
 
 Initial release 🎉

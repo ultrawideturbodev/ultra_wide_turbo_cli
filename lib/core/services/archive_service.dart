@@ -5,6 +5,27 @@ import 'package:path/path.dart' as path;
 import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 
+/// Archives workspace files and directories to a target location.
+///
+/// Provides functionality to safely copy workspace contents while handling:
+/// - Directory existence checks
+/// - Recursive copying
+/// - Path safety validation
+/// - Progress feedback
+///
+/// ```dart
+/// // Archive to a new directory
+/// final result = await archiveService.archiveWorkspace(
+///   targetDir: 'path/to/archive',
+///   force: false,
+/// );
+///
+/// // Force archive to existing directory
+/// final result = await archiveService.archiveWorkspace(
+///   targetDir: 'existing/path',
+///   force: true,
+/// );
+/// ```
 class ArchiveService with TurboLogger {
   ArchiveService._();
 
@@ -20,6 +41,28 @@ class ArchiveService with TurboLogger {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
 
+  /// Archives the current workspace to a target directory.
+  ///
+  /// Copies all files and directories from the current workspace to [targetDir].
+  /// If [force] is true, overwrites the target directory if it exists.
+  ///
+  /// Returns a [TurboResponse] indicating success or failure.
+  /// Fails if:
+  /// - Target directory exists and [force] is false
+  /// - Target is a subdirectory of source or vice versa
+  /// - No files were copied
+  /// - Any IO operation fails
+  ///
+  /// ```dart
+  /// // Archive with safety checks
+  /// final result = await archiveWorkspace(
+  ///   targetDir: 'backup/workspace',
+  ///   force: false,
+  /// );
+  /// if (result.isSuccess) {
+  ///   print('Workspace archived successfully');
+  /// }
+  /// ```
   Future<TurboResponse> archiveWorkspace({
     required String targetDir,
     required bool force,
@@ -90,6 +133,11 @@ class ArchiveService with TurboLogger {
   // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
 
+  /// Recursively copies a directory and its contents.
+  ///
+  /// Copies all files and subdirectories from [source] to [target].
+  /// Skips if target is a subdirectory of source or vice versa to prevent
+  /// infinite recursion.
   Future<void> _copyDirectory(String source, String target) async {
     final sourceDir = Directory(source);
     final targetDir = Directory(target);
@@ -113,5 +161,5 @@ class ArchiveService with TurboLogger {
     }
   }
 
-// 🪄 MUTATORS ------------------------------------------------------------------------------ \\
+  // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 }

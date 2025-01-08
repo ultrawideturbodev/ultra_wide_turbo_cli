@@ -5,6 +5,27 @@ import 'package:path/path.dart' as path;
 import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 
+/// Manages Ultra Wide Turbo workspace operations.
+///
+/// Handles workspace cloning and file management with features like:
+/// - Automatic file renaming (removing leading underscores)
+/// - Directory existence checks
+/// - Recursive file copying
+/// - Progress feedback
+///
+/// ```dart
+/// // Clone to a new directory
+/// final result = await workspaceService.cloneWorkspace(
+///   targetDir: 'my/new/workspace',
+///   force: false,
+/// );
+///
+/// // Force clone to existing directory
+/// final result = await workspaceService.cloneWorkspace(
+///   targetDir: 'existing/workspace',
+///   force: true,
+/// );
+/// ```
 class WorkspaceService with TurboLogger {
   WorkspaceService._();
 
@@ -20,6 +41,28 @@ class WorkspaceService with TurboLogger {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
 
+  /// Clones the Ultra Wide Turbo workspace template to a target directory.
+  ///
+  /// Creates a new workspace at [targetDir] by copying the template files.
+  /// If [force] is true, overwrites the target directory if it exists.
+  /// Automatically removes leading underscores from file names.
+  ///
+  /// Returns a [TurboResponse] indicating success or failure.
+  /// Fails if:
+  /// - Target directory exists and [force] is false
+  /// - Template workspace directory not found
+  /// - Any IO operation fails
+  ///
+  /// ```dart
+  /// // Clone with automatic file renaming
+  /// final result = await cloneWorkspace(
+  ///   targetDir: 'projects/my_workspace',
+  ///   force: false,
+  /// );
+  /// if (result.isSuccess) {
+  ///   print('Workspace cloned successfully');
+  /// }
+  /// ```
   Future<TurboResponse> cloneWorkspace({
     required String targetDir,
     required bool force,
@@ -84,6 +127,11 @@ class WorkspaceService with TurboLogger {
   // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
 
+  /// Recursively copies a directory while renaming files.
+  ///
+  /// Copies all files and subdirectories from [source] to [target].
+  /// Removes leading underscores from file names during the copy.
+  /// Logs when files are renamed.
   Future<void> _copyDirectory(String source, String target) async {
     await Directory(target).create(recursive: true);
     await for (final entity in Directory(source).list(recursive: false)) {

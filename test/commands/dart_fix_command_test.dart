@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:mason_logger/mason_logger.dart';
-import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';

@@ -13,6 +13,22 @@ import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/models/turbo_command.dart';
 
+/// Handles CLI command registration, parsing, and execution.
+///
+/// Manages global flags, command-specific flags, and command execution.
+/// Extends [CommandRunner] to provide a structured CLI interface.
+///
+/// ```dart
+/// // Register and run commands
+/// final runner = CommandService();
+/// await runner.run(['command', '--flag']);
+///
+/// // Check version
+/// await runner.run(['--version']);
+///
+/// // Get help
+/// await runner.run(['--help']);
+/// ```
 class CommandService extends CommandRunner<int> with TurboLogger {
   CommandService() : super(Environment.packageName, Environment.packageTitle) {
     initialise();
@@ -26,6 +42,10 @@ class CommandService extends CommandRunner<int> with TurboLogger {
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
 
+  /// Initializes the command service by setting up flags and commands.
+  ///
+  /// Sets up global flags like --version and --verbose.
+  /// Registers all available commands from [TurboCommandType].
   Future<void> initialise() async {
     try {
       _initGlobalFlags();
@@ -39,6 +59,7 @@ class CommandService extends CommandRunner<int> with TurboLogger {
     }
   }
 
+  /// Resets the service to its initial state.
   void dispose() {
     _isReady = Completer();
   }
@@ -46,6 +67,18 @@ class CommandService extends CommandRunner<int> with TurboLogger {
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
   // ⚡️ OVERRIDES ----------------------------------------------------------------------------- \\
 
+  /// Runs the command specified by [args].
+  ///
+  /// Parses the arguments and executes the corresponding command.
+  /// Handles format and usage exceptions with appropriate error messages.
+  ///
+  /// ```dart
+  /// // Run a command
+  /// final exitCode = await run(['clone', '--target', 'path']);
+  ///
+  /// // Run with verbose logging
+  /// final exitCode = await run(['command', '--verbose']);
+  /// ```
   @override
   Future<int> run(Iterable<String> args) async {
     try {
@@ -66,6 +99,10 @@ class CommandService extends CommandRunner<int> with TurboLogger {
     }
   }
 
+  /// Processes global flags and runs the specified command.
+  ///
+  /// Handles flags like --verbose and --version before command execution.
+  /// Returns the command's exit code or [ExitCode.success] for version flag.
   @override
   Future<int?> runCommand(ArgResults topLevelResults) async {
     for (final flag in topLevelResults.activeFlags) {
@@ -91,11 +128,16 @@ class CommandService extends CommandRunner<int> with TurboLogger {
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
   // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
 
+  /// Future that completes when the service is ready to handle commands.
   Future get isReady => _isReady.future;
 
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
+  /// Initializes global flags available to all commands.
+  ///
+  /// Adds flags like --version and --verbose that can be used
+  /// with any command or directly with the CLI.
   void _initGlobalFlags() {
     for (final flag in TurboFlagType.globalValues) {
       try {
@@ -113,6 +155,10 @@ class CommandService extends CommandRunner<int> with TurboLogger {
     }
   }
 
+  /// Initializes all available commands from [TurboCommandType].
+  ///
+  /// Creates command instances and sets up their flags and options.
+  /// Each command is registered with the command runner.
   void _initCommands() {
     for (final command in TurboCommandType.values) {
       try {

@@ -17,6 +17,24 @@ import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/typedefs/update_current_def.dart';
 import 'package:ultra_wide_turbo_cli/core/util/mutex.dart';
 
+/// Manages local data persistence using Hive boxes.
+///
+/// Provides thread-safe storage operations with features like:
+/// - Automatic initialization and cleanup
+/// - User-specific storage
+/// - Data sanity checks
+/// - Mutex-protected operations
+///
+/// ```dart
+/// // Initialize storage
+/// await localStorageService.initialise();
+///
+/// // Access stored data
+/// final settings = localStorageService.localStorageDto;
+///
+/// // Clean up
+/// await localStorageService.dispose();
+/// ```
 class LocalStorageService extends Initialisable with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
@@ -26,6 +44,10 @@ class LocalStorageService extends Initialisable with TurboLogger {
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
 
+  /// Initializes the local storage service.
+  ///
+  /// Sets up Hive boxes and performs initial data sanity checks.
+  /// Uses mutex to ensure thread-safe initialization.
   @override
   Future<void> initialise() async {
     await _mutex.lockAndRun(
@@ -45,6 +67,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
     );
   }
 
+  /// Cleans up resources and resets storage to default state.
+  ///
+  /// Clears all boxes and resets the local storage DTO.
   @override
   Future<void> dispose() async {
     try {
@@ -60,6 +85,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
     }
   }
 
+  /// Clears all Hive boxes and their in-memory references.
+  ///
+  /// Uses mutex to ensure thread-safe box clearing.
   Future<void> resetBoxes() async {
     log.info('Resetting boxes');
     await _mutex.lockAndRun(
@@ -88,15 +116,22 @@ class LocalStorageService extends Initialisable with TurboLogger {
 
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
+  /// In-memory cache of opened Hive boxes.
   final Map<String, Box> _boxes = {};
+
+  /// Current local storage settings.
   var _localStorageDto = LocalStorageDto.defaultDto(userId: '');
 
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
 
+  /// Mutex for thread-safe operations.
   final _mutex = Mutex();
 
   // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
 
+  /// Retrieves local storage settings for a specific user.
+  ///
+  /// Returns null if no settings exist for the [userId].
   LocalStorageDto? _fetchLocalStorageDto({required String userId}) {
     final rLocalStorage = _getBoxContent(
       hiveBox: HiveBox.localStorageDto,
@@ -105,10 +140,14 @@ class LocalStorageService extends Initialisable with TurboLogger {
     return rLocalStorage == null ? null : LocalStorageDto.fromJson(rLocalStorage);
   }
 
+  /// Current local storage settings.
   LocalStorageDto get localStorageDto => _localStorageDto;
 
   // 🏗 HELPERS ------------------------------------------------------------------------------- \\
 
+  /// Ensures local storage settings match the current user.
+  ///
+  /// Creates default settings if none exist for the [userId].
   Future<void> _localStorageSanityCheck({required String userId}) async {
     final localStorageDto = _localStorageDto;
     if (localStorageDto.id != userId) {
@@ -127,6 +166,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
     }
   }
 
+  /// Gets or initializes a Hive box.
+  ///
+  /// Returns existing box if available, otherwise initializes a new one.
   FutureOr<Box<T>> _getBox<T>({
     required HiveBox hiveBox,
     required String userId,
@@ -138,6 +180,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     return box;
   }
 
+  /// Initializes a new Hive box and updates local storage if needed.
   Future<Box<T>> _initBox<T>({
     required HiveBox hiveBox,
     required String userId,
@@ -162,15 +205,20 @@ class LocalStorageService extends Initialisable with TurboLogger {
 
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
 
+  /// Checks if a Hive box is already opened.
   bool _hasBox({required HiveBox hiveBox}) => _boxes.containsKey(hiveBox.id);
+
+  /// Gets an opened Hive box, assuming it exists.
   Box<T> _forceGetBox<T>({required HiveBox hiveBox}) => _boxes[hiveBox.id] as Box<T>;
 
+  /// Opens a new Hive box.
   Future<Box<T>> _openBox<T>({required HiveBox hiveBox}) async {
     return await Hive.openBox<T>(
       hiveBox.id,
     );
   }
 
+  /// Adds a box to the in-memory cache.
   void _addBoxInMemory<T>({
     required HiveBox hiveBox,
     required Box<T> box,
@@ -178,6 +226,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     _boxes[hiveBox.id] = box;
   }
 
+  /// Retrieves content from a Hive box for a specific user.
   Map<String, dynamic>? _getBoxContent({
     required HiveBox hiveBox,
     required String userId,
@@ -193,6 +242,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     );
   }
 
+  /// Updates content in a Hive box for a specific user.
   Future<void> _updateBoxContent<T extends LocalStorageValue>({
     required HiveBox hiveBox,
     required T value,
@@ -205,6 +255,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     );
   }
 
+  /// Initializes Hive directory and registers adapters.
   @CalledByMutex()
   Future<void> _tryInitDirAndAdapters() async {
     try {
@@ -218,6 +269,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     }
   }
 
+  /// Registers all Hive type adapters.
   @CalledByMutex()
   void _registerAdapters() {
     for (final hiveAdapter in HiveAdapters.values) {
@@ -227,6 +279,10 @@ class LocalStorageService extends Initialisable with TurboLogger {
     }
   }
 
+  /// Updates local storage settings with thread safety.
+  ///
+  /// Uses [dtoUpdater] to modify the current settings.
+  /// Performs sanity checks unless disabled via parameters.
   Future<TurboResponse> _updateLocalStorage(
     UpdateCurrentDef<LocalStorageDto> dtoUpdater, {
     required String userId,
@@ -258,7 +314,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     }
   }
 
-// 🪄 MUTATORS ------------------------------------------------------------------------------ \\
+  // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
   Future<TurboResponse> addTag({required String tag}) async => await _updateLocalStorage(
         (current) => current.copyWith(

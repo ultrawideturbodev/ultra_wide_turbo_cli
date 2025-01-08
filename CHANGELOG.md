@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.2
+
+### Added
+- Comprehensive Dart documentation for all services
+- Code examples in documentation
+- Detailed parameter and return value descriptions
+- Thread safety documentation for local storage operations
+
 ## 0.1.1
 
 ### Fixed

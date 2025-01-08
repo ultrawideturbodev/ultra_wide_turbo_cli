@@ -10,6 +10,7 @@ import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart'
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/services/archive_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/script_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/workspace_service.dart';
 
 class TurboCommand extends Command<int> with TurboLogger {
@@ -89,8 +90,7 @@ class TurboCommand extends Command<int> with TurboLogger {
           switch (tag) {
             case TurboTagType.workspace:
               final options = argResults!.activeOptions;
-              final targetDir =
-                  options[TurboOption.target] ?? TurboOption.target.defaultsTo;
+              final targetDir = options[TurboOption.target] ?? TurboOption.target.defaultsTo;
               final force = argResults!.activeFlags.hasForce;
 
               final response = await WorkspaceService.locate.cloneWorkspace(
@@ -115,8 +115,7 @@ class TurboCommand extends Command<int> with TurboLogger {
           switch (tag) {
             case TurboTagType.workspace:
               final options = argResults!.activeOptions;
-              final targetDir =
-                  options[TurboOption.target] ?? './turbo-archive';
+              final targetDir = options[TurboOption.target] ?? './turbo-archive';
               final force = argResults!.activeFlags.hasForce;
 
               final response = await ArchiveService.locate.archiveWorkspace(
@@ -130,6 +129,12 @@ class TurboCommand extends Command<int> with TurboLogger {
               );
           }
         }
+      case TurboCommandType.update:
+        final response = await UpdateService.locate.manualUpdate();
+        return response.when(
+          success: (_) => ExitCode.success.code,
+          fail: (_) => ExitCode.software.code,
+        );
     }
     return ExitCode.usage.code;
   }

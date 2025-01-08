@@ -5,7 +5,8 @@ import 'package:ultra_wide_turbo_cli/core/enums/turbo_tag_type.dart';
 enum TurboCommandType {
   fix,
   clone,
-  archive;
+  archive,
+  update;
 
   List<String> bashCommands() {
     switch (this) {
@@ -33,6 +34,7 @@ enum TurboCommandType {
         ];
       case TurboCommandType.clone:
       case TurboCommandType.archive:
+      case TurboCommandType.update:
         return [];
     }
   }
@@ -42,6 +44,7 @@ enum TurboCommandType {
       case TurboCommandType.clone:
       case TurboCommandType.archive:
       case TurboCommandType.fix:
+      case TurboCommandType.update:
         return name;
     }
   }
@@ -54,6 +57,8 @@ enum TurboCommandType {
         return 'Clone various ultra wide turbo components.';
       case TurboCommandType.archive:
         return 'Archive workspace files to preserve state.';
+      case TurboCommandType.update:
+        return 'Manually check and update Ultra Wide Turbo CLI to the latest version.';
     }
   }
 
@@ -95,6 +100,16 @@ Options:
 Example:
   turbo archive ${TurboTagType.workspace.argument} --target=my_archive --force
 ''';
+      case TurboCommandType.update:
+        return '''
+Manually check and update Ultra Wide Turbo CLI to the latest version.
+- Shows current and latest version
+- Updates if a newer version is available
+- No options or flags needed
+
+Example:
+  turbo update
+''';
     }
   }
 
@@ -103,6 +118,7 @@ Example:
       case TurboCommandType.fix:
       case TurboCommandType.clone:
       case TurboCommandType.archive:
+      case TurboCommandType.update:
         return [];
     }
   }
@@ -114,12 +130,15 @@ Example:
       case TurboCommandType.clone:
       case TurboCommandType.archive:
         return [TurboFlagType.force];
+      case TurboCommandType.update:
+        return [];
     }
   }
 
   List<TurboOption> get options {
     switch (this) {
       case TurboCommandType.fix:
+      case TurboCommandType.update:
         return [];
       case TurboCommandType.clone:
       case TurboCommandType.archive:
@@ -136,6 +155,7 @@ Example:
         ].join('\n');
       case TurboCommandType.clone:
       case TurboCommandType.archive:
+      case TurboCommandType.update:
         return null;
     }
   }

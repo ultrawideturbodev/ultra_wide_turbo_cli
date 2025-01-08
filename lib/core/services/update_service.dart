@@ -42,8 +42,7 @@ class UpdateService with TurboLogger {
   Future<TurboResponse<bool>> checkForUpdates() async {
     try {
       log.detail('Checking for updates...');
-      final latestVersion =
-          await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
       final shouldUpdate = latestVersion != packageVersion;
       log.detail(
         shouldUpdate
@@ -77,7 +76,48 @@ class UpdateService with TurboLogger {
     }
   }
 
-  // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
+  /// Manually checks for and applies updates.
+  ///
+  /// Shows the current version and checks for updates.
+  /// If an update is available:
+  /// - Shows the latest version
+  /// - Prompts to update
+  /// - Performs the update
+  ///
+  /// Returns [TurboResponse] indicating success or failure.
+  Future<TurboResponse> manualUpdate() async {
+    try {
+      log.info('Current version: $packageVersion');
+
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+
+      if (latestVersion == packageVersion) {
+        log.success('Already on latest version!');
+        return const TurboResponse.emptySuccess();
+      }
+
+      log.info('Latest version: $latestVersion');
+      log.info('Updating to latest version...');
+
+      final result = await update();
+
+      return result.when(
+        success: (_) {
+          log.success('Successfully updated to $latestVersion');
+          return const TurboResponse.emptySuccess();
+        },
+        fail: (f) {
+          log.err('Failed to update: ${f.message}');
+          return TurboResponse.fail(error: f.error);
+        },
+      );
+    } catch (error) {
+      log.err('Failed to check for updates: $error');
+      return TurboResponse.fail(error: error);
+    }
+  }
+
+  //🧲 FETCHERS ------------------------------------------------------------------------------ \\
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 }

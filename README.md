@@ -129,3 +129,12 @@ This means you can:
 - ✅ Use the software for patent purposes
 
 The only requirement is that you include the original copyright and license notice in any copy of the software/source.
+
+### Update CLI
+
+```bash
+# Update Ultra Wide Turbo CLI to the latest version
+turbo update
+```
+
+### Clone Workspace

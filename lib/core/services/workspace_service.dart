@@ -72,8 +72,8 @@ class WorkspaceService with TurboLogger {
 
       // Get the source directory (ultra_wide_turbo_workspace)
       final sourceDir = path.join(
-        Directory.current.path,
-        'ultra_wide_turbo_workspace',
+        Platform.script.toFilePath(),
+        '../ultra_wide_turbo_workspace',
       );
 
       if (!await Directory(sourceDir).exists()) {

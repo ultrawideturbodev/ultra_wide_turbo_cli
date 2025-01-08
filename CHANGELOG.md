@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.10
+
+### Fixed
+- Fixed workspace clone command to correctly locate template files in package directory
+
+## 0.1.9
+
+- Added manual update command (`turbo update`)
+- Enhanced update service with manual update functionality
+- Added comprehensive tests for update service
+
 ## 0.1.8 - 2024-01-08
 
 ### Changed

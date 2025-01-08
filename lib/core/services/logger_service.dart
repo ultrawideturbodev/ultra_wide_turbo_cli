@@ -18,7 +18,8 @@ import 'package:mason_logger/mason_logger.dart';
 /// ```
 class LoggerService {
   static LoggerService get locate => GetIt.I.get();
-  static void registerSingleton() => GetIt.I.registerSingleton<LoggerService>(LoggerService());
+  static void registerSingleton() =>
+      GetIt.I.registerSingleton<LoggerService>(LoggerService());
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 

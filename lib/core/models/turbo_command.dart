@@ -55,7 +55,8 @@ class TurboCommand extends Command<int> with TurboLogger {
         // Check for lib and test directories in project root
         if (!await Directory('${currentDir.path}/lib').exists() &&
             !await Directory('${currentDir.path}/test').exists()) {
-          log.err('Invalid directory structure: neither lib/ nor test/ directory exists');
+          log.err(
+              'Invalid directory structure: neither lib/ nor test/ directory exists');
           return ExitCode.software.code;
         }
 
@@ -87,7 +88,8 @@ class TurboCommand extends Command<int> with TurboLogger {
           switch (tag) {
             case TurboTagType.workspace:
               final options = argResults!.activeOptions;
-              final targetDir = options[TurboOption.target] ?? TurboOption.target.defaultsTo;
+              final targetDir =
+                  options[TurboOption.target] ?? TurboOption.target.defaultsTo;
               final force = argResults!.activeFlags.hasForce;
 
               final response = await WorkspaceService.locate.cloneWorkspace(
@@ -112,7 +114,8 @@ class TurboCommand extends Command<int> with TurboLogger {
           switch (tag) {
             case TurboTagType.workspace:
               final options = argResults!.activeOptions;
-              final targetDir = options[TurboOption.target] ?? './turbo-archive';
+              final targetDir =
+                  options[TurboOption.target] ?? './turbo-archive';
               final force = argResults!.activeFlags.hasForce;
 
               final response = await ArchiveService.locate.archiveWorkspace(

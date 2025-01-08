@@ -30,9 +30,11 @@ void main() {
       final sourceDir = Directory('${tempDir.path}/source');
       await sourceDir.create();
       await File('${sourceDir.path}/test.txt').writeAsString('test content');
-      await File('${sourceDir.path}/another.txt').writeAsString('another content');
+      await File('${sourceDir.path}/another.txt')
+          .writeAsString('another content');
       await Directory('${sourceDir.path}/subdir').create();
-      await File('${sourceDir.path}/subdir/nested.txt').writeAsString('nested content');
+      await File('${sourceDir.path}/subdir/nested.txt')
+          .writeAsString('nested content');
 
       // Set current directory to source dir for relative path resolution
       Directory.current = sourceDir;

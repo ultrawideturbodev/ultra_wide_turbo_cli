@@ -28,14 +28,18 @@ void main() {
       tempDir = await Directory.systemTemp.createTemp('turbo_test_');
 
       // Create source workspace directory with test files
-      final workspaceDir = Directory(path.join(tempDir.path, 'ultra_wide_turbo_workspace'));
+      final workspaceDir =
+          Directory(path.join(tempDir.path, 'ultra_wide_turbo_workspace'));
       await workspaceDir.create(recursive: true);
-      await File(path.join(workspaceDir.path, 'test.md')).writeAsString('test content');
-      await File(path.join(workspaceDir.path, 'normal.txt')).writeAsString('normal content');
+      await File(path.join(workspaceDir.path, 'test.md'))
+          .writeAsString('test content');
+      await File(path.join(workspaceDir.path, 'normal.txt'))
+          .writeAsString('normal content');
 
       final testDir = Directory(path.join(workspaceDir.path, 'test_dir'));
       await testDir.create();
-      await File(path.join(testDir.path, 'file.txt')).writeAsString('nested content');
+      await File(path.join(testDir.path, 'file.txt'))
+          .writeAsString('nested content');
 
       // Set current directory to temp dir for relative path resolution
       Directory.current = tempDir.path;
@@ -81,8 +85,10 @@ void main() {
       expect(await Directory(targetDir).exists(), isTrue);
       expect(await File(path.join(targetDir, 'test.md')).exists(), isTrue);
       expect(await File(path.join(targetDir, 'normal.txt')).exists(), isTrue);
-      expect(await Directory(path.join(targetDir, 'test_dir')).exists(), isTrue);
-      expect(await File(path.join(targetDir, 'test_dir', 'file.txt')).exists(), isTrue);
+      expect(
+          await Directory(path.join(targetDir, 'test_dir')).exists(), isTrue);
+      expect(await File(path.join(targetDir, 'test_dir', 'file.txt')).exists(),
+          isTrue);
 
       // Verify content was preserved
       expect(
@@ -101,11 +107,13 @@ void main() {
       log.success('TEST PASSED: clones workspace successfully');
     });
 
-    test('fails when cloning to existing directory without force flag', () async {
+    test('fails when cloning to existing directory without force flag',
+        () async {
       // Given: An existing target directory with some content
       final targetDir = path.join(tempDir.path, 'existing_target');
       await Directory(targetDir).create();
-      await File(path.join(targetDir, 'existing_file.txt')).writeAsString('existing content');
+      await File(path.join(targetDir, 'existing_file.txt'))
+          .writeAsString('existing content');
 
       // When: Attempting to clone to the existing directory
       final result = await commandService.run([
@@ -123,14 +131,17 @@ void main() {
       expect(await existingFile.exists(), isTrue);
       expect(await existingFile.readAsString(), equals('existing content'));
 
-      log.success('TEST PASSED: fails when cloning to existing directory without force flag');
+      log.success(
+          'TEST PASSED: fails when cloning to existing directory without force flag');
     });
 
-    test('succeeds when cloning to existing directory with force flag', () async {
+    test('succeeds when cloning to existing directory with force flag',
+        () async {
       // Given: An existing target directory with some content
       final targetDir = path.join(tempDir.path, 'force_target');
       await Directory(targetDir).create();
-      await File(path.join(targetDir, 'existing_file.txt')).writeAsString('existing content');
+      await File(path.join(targetDir, 'existing_file.txt'))
+          .writeAsString('existing content');
 
       // When: Attempting to clone to the existing directory with force flag
       final result = await commandService.run([
@@ -145,12 +156,15 @@ void main() {
       expect(result, equals(ExitCode.success.code));
 
       // And: Original content should be replaced with cloned content
-      expect(await File(path.join(targetDir, 'existing_file.txt')).exists(), isFalse);
+      expect(await File(path.join(targetDir, 'existing_file.txt')).exists(),
+          isFalse);
       expect(await File(path.join(targetDir, 'test.md')).exists(), isTrue);
       expect(await File(path.join(targetDir, 'normal.txt')).exists(), isTrue);
-      expect(await Directory(path.join(targetDir, 'test_dir')).exists(), isTrue);
+      expect(
+          await Directory(path.join(targetDir, 'test_dir')).exists(), isTrue);
 
-      log.success('TEST PASSED: succeeds when cloning to existing directory with force flag');
+      log.success(
+          'TEST PASSED: succeeds when cloning to existing directory with force flag');
     });
 
     test('fails with insufficient permissions', () async {

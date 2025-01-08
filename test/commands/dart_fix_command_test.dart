@@ -67,7 +67,8 @@ environment:
       Directory.current = deepDir;
 
       // Run fix command
-      final result = await commandService.run([TurboCommandType.dartFix.argument]);
+      final result =
+          await commandService.run([TurboCommandType.dartFix.argument]);
 
       // Should succeed
       expect(result, equals(ExitCode.success.code));
@@ -79,7 +80,8 @@ environment:
       );
 
       // Verify file was formatted
-      final formattedContent = await File('${deepDir.path}/test.dart').readAsString();
+      final formattedContent =
+          await File('${deepDir.path}/test.dart').readAsString();
       expect(
         formattedContent,
         equals('''void main() {
@@ -104,7 +106,8 @@ environment:
       Directory.current = testDir;
 
       // Run fix command
-      final result = await commandService.run([TurboCommandType.dartFix.argument]);
+      final result =
+          await commandService.run([TurboCommandType.dartFix.argument]);
 
       // Should fail
       expect(result, equals(ExitCode.software.code));
@@ -121,7 +124,8 @@ environment:
       log.success('TEST PASSED: fails when no pubspec.yaml found');
     });
 
-    test('fails when pubspec.yaml found but no lib or test directories', () async {
+    test('fails when pubspec.yaml found but no lib or test directories',
+        () async {
       // Create project with pubspec.yaml but no lib/test dirs
       await File('${tempDir.path}/pubspec.yaml').writeAsString('''
 name: test_project
@@ -135,7 +139,8 @@ environment:
       Directory.current = tempDir;
 
       // Run fix command
-      final result = await commandService.run([TurboCommandType.dartFix.argument]);
+      final result =
+          await commandService.run([TurboCommandType.dartFix.argument]);
 
       // Should fail
       expect(result, equals(ExitCode.software.code));
@@ -149,7 +154,8 @@ environment:
         equals(Directory(tempDir.path).resolveSymbolicLinksSync()),
       );
 
-      log.success('TEST PASSED: fails when pubspec.yaml found but no lib or test directories');
+      log.success(
+          'TEST PASSED: fails when pubspec.yaml found but no lib or test directories');
     });
   });
 }

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6
+
+### Changed
+- Switched to MIT License for better open source compatibility
+- Updated documentation to reflect new license terms
+
 ## 0.1.5
 
 ### Added

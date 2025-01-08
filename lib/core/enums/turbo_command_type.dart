@@ -132,7 +132,8 @@ Example:
     switch (this) {
       case TurboCommandType.dartFix:
         return [
-          if (activeFlags.hasClean) ...TurboFlagType.clean.bashCommands(source: this),
+          if (activeFlags.hasClean)
+            ...TurboFlagType.clean.bashCommands(source: this),
           ...bashCommands(),
         ].join('\n');
       case TurboCommandType.clone:

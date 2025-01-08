@@ -24,7 +24,8 @@ class ScriptService with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static ScriptService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(ScriptService._);
+  static void registerLazySingleton() =>
+      GetIt.I.registerLazySingleton(ScriptService._);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\

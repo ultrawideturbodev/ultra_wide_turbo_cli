@@ -37,7 +37,8 @@ class CommandService extends CommandRunner<int> with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static CommandService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(CommandService.new);
+  static void registerLazySingleton() =>
+      GetIt.I.registerLazySingleton(CommandService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\

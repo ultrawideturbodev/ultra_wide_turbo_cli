@@ -6,7 +6,8 @@ enum TurboFlagType {
   clean,
   force;
 
-  static List<TurboFlagType> get globalValues => values.where((flag) => flag.isGlobal).toList();
+  static List<TurboFlagType> get globalValues =>
+      values.where((flag) => flag.isGlobal).toList();
 
   List<String> bashCommands({required TurboCommandType source}) {
     switch (source) {

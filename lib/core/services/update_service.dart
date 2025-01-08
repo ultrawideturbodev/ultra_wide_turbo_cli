@@ -42,7 +42,8 @@ class UpdateService with TurboLogger {
   Future<TurboResponse<bool>> checkForUpdates() async {
     try {
       log.detail('Checking for updates...');
-      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion =
+          await _pubUpdater.getLatestVersion(Environment.packageName);
       final shouldUpdate = latestVersion != packageVersion;
       log.detail(
         shouldUpdate

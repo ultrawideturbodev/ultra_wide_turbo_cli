@@ -92,14 +92,13 @@ dart test
 
 ## License
 
-This project is licensed under the Apache License, Version 2.0 with Commons Clause - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-This means:
-- ✅ You can use the software
-- ✅ You can modify the software
-- ✅ You can contribute to the project
-- ❌ You cannot use the code commercially without permission
-- ❌ You cannot use the code in other projects without permission
-- ❌ You cannot sell the software or derivative services
+This means you can:
+- ✅ Use the software commercially
+- ✅ Modify the software
+- ✅ Distribute the software
+- ✅ Use the software privately
+- ✅ Use the software for patent purposes
 
-The Commons Clause and additional terms restrict commercial use and code reuse. For permissions beyond the standard license, please contact Ultra Wide Turbo Company via ultrawideturbocompany.com.
+The only requirement is that you include the original copyright and license notice in any copy of the software/source.

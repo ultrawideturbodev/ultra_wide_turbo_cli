@@ -32,7 +32,8 @@ class WorkspaceService with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static WorkspaceService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(WorkspaceService._);
+  static void registerLazySingleton() =>
+      GetIt.I.registerLazySingleton(WorkspaceService._);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -100,7 +101,8 @@ class WorkspaceService with TurboLogger {
       // Copy all files
       await for (final entity in Directory(sourceDir).list()) {
         final basename = path.basename(entity.path);
-        final targetBasename = basename.startsWith('_') ? basename.substring(1) : basename;
+        final targetBasename =
+            basename.startsWith('_') ? basename.substring(1) : basename;
         final targetPath = path.join(targetDir, targetBasename);
 
         if (entity is File) {
@@ -136,7 +138,8 @@ class WorkspaceService with TurboLogger {
     await Directory(target).create(recursive: true);
     await for (final entity in Directory(source).list(recursive: false)) {
       final basename = path.basename(entity.path);
-      final targetBasename = basename.startsWith('_') ? basename.substring(1) : basename;
+      final targetBasename =
+          basename.startsWith('_') ? basename.substring(1) : basename;
       final targetPath = path.join(target, targetBasename);
 
       if (entity is Directory) {

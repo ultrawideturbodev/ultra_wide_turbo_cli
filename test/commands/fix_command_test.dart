@@ -30,7 +30,8 @@ void main() {
       // Create symbolic link for dart-fix
       final dartPath = Platform.resolvedExecutable;
       final dartDir = path.dirname(dartPath);
-      await Process.run('ln', ['-s', path.join(dartDir, 'dart'), path.join(dartDir, 'dart-fix')]);
+      await Process.run('ln',
+          ['-s', path.join(dartDir, 'dart'), path.join(dartDir, 'dart-fix')]);
 
       // Create pubspec.yaml for a valid Dart project
       await File('${tempDir.path}/pubspec.yaml').writeAsString('''
@@ -92,7 +93,8 @@ dev_dependencies:
       final initialTestContent = await testFile.readAsString();
 
       // When: Running fix command
-      final result = await commandService.run([TurboCommandType.dartFix.argument]);
+      final result =
+          await commandService.run([TurboCommandType.dartFix.argument]);
 
       // Then: Command should succeed
       expect(result, equals(ExitCode.success.code));
@@ -121,7 +123,8 @@ dev_dependencies:
       log.success('TEST PASSED: formats Dart files when running fix command');
     });
 
-    test('formats Dart files when running fix command with clean flag', () async {
+    test('formats Dart files when running fix command with clean flag',
+        () async {
       // Given: Unformatted Dart files and a pubspec.yaml
       final libFile = File('${tempDir.path}/lib/test.dart');
       final testFile = File('${tempDir.path}/test/test.dart');
@@ -144,7 +147,8 @@ dev_dependencies:
       final initialTestContent = await testFile.readAsString();
 
       // When: Running fix command with clean flag
-      final result = await commandService.run([TurboCommandType.dartFix.argument, '--clean']);
+      final result = await commandService
+          .run([TurboCommandType.dartFix.argument, '--clean']);
 
       // Then: Command should succeed
       expect(result, equals(ExitCode.success.code));
@@ -155,7 +159,8 @@ dev_dependencies:
       expect(formattedLibContent, isNot(equals(initialLibContent)));
       expect(formattedTestContent, isNot(equals(initialTestContent)));
 
-      log.success('TEST PASSED: formats Dart files when running fix command with clean flag');
+      log.success(
+          'TEST PASSED: formats Dart files when running fix command with clean flag');
     });
 
     test('fails with invalid directory structure', () async {
@@ -164,7 +169,8 @@ dev_dependencies:
       await Directory('${tempDir.path}/test').delete(recursive: true);
 
       // When: Running fix command
-      final result = await commandService.run([TurboCommandType.dartFix.argument]);
+      final result =
+          await commandService.run([TurboCommandType.dartFix.argument]);
 
       // Then: Command should fail
       expect(result, equals(ExitCode.software.code));
@@ -181,7 +187,8 @@ void main() {
 ''');
 
       // When: Running fix command
-      final result = await commandService.run([TurboCommandType.dartFix.argument]);
+      final result =
+          await commandService.run([TurboCommandType.dartFix.argument]);
 
       // Then: Command should fail
       expect(result, equals(ExitCode.software.code));

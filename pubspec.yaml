@@ -1,10 +1,11 @@
 name: ultra_wide_turbo_cli
 description: A command-line tool for managing Ultra Wide Turbo development workflows. Features auto-updates, workspace management, and comprehensive documentation.
-version: 0.1.5
+version: 0.1.6
 repository: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli
 homepage: https://ultrawideturbodev.com
 documentation: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli/tree/main/turbo_docs
 issue_tracker: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli/issues
+publish_to: https://pub.dev
 topics:
   - cli
   - development
@@ -27,7 +28,7 @@ dependencies:
   path: ^1.9.1
   pub_updater: ^0.5.0
   json_annotation: ^4.9.0
-  turbo_response: ^0.2.3
+  turbo_response: ^0.2.4
 
 dev_dependencies:
   json_serializable: ^6.9.2

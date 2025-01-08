@@ -39,7 +39,8 @@ class LocalStorageDto extends LocalStorageValue<LocalStorageDto> {
   final Set<String> tags;
 
   static const fromJsonFactory = _$LocalStorageDtoFromJson;
-  factory LocalStorageDto.fromJson(Map<String, dynamic> json) => _$LocalStorageDtoFromJson(json);
+  factory LocalStorageDto.fromJson(Map<String, dynamic> json) =>
+      _$LocalStorageDtoFromJson(json);
   static const toJsonFactory = _$LocalStorageDtoToJson;
   Map<String, dynamic> toJson() => _$LocalStorageDtoToJson(this);
 

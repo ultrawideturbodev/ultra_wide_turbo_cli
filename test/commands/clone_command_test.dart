@@ -86,9 +86,13 @@ void main() {
       expect(await File(path.join(targetDir, 'test.md')).exists(), isTrue);
       expect(await File(path.join(targetDir, 'normal.txt')).exists(), isTrue);
       expect(
-          await Directory(path.join(targetDir, 'test_dir')).exists(), isTrue);
-      expect(await File(path.join(targetDir, 'test_dir', 'file.txt')).exists(),
-          isTrue);
+        await Directory(path.join(targetDir, 'test_dir')).exists(),
+        isTrue,
+      );
+      expect(
+        await File(path.join(targetDir, 'test_dir', 'file.txt')).exists(),
+        isTrue,
+      );
 
       // Verify content was preserved
       expect(
@@ -132,7 +136,8 @@ void main() {
       expect(await existingFile.readAsString(), equals('existing content'));
 
       log.success(
-          'TEST PASSED: fails when cloning to existing directory without force flag');
+        'TEST PASSED: fails when cloning to existing directory without force flag',
+      );
     });
 
     test('succeeds when cloning to existing directory with force flag',
@@ -156,15 +161,20 @@ void main() {
       expect(result, equals(ExitCode.success.code));
 
       // And: Original content should be replaced with cloned content
-      expect(await File(path.join(targetDir, 'existing_file.txt')).exists(),
-          isFalse);
+      expect(
+        await File(path.join(targetDir, 'existing_file.txt')).exists(),
+        isFalse,
+      );
       expect(await File(path.join(targetDir, 'test.md')).exists(), isTrue);
       expect(await File(path.join(targetDir, 'normal.txt')).exists(), isTrue);
       expect(
-          await Directory(path.join(targetDir, 'test_dir')).exists(), isTrue);
+        await Directory(path.join(targetDir, 'test_dir')).exists(),
+        isTrue,
+      );
 
       log.success(
-          'TEST PASSED: succeeds when cloning to existing directory with force flag');
+        'TEST PASSED: succeeds when cloning to existing directory with force flag',
+      );
     });
 
     test('fails with insufficient permissions', () async {

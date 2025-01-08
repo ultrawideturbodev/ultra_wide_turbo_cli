@@ -3,8 +3,8 @@
 ## 0.1.6
 
 ### Changed
-- Switched to MIT License for better open source compatibility
-- Updated documentation to reflect new license terms
+- Switched to GNU License
+- Updated documentation to reflect GNU license terms
 
 ## 0.1.5
 

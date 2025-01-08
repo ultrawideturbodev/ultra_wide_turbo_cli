@@ -67,8 +67,7 @@ environment:
       Directory.current = deepDir;
 
       // Run fix command
-      final result =
-          await commandService.run([TurboCommandType.dartFix.argument]);
+      final result = await commandService.run([TurboCommandType.fix.argument]);
 
       // Should succeed
       expect(result, equals(ExitCode.success.code));
@@ -106,8 +105,7 @@ environment:
       Directory.current = testDir;
 
       // Run fix command
-      final result =
-          await commandService.run([TurboCommandType.dartFix.argument]);
+      final result = await commandService.run([TurboCommandType.fix.argument]);
 
       // Should fail
       expect(result, equals(ExitCode.software.code));
@@ -139,8 +137,7 @@ environment:
       Directory.current = tempDir;
 
       // Run fix command
-      final result =
-          await commandService.run([TurboCommandType.dartFix.argument]);
+      final result = await commandService.run([TurboCommandType.fix.argument]);
 
       // Should fail
       expect(result, equals(ExitCode.software.code));
@@ -155,7 +152,8 @@ environment:
       );
 
       log.success(
-          'TEST PASSED: fails when pubspec.yaml found but no lib or test directories');
+        'TEST PASSED: fails when pubspec.yaml found but no lib or test directories',
+      );
     });
   });
 }

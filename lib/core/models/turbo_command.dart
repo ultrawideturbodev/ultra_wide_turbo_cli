@@ -35,7 +35,7 @@ class TurboCommand extends Command<int> with TurboLogger {
   @override
   Future<int> run() async {
     switch (_type) {
-      case TurboCommandType.dartFix:
+      case TurboCommandType.fix:
         // Find project root by looking for pubspec.yaml
         var currentDir = Directory.current;
         var foundRoot = false;
@@ -56,7 +56,8 @@ class TurboCommand extends Command<int> with TurboLogger {
         if (!await Directory('${currentDir.path}/lib').exists() &&
             !await Directory('${currentDir.path}/test').exists()) {
           log.err(
-              'Invalid directory structure: neither lib/ nor test/ directory exists');
+            'Invalid directory structure: neither lib/ nor test/ directory exists',
+          );
           return ExitCode.software.code;
         }
 

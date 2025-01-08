@@ -11,7 +11,7 @@ enum TurboFlagType {
 
   List<String> bashCommands({required TurboCommandType source}) {
     switch (source) {
-      case TurboCommandType.dartFix:
+      case TurboCommandType.fix:
         return [
           'dart clean && dart pub get',
           'dart pub run build_runner build --delete-conflicting-outputs',

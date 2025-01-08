@@ -6,12 +6,6 @@
 build/
 .dart_tool/
 
-# Workspace files
-ultra_wide_turbo_workspace/
-
-# Documentation
-turbo_docs/
-
 # Lock files
 pubspec.lock
 

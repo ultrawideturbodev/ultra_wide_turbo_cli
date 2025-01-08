@@ -21,8 +21,11 @@ Future<void> main(List<String> args) async {
     );
 
     if (shouldUpdate) {
-      await updateService.update();
-      return;
+      final updateResult = await updateService.update();
+      // Only exit if update was successful, otherwise continue with command
+      if (updateResult.when(success: (_) => true, fail: (_) => false)) {
+        exit(ExitCode.success.code);
+      }
     }
 
     final exitCode = await turboCommandService.run(args);

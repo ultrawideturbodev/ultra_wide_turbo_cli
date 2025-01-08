@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4
+
+### Fixed
+- Continue with original command after successful update
+- Only exit after update if it was successful
+
 ## 0.1.3
 
 ### Fixed

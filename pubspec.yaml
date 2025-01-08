@@ -1,6 +1,6 @@
 name: ultra_wide_turbo_cli
 description: A command-line tool for managing Ultra Wide Turbo development workflows.
-version: 0.1.2
+version: 0.1.3
 repository: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli
 
 executables:

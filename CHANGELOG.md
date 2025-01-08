@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.3
+
+### Fixed
+- Include workspace template and documentation in package
+
 ## 0.1.2
 
 ### Added

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+### Added
+- Verified publisher status
+- Updated package metadata
+
 ## 0.1.4
 
 ### Fixed

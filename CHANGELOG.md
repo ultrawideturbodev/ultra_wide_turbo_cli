@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.11
+
+### Fixed
+- Fixed version constant to prevent update loop
+
 ## 0.1.10
 
 ### Fixed

@@ -4,6 +4,9 @@ A command-line tool for managing Ultra Wide Turbo development workflows.
 
 ## Features
 
+- **Auto Updates**
+  - Automatic version checking on startup
+  - Seamless updates to the latest version
 - **Code Maintenance**
   - Run dart fix and format on lib/ and test/
   - Run build_runner build with safe options
@@ -23,6 +26,13 @@ dart pub global activate ultra_wide_turbo_cli
 ```bash
 turbo <command> [arguments]
 ```
+
+### Auto Updates
+
+The CLI automatically checks for updates on startup. When a new version is available, it will:
+1. Notify you about the new version
+2. Automatically update to the latest version
+3. Restart with the new version
 
 ### Code Maintenance Commands
 

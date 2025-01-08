@@ -3,6 +3,8 @@
 ## 0.1.2
 
 ### Added
+- Auto-update feature that checks for new versions on startup
+- Automatic update process when new version is available
 - Comprehensive Dart documentation for all services
 - Code examples in documentation
 - Detailed parameter and return value descriptions

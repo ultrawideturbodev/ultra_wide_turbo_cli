@@ -32,8 +32,7 @@ class WorkspaceService with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static WorkspaceService get locate => GetIt.I.get();
-  static void registerLazySingleton() =>
-      GetIt.I.registerLazySingleton(WorkspaceService._);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(WorkspaceService._);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -72,19 +71,6 @@ class WorkspaceService with TurboLogger {
       final directory = Directory(targetDir);
       final exists = await directory.exists();
 
-      if (exists && !force) {
-        log.err('Directory already exists. Use --force to overwrite.');
-        return const TurboResponse.emptyFail();
-      }
-
-      if (exists && force) {
-        log.info('Removing existing directory...');
-        await directory.delete(recursive: true);
-      }
-
-      // Create the directory
-      await directory.create(recursive: true);
-
       // Get the source directory (ultra_wide_turbo_workspace)
       final sourceDir = path.join(
         Directory.current.path,
@@ -96,13 +82,23 @@ class WorkspaceService with TurboLogger {
         return const TurboResponse.emptyFail();
       }
 
+      // Check for existing files before proceeding
+      if (exists) {
+        final hasConflicts = await _checkForConflicts(sourceDir, targetDir);
+        if (hasConflicts && !force) {
+          log.err('Target directory contains existing files. Use --force to overwrite.');
+          return const TurboResponse.emptyFail();
+        }
+      } else {
+        await directory.create(recursive: true);
+      }
+
       log.info('Copying workspace files...');
 
       // Copy all files
       await for (final entity in Directory(sourceDir).list()) {
         final basename = path.basename(entity.path);
-        final targetBasename =
-            basename.startsWith('_') ? basename.substring(1) : basename;
+        final targetBasename = basename.startsWith('_') ? basename.substring(1) : basename;
         final targetPath = path.join(targetDir, targetBasename);
 
         if (entity is File) {
@@ -126,20 +122,40 @@ class WorkspaceService with TurboLogger {
     }
   }
 
-  // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
-  // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
+  /// Checks if there are any file conflicts in the target directory.
+  Future<bool> _checkForConflicts(String sourceDir, String targetDir) async {
+    try {
+      await for (final entity in Directory(sourceDir).list(recursive: true)) {
+        if (entity is! File) continue;
 
-  /// Recursively copies a directory while renaming files.
-  ///
-  /// Copies all files and subdirectories from [source] to [target].
-  /// Removes leading underscores from file names during the copy.
+        final relativePath = path.relative(entity.path, from: sourceDir);
+        final targetPath = path.join(
+          targetDir,
+          relativePath.startsWith('_') ? relativePath.substring(1) : relativePath,
+        );
+
+        if (await File(targetPath).exists()) {
+          return true;
+        }
+      }
+      return false;
+    } catch (e) {
+      // If we can't check, assume there are conflicts to be safe
+      return true;
+    }
+  }
+
+  /// Copies a directory and its contents recursively.
   /// Logs when files are renamed.
   Future<void> _copyDirectory(String source, String target) async {
-    await Directory(target).create(recursive: true);
+    final targetDir = Directory(target);
+    if (!await targetDir.exists()) {
+      await targetDir.create(recursive: true);
+    }
+
     await for (final entity in Directory(source).list(recursive: false)) {
       final basename = path.basename(entity.path);
-      final targetBasename =
-          basename.startsWith('_') ? basename.substring(1) : basename;
+      final targetBasename = basename.startsWith('_') ? basename.substring(1) : basename;
       final targetPath = path.join(target, targetBasename);
 
       if (entity is Directory) {
@@ -152,6 +168,9 @@ class WorkspaceService with TurboLogger {
       }
     }
   }
+
+  // 🪄 FETCHERS ------------------------------------------------------------------------------ \\
+  // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
 
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 }

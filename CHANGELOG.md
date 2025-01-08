@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.8 - 2024-01-08
+
+### Changed
+- Made workspace clone command safer by removing deletion operations
+- Added proper file existence checks
+- Improved error handling for existing files
+- Added force flag support for overwriting
+
+## 0.1.7
+
+### Added
+- Verified publisher status
+- Updated package metadata
+
 ## 0.1.6
 
 ### Changed

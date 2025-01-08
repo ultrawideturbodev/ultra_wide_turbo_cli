@@ -1,5 +1,3 @@
-import 'package:pub_updater/pub_updater.dart';
-
 class UpdateService {
   UpdateService._();
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\

@@ -10,8 +10,7 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
 import 'package:ultra_wide_turbo_cli/core/annotations/called_by_mutex.dart';
 import 'package:ultra_wide_turbo_cli/core/constants/k_values.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/local_storage_dto.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/tag_dto.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/tag_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_adapters.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_box.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_auth.dart';
@@ -318,23 +317,23 @@ class LocalStorageService extends Initialisable with TurboLogger {
 
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  Future<TurboResponse> addTag({required TagDto tag}) async => await _updateLocalStorage(
+  Future<TurboResponse> addTag({required TurboTagDto turboTag}) async => await _updateLocalStorage(
         (current) => current.copyWith(
-          tags: (current) => current..add(tag),
+          turboTags: (current) => current..add(turboTag),
         ),
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeTag({required TagDto tag}) async => await _updateLocalStorage(
+  Future<TurboResponse> removeTag({required TurboTagDto turboTag}) async => await _updateLocalStorage(
         (current) => current.copyWith(
-          tags: (current) => current..remove(tag),
+          turboTags: (current) => current..remove(turboTag),
         ),
         userId: gUserId,
       );
 
   Future<TurboResponse> clearTags() async => await _updateLocalStorage(
         (current) => current.copyWith(
-          tags: (current) => current..clear(),
+          turboTags: (current) => current..clear(),
         ),
         userId: gUserId,
       );

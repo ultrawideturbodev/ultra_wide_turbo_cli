@@ -3,11 +3,11 @@ import 'dart:convert';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
 
-part 'tag_dto.g.dart';
+part 'turbo_tag_dto.g.dart';
 
 @JsonSerializable(includeIfNull: true, explicitToJson: true)
-class TagDto extends LocalStorageValue {
-  TagDto({
+class TurboTagDto extends LocalStorageValue {
+  TurboTagDto({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
@@ -21,15 +21,15 @@ class TagDto extends LocalStorageValue {
   final DateTime updatedAt;
   final String createdBy;
 
-  static const fromJsonFactory = _$TagDtoFromJson;
-  factory TagDto.fromJson(Map<String, dynamic> json) =>
-      _$TagDtoFromJson(json);
-  static const toJsonFactory = _$TagDtoToJson;
-  Map<String, dynamic> toJson() => _$TagDtoToJson(this);
+  static const fromJsonFactory = _$TurboTagDtoFromJson;
+  factory TurboTagDto.fromJson(Map<String, dynamic> json) =>
+      _$TurboTagDtoFromJson(json);
+  static const toJsonFactory = _$TurboTagDtoToJson;
+  Map<String, dynamic> toJson() => _$TurboTagDtoToJson(this);
 
   @override
   String toString() {
-    return 'TagDto{'
+    return 'TurboTagDto{'
         'id: $id, '
         'createdAt: $createdAt, '
         'updatedAt: $updatedAt, '

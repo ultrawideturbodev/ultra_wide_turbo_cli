@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tag_dto.dart';
+part of 'turbo_tag_dto.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TagDto _$TagDtoFromJson(Map<String, dynamic> json) => TagDto(
+TurboTagDto _$TurboTagDtoFromJson(Map<String, dynamic> json) => TurboTagDto(
       id: json['id'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
@@ -14,7 +14,8 @@ TagDto _$TagDtoFromJson(Map<String, dynamic> json) => TagDto(
       parentId: json['parentId'] as String?,
     );
 
-Map<String, dynamic> _$TagDtoToJson(TagDto instance) => <String, dynamic>{
+Map<String, dynamic> _$TurboTagDtoToJson(TurboTagDto instance) =>
+    <String, dynamic>{
       'parentId': instance.parentId,
       'id': instance.id,
       'createdAt': instance.createdAt.toIso8601String(),

@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/tag_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_date_times.dart';
 import 'package:ultra_wide_turbo_cli/core/typedefs/update_current_def.dart';
 
@@ -15,7 +15,7 @@ class LocalStorageDto extends LocalStorageValue {
     required this.createdAt,
     required this.updatedAt,
     required this.createdBy,
-    this.tags = const {},
+    this.turboTags = const {},
   });
 
   factory LocalStorageDto.defaultDto({required String userId}) {
@@ -25,7 +25,7 @@ class LocalStorageDto extends LocalStorageValue {
       createdAt: now,
       updatedAt: now,
       createdBy: userId,
-      tags: {},
+      turboTags: {},
     );
   }
 
@@ -33,7 +33,7 @@ class LocalStorageDto extends LocalStorageValue {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String createdBy;
-  final Set<TagDto> tags;
+  final Set<TurboTagDto> turboTags;
 
   static const fromJsonFactory = _$LocalStorageDtoFromJson;
   factory LocalStorageDto.fromJson(Map<String, dynamic> json) => _$LocalStorageDtoFromJson(json);
@@ -47,7 +47,7 @@ class LocalStorageDto extends LocalStorageValue {
         'createdAt: $createdAt, '
         'updatedAt: $updatedAt, '
         'createdBy: $createdBy, '
-        'tags: $tags'
+        'turboTags: $turboTags'
         '}';
   }
 
@@ -55,13 +55,13 @@ class LocalStorageDto extends LocalStorageValue {
   String get toJsonString => jsonEncode(toJson());
 
   LocalStorageDto copyWith({
-    UpdateCurrentDef<Set<TagDto>>? tags,
+    UpdateCurrentDef<Set<TurboTagDto>>? turboTags,
   }) =>
       LocalStorageDto(
         id: id,
         createdAt: createdAt,
         updatedAt: gNow,
         createdBy: createdBy,
-        tags: tags?.call(this.tags) ?? this.tags,
+        turboTags: turboTags?.call(this.turboTags) ?? this.turboTags,
       );
 }

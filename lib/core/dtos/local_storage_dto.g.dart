@@ -12,7 +12,9 @@ LocalStorageDto _$LocalStorageDtoFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       createdBy: json['createdBy'] as String,
-      tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toSet() ??
+      turboTags: (json['turboTags'] as List<dynamic>?)
+              ?.map((e) => TurboTagDto.fromJson(e as Map<String, dynamic>))
+              .toSet() ??
           const {},
     );
 
@@ -22,5 +24,5 @@ Map<String, dynamic> _$LocalStorageDtoToJson(LocalStorageDto instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'createdBy': instance.createdBy,
-      'tags': instance.tags.toList(),
+      'turboTags': instance.turboTags.map((e) => e.toJson()).toList(),
     };

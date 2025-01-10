@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:meta/meta.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:pub_updater/pub_updater.dart';
 import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
@@ -71,9 +72,15 @@ class UpdateService with TurboLogger {
     try {
       log.detail('Checking for updates...');
       final currentVersion = await getCurrentVersion();
-      final latestVersion =
-          await _pubUpdater.getLatestVersion(Environment.packageName);
-      final shouldUpdate = latestVersion != currentVersion;
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+
+      // Parse versions to compare them properly
+      final current = Version.parse(currentVersion);
+      final latest = Version.parse(latestVersion);
+
+      // Only update if latest version is higher than current
+      final shouldUpdate = latest > current;
+
       log.detail(
         shouldUpdate
             ? 'Update available: $currentVersion -> $latestVersion'
@@ -120,10 +127,14 @@ class UpdateService with TurboLogger {
       final currentVersion = await getCurrentVersion();
       log.info('Current version: $currentVersion');
 
-      final latestVersion =
-          await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
 
-      if (latestVersion == currentVersion) {
+      // Parse versions to compare them properly
+      final current = Version.parse(currentVersion);
+      final latest = Version.parse(latestVersion);
+
+      // Only update if latest version is higher than current
+      if (latest <= current) {
         log.success('Already on latest version!');
         return const TurboResponse.successAsBool();
       }

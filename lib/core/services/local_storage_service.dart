@@ -10,6 +10,8 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
 import 'package:ultra_wide_turbo_cli/core/annotations/called_by_mutex.dart';
 import 'package:ultra_wide_turbo_cli/core/constants/k_values.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/local_storage_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/turbo_relation_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/turbo_source_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_adapters.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_box.dart';
@@ -324,7 +326,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeTag({required TurboTagDto turboTag}) async => await _updateLocalStorage(
+  Future<TurboResponse> removeTag({required TurboTagDto turboTag}) async =>
+      await _updateLocalStorage(
         (current) => current.copyWith(
           turboTags: (current) => current..remove(turboTag),
         ),
@@ -334,6 +337,52 @@ class LocalStorageService extends Initialisable with TurboLogger {
   Future<TurboResponse> clearTags() async => await _updateLocalStorage(
         (current) => current.copyWith(
           turboTags: (current) => current..clear(),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> addSource({required TurboSourceDto turboSource}) async =>
+      await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboSources: (current) => current..add(turboSource),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> removeSource({required TurboSourceDto turboSource}) async =>
+      await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboSources: (current) => current..remove(turboSource),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> clearSources() async => await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboSources: (current) => current..clear(),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> addRelation({required TurboRelationDto turboRelation}) async =>
+      await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboRelations: (current) => current..add(turboRelation),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> removeRelation({required TurboRelationDto turboRelation}) async =>
+      await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboRelations: (current) => current..remove(turboRelation),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> clearRelations() async => await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboRelations: (current) => current..clear(),
         ),
         userId: gUserId,
       );

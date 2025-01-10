@@ -32,8 +32,7 @@ class ArchiveService with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static ArchiveService get locate => GetIt.I.get();
-  static void registerLazySingleton() =>
-      GetIt.I.registerLazySingleton(ArchiveService._);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(ArchiveService._);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -75,7 +74,7 @@ class ArchiveService with TurboLogger {
 
       if (exists && !force) {
         log.err('Directory already exists. Use --force to overwrite.');
-        return const TurboResponse.emptyFail();
+        return const TurboResponse.failAsBool();
       }
 
       if (exists && force) {
@@ -88,7 +87,7 @@ class ArchiveService with TurboLogger {
 
       if (!await sourceDir.exists()) {
         log.err('Source directory not found at: ${sourceDir.path}');
-        return const TurboResponse.emptyFail();
+        return const TurboResponse.failAsBool();
       }
 
       log.info('Archiving workspace files...');
@@ -103,7 +102,7 @@ class ArchiveService with TurboLogger {
             path.isWithin(directory.absolute.path, entity.path) ||
             path.isWithin(entity.path, directory.absolute.path)) {
           log.err('Cannot archive to a subdirectory of the source directory.');
-          return const TurboResponse.emptyFail();
+          return const TurboResponse.failAsBool();
         }
 
         if (entity is File) {
@@ -117,11 +116,11 @@ class ArchiveService with TurboLogger {
       final targetFiles = await directory.list().toList();
       if (targetFiles.isEmpty) {
         log.err('No files were copied to the target directory.');
-        return const TurboResponse.emptyFail();
+        return const TurboResponse.failAsBool();
       }
 
       log.success('Workspace archived successfully to: $targetDir');
-      return const TurboResponse.emptySuccess();
+      return const TurboResponse.successAsBool();
     } catch (error) {
       log.err('Failed to archive workspace: $error');
       return TurboResponse.fail(
@@ -152,8 +151,7 @@ class ArchiveService with TurboLogger {
 
     await targetDir.create(recursive: true);
     await for (final entity in sourceDir.list(recursive: false)) {
-      final targetPath =
-          path.join(targetDir.absolute.path, path.basename(entity.path));
+      final targetPath = path.join(targetDir.absolute.path, path.basename(entity.path));
 
       if (entity is Directory) {
         await _copyDirectory(entity.path, targetPath);

@@ -5,13 +5,13 @@ import 'package:args/command_runner.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
-import 'package:ultra_wide_turbo_cli/core/constants/k_version.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/models/turbo_command.dart';
+import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 
 /// Handles CLI command registration, parsing, and execution.
 ///
@@ -83,6 +83,11 @@ class CommandService extends CommandRunner<int> with TurboLogger {
   @override
   Future<int> run(Iterable<String> args) async {
     try {
+      if (args.contains('--version')) {
+        final version = await UpdateService.locate.getCurrentVersion();
+        log.info(version);
+        return ExitCode.success.code;
+      }
       final argResults = parse(args);
       return await runCommand(argResults) ?? ExitCode.success.code;
     } on FormatException catch (e) {
@@ -97,6 +102,9 @@ class CommandService extends CommandRunner<int> with TurboLogger {
         ..info('')
         ..info(e.usage);
       return ExitCode.usage.code;
+    } catch (error) {
+      log.err('$error');
+      return ExitCode.software.code;
     }
   }
 
@@ -112,9 +120,9 @@ class CommandService extends CommandRunner<int> with TurboLogger {
           log.level = Level.verbose;
           break;
         case TurboFlagType.version:
-          log.info(packageVersion);
+          final version = await UpdateService.locate.getCurrentVersion();
+          log.info(version);
           return ExitCode.success.code;
-        case TurboFlagType.clean:
         case TurboFlagType.force:
           break;
       }

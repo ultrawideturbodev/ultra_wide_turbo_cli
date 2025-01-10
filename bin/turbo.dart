@@ -12,19 +12,22 @@ Future<void> main(List<String> args) async {
     final turboCommandService = CommandService.locate;
     await turboCommandService.isReady;
 
-    // Check for updates
-    final updateService = UpdateService.locate;
-    final updateCheck = await updateService.checkForUpdates();
-    final shouldUpdate = updateCheck.when(
-      success: (response) => response.result,
-      fail: (_) => false,
-    );
+    // Skip update check if we're already running an update command
+    if (!args.contains('update')) {
+      // Check for updates
+      final updateService = UpdateService.locate;
+      final updateCheck = await updateService.checkForUpdates();
+      final shouldUpdate = updateCheck.when(
+        success: (response) => response.result,
+        fail: (_) => false,
+      );
 
-    if (shouldUpdate) {
-      final updateResult = await updateService.update();
-      // Only exit if update was successful, otherwise continue with command
-      if (updateResult.when(success: (_) => true, fail: (_) => false)) {
-        exit(ExitCode.success.code);
+      if (shouldUpdate) {
+        final updateResult = await updateService.update();
+        // Only exit if update was successful, otherwise continue with command
+        if (updateResult.when(success: (_) => true, fail: (_) => false)) {
+          exit(ExitCode.success.code);
+        }
       }
     }
 

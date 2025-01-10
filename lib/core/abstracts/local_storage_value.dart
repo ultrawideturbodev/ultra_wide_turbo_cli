@@ -1,3 +1,3 @@
-abstract class LocalStorageValue<T extends Object> {
+abstract class LocalStorageValue {
   String get toJsonString;
 }

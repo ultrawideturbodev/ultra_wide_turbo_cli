@@ -27,7 +27,8 @@ dependencies:
   path: ^1.9.1
   pub_updater: ^0.5.0
   json_annotation: ^4.9.0
-  turbo_response: ^0.2.4
+  turbo_response: ^0.2.6
+  yaml: ^3.1.2
 
 dev_dependencies:
   json_serializable: ^6.9.2

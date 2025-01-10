@@ -91,7 +91,7 @@ class ScriptService with TurboLogger {
         throw Exception('Script failed with exit code $exitCode');
       }
 
-      return const TurboResponse.emptySuccess();
+      return const TurboResponse.successAsBool();
     } catch (error) {
       // Clean up subscriptions in case of error
       await Future.wait([

@@ -32,7 +32,8 @@ class WorkspaceService with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static WorkspaceService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(WorkspaceService._);
+  static void registerLazySingleton() =>
+      GetIt.I.registerLazySingleton(WorkspaceService._);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -78,15 +79,16 @@ class WorkspaceService with TurboLogger {
 
       if (!await Directory(sourceDir).exists()) {
         log.err('Source workspace directory not found at: $sourceDir');
-        return const TurboResponse.emptyFail();
+        return const TurboResponse.failAsBool();
       }
 
       // Check for existing files before proceeding
       if (exists) {
         final hasConflicts = await _checkForConflicts(sourceDir, targetDir);
         if (hasConflicts && !force) {
-          log.err('Target directory contains existing files. Use --force to overwrite.');
-          return const TurboResponse.emptyFail();
+          log.err(
+              'Target directory contains existing files. Use --force to overwrite.');
+          return const TurboResponse.failAsBool();
         }
       } else {
         await directory.create(recursive: true);
@@ -98,7 +100,7 @@ class WorkspaceService with TurboLogger {
       await _copyDirectory(sourceDir, targetDir);
 
       log.success('Workspace cloned successfully to: $targetDir');
-      return const TurboResponse.emptySuccess();
+      return const TurboResponse.successAsBool();
     } catch (error) {
       log.err('Failed to clone workspace: $error');
       return TurboResponse.fail(

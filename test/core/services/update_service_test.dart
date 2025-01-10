@@ -1,20 +1,19 @@
 import 'dart:io' show ProcessResult;
 
+import 'package:get_it/get_it.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pub_updater/pub_updater.dart';
 import 'package:test/test.dart';
-import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
-import 'package:ultra_wide_turbo_cli/core/constants/k_version.dart';
 import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
-import 'package:get_it/get_it.dart';
 
 class MockPubUpdater extends Mock implements PubUpdater {}
 
 void main() {
   late UpdateService service;
   late MockPubUpdater mockPubUpdater;
+  const testVersion = '0.1.0';
 
   setUp(() async {
     // Initialize app
@@ -23,6 +22,10 @@ void main() {
     mockPubUpdater = MockPubUpdater();
     service = UpdateService.locate;
     service.pubUpdater = mockPubUpdater;
+
+    // Mock getCurrentVersion to return test version
+    when(() => service.getCurrentVersion())
+        .thenAnswer((_) async => testVersion);
   });
 
   tearDown(() {
@@ -34,15 +37,17 @@ void main() {
       // Arrange
       when(
         () => mockPubUpdater.getLatestVersion(Environment.packageName),
-      ).thenAnswer((_) async => packageVersion);
+      ).thenAnswer((_) async => testVersion);
 
       // Act
       final result = await service.manualUpdate();
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), true);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verifyNever(() => mockPubUpdater.update(packageName: Environment.packageName));
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verifyNever(
+          () => mockPubUpdater.update(packageName: Environment.packageName));
     });
 
     test('updates successfully when newer version available', () async {
@@ -60,8 +65,10 @@ void main() {
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), true);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verify(() => mockPubUpdater.update(packageName: Environment.packageName)).called(1);
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verify(() => mockPubUpdater.update(packageName: Environment.packageName))
+          .called(1);
     });
 
     test('returns failure when update fails', () async {
@@ -79,8 +86,10 @@ void main() {
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), false);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verify(() => mockPubUpdater.update(packageName: Environment.packageName)).called(1);
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verify(() => mockPubUpdater.update(packageName: Environment.packageName))
+          .called(1);
     });
 
     test('returns failure when version check fails', () async {
@@ -94,8 +103,10 @@ void main() {
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), false);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verifyNever(() => mockPubUpdater.update(packageName: Environment.packageName));
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verifyNever(
+          () => mockPubUpdater.update(packageName: Environment.packageName));
     });
   });
 }

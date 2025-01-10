@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as path;
 import 'package:test/test.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
@@ -33,14 +32,17 @@ void main() {
     await AppSetup.initialise();
 
     // Get real workspace directory
-    realWorkspaceDir = Directory(path.join(
-      Directory.current.path,
-      'ultra_wide_turbo_workspace',
-    ));
+    realWorkspaceDir = Directory(
+      path.join(
+        Directory.current.path,
+        'ultra_wide_turbo_workspace',
+      ),
+    );
 
     // Create a fresh test directory
     tempDir = await Directory.systemTemp.createTemp('test_workspace');
-    sourceDir = Directory(path.join(tempDir.path, 'ultra_wide_turbo_workspace'));
+    sourceDir =
+        Directory(path.join(tempDir.path, 'ultra_wide_turbo_workspace'));
 
     // Copy real workspace to test directory
     await _copyDirectory(realWorkspaceDir, sourceDir);
@@ -128,20 +130,29 @@ void main() {
         final prompts = Directory(path.join(targetDir, 'prompts'));
         final knowledge = Directory(path.join(targetDir, 'knowledge'));
 
-        expect(await processes.exists(), true, reason: 'processes directory should exist');
-        expect(await protocols.exists(), true, reason: 'protocols directory should exist');
-        expect(await prompts.exists(), true, reason: 'prompts directory should exist');
-        expect(await knowledge.exists(), true, reason: 'knowledge directory should exist');
+        expect(await processes.exists(), true,
+            reason: 'processes directory should exist');
+        expect(await protocols.exists(), true,
+            reason: 'protocols directory should exist');
+        expect(await prompts.exists(), true,
+            reason: 'prompts directory should exist');
+        expect(await knowledge.exists(), true,
+            reason: 'knowledge directory should exist');
 
         // Verify some key files exist
-        final taskProcess = File(path.join(targetDir, 'processes', '_the-task-process.md'));
-        final stickToProcess =
-            File(path.join(targetDir, 'protocols', '_plx-stick-to-the-process.md'));
-        final requirements = File(path.join(targetDir, '_your-requirements.md'));
+        final taskProcess =
+            File(path.join(targetDir, 'processes', '_the-task-process.md'));
+        final stickToProcess = File(
+            path.join(targetDir, 'protocols', '_plx-stick-to-the-process.md'));
+        final requirements =
+            File(path.join(targetDir, '_your-requirements.md'));
 
-        expect(await taskProcess.exists(), true, reason: 'task process file should exist');
-        expect(await stickToProcess.exists(), true, reason: 'stick to process file should exist');
-        expect(await requirements.exists(), true, reason: 'requirements file should exist');
+        expect(await taskProcess.exists(), true,
+            reason: 'task process file should exist');
+        expect(await stickToProcess.exists(), true,
+            reason: 'stick to process file should exist');
+        expect(await requirements.exists(), true,
+            reason: 'requirements file should exist');
       },
       fail: (f) => fail('Should not fail: ${f.message}'),
     );
@@ -166,33 +177,44 @@ void main() {
         final prompts = Directory(path.join(targetDir, 'prompts'));
         final knowledge = Directory(path.join(targetDir, 'knowledge'));
 
-        expect(await processes.exists(), true, reason: 'processes directory should exist');
-        expect(await protocols.exists(), true, reason: 'protocols directory should exist');
-        expect(await prompts.exists(), true, reason: 'prompts directory should exist');
-        expect(await knowledge.exists(), true, reason: 'knowledge directory should exist');
+        expect(await processes.exists(), true,
+            reason: 'processes directory should exist');
+        expect(await protocols.exists(), true,
+            reason: 'protocols directory should exist');
+        expect(await prompts.exists(), true,
+            reason: 'prompts directory should exist');
+        expect(await knowledge.exists(), true,
+            reason: 'knowledge directory should exist');
 
         // Verify some key files exist
-        final taskProcess = File(path.join(targetDir, 'processes', '_the-task-process.md'));
-        final stickToProcess =
-            File(path.join(targetDir, 'protocols', '_plx-stick-to-the-process.md'));
-        final requirements = File(path.join(targetDir, '_your-requirements.md'));
+        final taskProcess =
+            File(path.join(targetDir, 'processes', '_the-task-process.md'));
+        final stickToProcess = File(
+            path.join(targetDir, 'protocols', '_plx-stick-to-the-process.md'));
+        final requirements =
+            File(path.join(targetDir, '_your-requirements.md'));
 
-        expect(await taskProcess.exists(), true, reason: 'task process file should exist');
-        expect(await stickToProcess.exists(), true, reason: 'stick to process file should exist');
-        expect(await requirements.exists(), true, reason: 'requirements file should exist');
+        expect(await taskProcess.exists(), true,
+            reason: 'task process file should exist');
+        expect(await stickToProcess.exists(), true,
+            reason: 'stick to process file should exist');
+        expect(await requirements.exists(), true,
+            reason: 'requirements file should exist');
       },
       fail: (f) => fail('Should not fail: ${f.message}'),
     );
   });
 
-  test('turbo clone workspace shows error message if documents already exist and no force is used',
+  test(
+      'turbo clone workspace shows error message if documents already exist and no force is used',
       () async {
     final service = WorkspaceService.locate;
     final targetDir = path.join(tempDir.path, 'target');
 
     // Create existing file
     await Directory(targetDir).create(recursive: true);
-    await File(path.join(targetDir, '_your-requirements.md')).writeAsString('existing');
+    await File(path.join(targetDir, '_your-requirements.md'))
+        .writeAsString('existing');
 
     // Act
     final result = await service.cloneWorkspace(
@@ -204,20 +226,24 @@ void main() {
     await result.when(
       success: (_) => fail('Should fail when files exist without force'),
       fail: (_) async {
-        final existingFile = File(path.join(targetDir, '_your-requirements.md'));
+        final existingFile =
+            File(path.join(targetDir, '_your-requirements.md'));
         expect(await existingFile.exists(), true);
         expect(await existingFile.readAsString(), 'existing');
       },
     );
   });
 
-  test('turbo clone workspace --force pastes and overwrites all workspace documents', () async {
+  test(
+      'turbo clone workspace --force pastes and overwrites all workspace documents',
+      () async {
     final service = WorkspaceService.locate;
     final targetDir = path.join(tempDir.path, 'target');
 
     // Create existing files
     await Directory(targetDir).create(recursive: true);
-    await File(path.join(targetDir, '_your-requirements.md')).writeAsString('existing');
+    await File(path.join(targetDir, '_your-requirements.md'))
+        .writeAsString('existing');
 
     // Act
     final result = await service.cloneWorkspace(
@@ -234,20 +260,29 @@ void main() {
         final prompts = Directory(path.join(targetDir, 'prompts'));
         final knowledge = Directory(path.join(targetDir, 'knowledge'));
 
-        expect(await processes.exists(), true, reason: 'processes directory should exist');
-        expect(await protocols.exists(), true, reason: 'protocols directory should exist');
-        expect(await prompts.exists(), true, reason: 'prompts directory should exist');
-        expect(await knowledge.exists(), true, reason: 'knowledge directory should exist');
+        expect(await processes.exists(), true,
+            reason: 'processes directory should exist');
+        expect(await protocols.exists(), true,
+            reason: 'protocols directory should exist');
+        expect(await prompts.exists(), true,
+            reason: 'prompts directory should exist');
+        expect(await knowledge.exists(), true,
+            reason: 'knowledge directory should exist');
 
         // Verify some key files exist
-        final taskProcess = File(path.join(targetDir, 'processes', '_the-task-process.md'));
-        final stickToProcess =
-            File(path.join(targetDir, 'protocols', '_plx-stick-to-the-process.md'));
-        final requirements = File(path.join(targetDir, '_your-requirements.md'));
+        final taskProcess =
+            File(path.join(targetDir, 'processes', '_the-task-process.md'));
+        final stickToProcess = File(
+            path.join(targetDir, 'protocols', '_plx-stick-to-the-process.md'));
+        final requirements =
+            File(path.join(targetDir, '_your-requirements.md'));
 
-        expect(await taskProcess.exists(), true, reason: 'task process file should exist');
-        expect(await stickToProcess.exists(), true, reason: 'stick to process file should exist');
-        expect(await requirements.exists(), true, reason: 'requirements file should exist');
+        expect(await taskProcess.exists(), true,
+            reason: 'task process file should exist');
+        expect(await stickToProcess.exists(), true,
+            reason: 'stick to process file should exist');
+        expect(await requirements.exists(), true,
+            reason: 'requirements file should exist');
 
         // Verify content was overwritten
         expect(await requirements.readAsString(), isNot('existing'));
@@ -275,7 +310,8 @@ void main() {
     );
   });
 
-  test('turbo clone workspace uses default path when no target specified', () async {
+  test('turbo clone workspace uses default path when no target specified',
+      () async {
     final service = WorkspaceService.locate;
     final defaultTargetDir = path.join(tempDir.path, 'turbo-workspace');
 
@@ -305,7 +341,8 @@ void main() {
     // Create existing nested structure
     final nestedDir = Directory(path.join(targetDir, 'protocols'));
     await nestedDir.create(recursive: true);
-    await File(path.join(nestedDir.path, '_plx-test.md')).writeAsString('existing');
+    await File(path.join(nestedDir.path, '_plx-test.md'))
+        .writeAsString('existing');
 
     // Act without force
     var result = await service.cloneWorkspace(

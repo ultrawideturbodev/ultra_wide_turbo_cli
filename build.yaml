@@ -2,6 +2,4 @@ targets:
   $default:
     builders:
       build_version:
-        options:
-          output: lib/core/constants/k_version.dart
-          format: const kPackageVersion = '$version'; 
+        enabled: false 

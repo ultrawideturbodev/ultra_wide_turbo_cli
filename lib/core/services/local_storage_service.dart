@@ -10,6 +10,8 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
 import 'package:ultra_wide_turbo_cli/core/annotations/called_by_mutex.dart';
 import 'package:ultra_wide_turbo_cli/core/constants/k_values.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/local_storage_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/tag_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/tag_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_adapters.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_box.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_auth.dart';
@@ -39,8 +41,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static LocalStorageService get locate => GetIt.I.get();
-  static void registerLazySingleton() =>
-      GetIt.I.registerLazySingleton(LocalStorageService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(LocalStorageService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -138,9 +139,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
       hiveBox: HiveBox.localStorageDto,
       userId: userId,
     );
-    return rLocalStorage == null
-        ? null
-        : LocalStorageDto.fromJson(rLocalStorage);
+    return rLocalStorage == null ? null : LocalStorageDto.fromJson(rLocalStorage);
   }
 
   /// Current local storage settings.
@@ -155,8 +154,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     final localStorageDto = _localStorageDto;
     if (localStorageDto.id != userId) {
       final hasLocalStorage = _hasBox(hiveBox: HiveBox.localStorageDto);
-      final localStorageDto =
-          hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
+      final localStorageDto = hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
       if (localStorageDto == null) {
         await _updateLocalStorage(
           (current) => LocalStorageDto.defaultDto(userId: userId),
@@ -194,8 +192,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
     switch (hiveBox) {
       case HiveBox.localStorageDto:
         try {
-          final rLocalStorage =
-              _getBoxContent(hiveBox: hiveBox, userId: userId);
+          final rLocalStorage = _getBoxContent(hiveBox: hiveBox, userId: userId);
           if (rLocalStorage != null) {
             _localStorageDto = LocalStorageDto.fromJson(rLocalStorage);
           }
@@ -214,8 +211,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
   bool _hasBox({required HiveBox hiveBox}) => _boxes.containsKey(hiveBox.id);
 
   /// Gets an opened Hive box, assuming it exists.
-  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) =>
-      _boxes[hiveBox.id] as Box<T>;
+  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) => _boxes[hiveBox.id] as Box<T>;
 
   /// Opens a new Hive box.
   Future<Box<T>> _openBox<T>({required HiveBox hiveBox}) async {
@@ -311,7 +307,7 @@ class LocalStorageService extends Initialisable with TurboLogger {
         value: newValue,
         userId: userId,
       );
-      return const TurboResponse.emptySuccess();
+      return const TurboResponse.successAsBool();
     } catch (error, _) {
       log.err(
         '$error caught while updating local device settings',
@@ -322,16 +318,14 @@ class LocalStorageService extends Initialisable with TurboLogger {
 
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  Future<TurboResponse> addTag({required String tag}) async =>
-      await _updateLocalStorage(
+  Future<TurboResponse> addTag({required TagDto tag}) async => await _updateLocalStorage(
         (current) => current.copyWith(
           tags: (current) => current..add(tag),
         ),
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeTag({required String tag}) async =>
-      await _updateLocalStorage(
+  Future<TurboResponse> removeTag({required TagDto tag}) async => await _updateLocalStorage(
         (current) => current.copyWith(
           tags: (current) => current..remove(tag),
         ),

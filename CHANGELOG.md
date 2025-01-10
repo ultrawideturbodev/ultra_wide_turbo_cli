@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.12
+
+### Added
+- New `turbo tag source` command for linking directories to tags
+  - Tag validation and automatic creation
+  - Source management from current directory
+  - Relation creation and validation
+  - Comprehensive error handling and user feedback
+- Enhanced test coverage with BDD-style tests
+- Improved directory validation in tests
+
 ## 0.1.11
 
 ### Fixed

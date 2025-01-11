@@ -5,7 +5,8 @@ enum TurboCommandType {
   update,
   tag,
   tagSource,
-  tagTarget;
+  tagTarget,
+  clone;
 
   List<String> bashCommands() {
     switch (this) {
@@ -16,6 +17,8 @@ enum TurboCommandType {
       case TurboCommandType.tagSource:
         return [];
       case TurboCommandType.tagTarget:
+        return [];
+      case TurboCommandType.clone:
         return [];
     }
   }
@@ -30,6 +33,8 @@ enum TurboCommandType {
         return 'source';
       case TurboCommandType.tagTarget:
         return 'target';
+      case TurboCommandType.clone:
+        return name;
     }
   }
 
@@ -43,6 +48,8 @@ enum TurboCommandType {
         return 'Link current directory to a tag.';
       case TurboCommandType.tagTarget:
         return 'Link current directory as a target for a tag.';
+      case TurboCommandType.clone:
+        return 'Clone files from all sources associated with a tag to the current directory.';
     }
   }
 
@@ -109,6 +116,30 @@ Common errors:
 - Target already linked: The directory is already linked to this tag
 
 For more information, visit: https://docs.turbo.build/tags''';
+      case TurboCommandType.clone:
+        return '''
+Clone files from all sources associated with a tag to the current directory.
+
+The tag name must:
+- Be between 2 and 50 characters
+- Contain only letters, numbers, hyphens, and underscores
+- Not start or end with a hyphen or underscore
+
+Options:
+  -f, --force    Overwrite existing files
+
+Examples:
+  turbo clone my-project              # Clone files from my-project tag sources
+  turbo clone frontend_v2 --force     # Clone and overwrite existing files
+
+Common errors:
+- Invalid tag name format: Use only allowed characters and follow naming rules
+- Tag not found: The specified tag does not exist
+- No sources found: The tag has no associated source directories
+- Directory not accessible: Ensure you have read permissions
+- Insufficient space: Not enough space to copy files
+
+For more information, visit: https://docs.turbo.build/clone''';
     }
   }
 
@@ -121,6 +152,8 @@ For more information, visit: https://docs.turbo.build/tags''';
       case TurboCommandType.tagSource:
         return [];
       case TurboCommandType.tagTarget:
+        return [];
+      case TurboCommandType.clone:
         return [];
     }
   }
@@ -135,6 +168,8 @@ For more information, visit: https://docs.turbo.build/tags''';
         return [];
       case TurboCommandType.tagTarget:
         return [];
+      case TurboCommandType.clone:
+        return [TurboFlagType.force];
     }
   }
 
@@ -148,6 +183,8 @@ For more information, visit: https://docs.turbo.build/tags''';
         return [];
       case TurboCommandType.tagTarget:
         return [];
+      case TurboCommandType.clone:
+        return [];
     }
   }
 
@@ -160,6 +197,8 @@ For more information, visit: https://docs.turbo.build/tags''';
       case TurboCommandType.tagSource:
         return null;
       case TurboCommandType.tagTarget:
+        return null;
+      case TurboCommandType.clone:
         return null;
     }
   }

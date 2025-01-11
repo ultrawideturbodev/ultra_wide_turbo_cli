@@ -1,13 +1,16 @@
 # Ultra Wide Turbo CLI
 
-A command-line tool for managing Ultra Wide Turbo development workflows.
+A powerful CLI tool for managing and organizing your development workspace.
 
 ## Features
 
-- 🏷️ **Tag Management**: Link directories to tags for easy organization and reference
-  - Tag sources: Link source directories to tags
-  - Tag targets: Link target directories to tags
-- 🔄 **Auto Updates**: Automatic version checking and seamless updates
+- 🏷️ Tag Management
+  - Link directories to tags for easy reference
+  - Create and manage tag targets
+  - Clone files from tagged sources
+- 🔄 Auto Updates
+  - Automatic version checks
+  - Seamless update process
 
 ## Installation
 
@@ -15,23 +18,14 @@ A command-line tool for managing Ultra Wide Turbo development workflows.
 dart pub global activate ultra_wide_turbo_cli
 ```
 
-## Commands
+## Usage
 
 ### Tag Source Command
 
-Link the current directory to a tag for easy reference:
+Link the current directory to a tag:
 
 ```bash
-turbo tag source <tag>
-```
-
-Example:
-```bash
-# Link current directory to "my-project" tag
 turbo tag source my-project
-
-# Link current directory to "frontend_v2" tag
-turbo tag source frontend_v2
 ```
 
 ### Tag Target Command
@@ -39,46 +33,42 @@ turbo tag source frontend_v2
 Link the current directory as a target for a tag:
 
 ```bash
-turbo tag target <tag>
-```
-
-Example:
-```bash
-# Link current directory as target for "my-project" tag
-turbo tag target my-project
-
-# Link current directory as target for "frontend_v2" tag
 turbo tag target frontend_v2
 ```
 
-Tag names must:
-- Be 2-50 characters long
-- Use only letters, numbers, hyphens, and underscores
-- Not start/end with hyphens or underscores
+### Clone Command
 
-Common errors:
-- Invalid tag name format: Use only allowed characters and follow naming rules
+Clone files from all sources associated with a tag to the current directory:
+
+```bash
+# Clone files from my-project tag sources
+turbo clone my-project
+
+# Clone and overwrite existing files
+turbo clone frontend_v2 --force
+```
+
+## Common Errors
+
+### Tag Commands
+- Invalid tag name format: Use only allowed characters (letters, numbers, hyphens, underscores)
 - Directory not accessible: Ensure you have read permissions
 - Tag already linked: The directory is already linked to this tag
 
-### Update Command
+### Clone Command
+- Tag not found: The specified tag does not exist
+- No sources found: The tag has no associated source directories
+- Directory not accessible: Ensure you have write permissions
+- Insufficient space: Not enough space to copy files
 
-The CLI automatically checks for updates on startup, but you can also manually update:
+## Contributing
 
-```bash
-# Check and apply updates
-turbo update
-```
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## Global Options
+## License
 
-| Option | Description |
-|--------|-------------|
-| `-v, --version` | Show version |
-| `--verbose` | Enable verbose logging |
-| `-h, --help` | Show command help |
-
-## Documentation
-
-- [Changelog](CHANGELOG.md)
-- [Issue Tracker](https://github.com/ultrawideturbodev/ultra_wide_turbo_cli/issues)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

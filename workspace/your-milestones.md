@@ -4,302 +4,151 @@ goal: track progress of implementation milestones
 gpt_action: use as a reference to track progress and next steps
 ---
 
-# 🎯 Milestones
+# 🎯 Turbo Clone Command Milestones
 
-## M1: Command Layer Implementation ⏳
-> Add command registration and parameter validation
+## M1: Command Layer Implementation
+```gherkin
+Feature: Clone Command Registration
+  As a developer
+  I want to register the clone command
+  So that users can access it through the CLI
 
-### Tests
-```dart
-group('Feature: Tag Target Command', () {
-  group('Scenario: Register new tag target command', () {
-    test('GIVEN the CLI application is running', () async {
-      // WHEN the system initializes commands
-      final result = await commandService.run(['tag', 'target', '--help']);
+  Scenario: Register clone command
+    Given the CLI is initialized
+    When I add the clone command type
+    Then it should be registered in TurboCommandType
+    And it should have proper help text
+    And it should accept a tag parameter
 
-      // THEN the "tag target" command is registered under "tag"
-      expect(result, equals(ExitCode.success.code));
+  Scenario: Validate tag parameter
+    Given the clone command is registered
+    When I run "turbo clone" without a tag
+    Then it should show an error message
+    And it should display the command usage
 
-      // AND it accepts a tag parameter
-      final resultWithParam = await commandService.run(['tag', 'target', 'test-tag']);
-      expect(resultWithParam, equals(ExitCode.success.code));
-
-      // AND it shows in help text
-      final helpResult = await commandService.run(['tag', 'target', '--help']);
-      expect(helpResult, equals(ExitCode.success.code));
-    });
-  });
-
-  group('Scenario: Validate tag parameter', () {
-    test('GIVEN the user runs "turbo tag target"', () async {
-      // WHEN no tag parameter is provided
-      final result = await commandService.run(['tag', 'target']);
-
-      // THEN the system shows an error message
-      expect(result, equals(ExitCode.usage.code));
-    });
-  });
-});
+  Scenario: Show help text
+    Given the clone command is registered
+    When I run "turbo clone --help"
+    Then it should show the command description
+    And it should show usage examples
+    And it should list available options
 ```
 
-### Tasks
-- [ ] Add `tagTarget` to `TurboCommandType` enum
-- [ ] Add command description and help text
-- [ ] Register command under `tag` parent
-- [ ] Implement tag parameter validation
+## M2: Tag Validation
+```gherkin
+Feature: Tag Validation
+  As a developer
+  I want to validate the provided tag
+  So that I only process valid tags
 
-## M2: Tag Validation and Creation ⏳
-> Implement tag validation and creation logic
+  Scenario: Validate existing tag
+    Given I have a tag "test-tag" in storage
+    When I run "turbo clone test-tag"
+    Then it should find the tag in storage
+    And it should proceed with source lookup
 
-### Tests
-```dart
-group('Scenario: Validate existing tag', () {
-  test('GIVEN the user runs "turbo tag target <existing-tag>"', () async {
-    // Setup existing tag
-    final now = DateTime.now();
-    final tag = TurboTagDto(
-      id: 'existing-tag',
-      createdAt: now,
-      updatedAt: now,
-      createdBy: 'test-user',
-      parentId: null,
-    );
-    await storageService.addTag(turboTag: tag);
+  Scenario: Handle non-existent tag
+    Given I have no tag "missing-tag" in storage
+    When I run "turbo clone missing-tag"
+    Then it should show an error message
+    And it should exit with non-zero status
 
-    // WHEN the system checks local storage
-    final result = await commandService.run(['tag', 'target', 'existing-tag']);
-
-    // THEN it finds the tag
-    final storage = storageService.localStorageDto;
-    final foundTag = storage.turboTags.where((t) => t.id == 'existing-tag').firstOrNull;
-    expect(foundTag, isNotNull);
-
-    // AND proceeds with target linking
-    expect(result, equals(ExitCode.success.code));
-  });
-});
-
-group('Scenario: Create new tag', () {
-  test('GIVEN the user runs "turbo tag target <new-tag>"', () async {
-    // WHEN the system checks local storage
-    final result = await commandService.run(['tag', 'target', 'new-tag']);
-
-    // AND doesn't find the tag
-    // THEN it creates a new TurboTagDto
-    final storage = storageService.localStorageDto;
-    final newTag = storage.turboTags.where((t) => t.id == 'new-tag').firstOrNull;
-    expect(newTag, isNotNull);
-
-    // AND stores it in local storage
-    expect(newTag!.id, equals('new-tag'));
-
-    // AND proceeds with target linking
-    expect(result, equals(ExitCode.success.code));
-  });
-});
+  Scenario: Validate tag format
+    Given I have an invalid tag "!invalid!"
+    When I run "turbo clone !invalid!"
+    Then it should show a format error message
+    And it should suggest valid format
 ```
 
-### Tasks
-- [ ] Implement tag name validation
-- [ ] Add tag existence check
-- [ ] Implement tag creation logic
-- [ ] Add storage integration
+## M3: Source Lookup
+```gherkin
+Feature: Source Directory Lookup
+  As a developer
+  I want to find all source directories for a tag
+  So that I can copy their contents
 
-## M3: Target Management ⏳
-> Implement target directory validation and management
+  Scenario: Find tag sources
+    Given I have a tag with sources
+    When I look up the sources
+    Then it should return all source paths
+    And it should validate they exist
 
-### Tests
-```dart
-group('Scenario: Create new target from directory', () {
-  test('GIVEN the command has a valid tag', () async {
-    // WHEN the system checks the current directory
-    final result = await commandService.run(['tag', 'target', 'my-tag']);
-    expect(result, equals(ExitCode.success.code));
+  Scenario: Handle no sources
+    Given I have a tag without sources
+    When I look up the sources
+    Then it should show "no sources" message
+    And it should exit gracefully
 
-    // Wait for storage operations to complete
-    await Future.delayed(const Duration(milliseconds: 300));
-
-    // AND the directory is not registered as a target
-    final storage = storageService.localStorageDto;
-
-    // THEN it creates a new TurboTargetDto
-    final target = storage.turboTargets.firstWhere(
-      (s) => s.id.toLowerCase().startsWith('test_dir'),
-      orElse: () => throw Exception('Target not found with pattern test_dir*'),
-    );
-    expect(target, isNotNull);
-
-    // AND stores it in local storage
-    expect(target.id.toLowerCase().startsWith('test_dir'), isTrue);
-    expect(target.createdBy, isNotNull);
-    expect(target.createdAt, isNotNull);
-    expect(target.updatedAt, isNotNull);
-  });
-});
-
-group('Scenario: Use existing target', () {
-  test('GIVEN the command has a valid tag', () async {
-    // Setup existing target
-    final now = DateTime.now();
-    final dirName = tempDir.path.split('/').last;
-    final target = TurboTargetDto(
-      id: dirName,
-      createdAt: now,
-      updatedAt: now,
-      createdBy: 'test-user',
-    );
-    await storageService.addTarget(turboTarget: target);
-
-    // WHEN the system checks the current directory
-    final result = await commandService.run(['tag', 'target', 'my-tag']);
-    expect(result, equals(ExitCode.success.code));
-
-    // Wait for storage operations to complete
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    // AND the directory is already registered as a target
-    final storage = storageService.localStorageDto;
-    final targets = storage.turboTargets.where((s) => s.id == dirName);
-
-    // THEN it uses the existing TurboTargetDto
-    expect(targets.length, equals(1));
-    expect(targets.first.id, equals(dirName));
-    expect(targets.first.createdAt, equals(now));
-  });
-});
+  Scenario: Validate source access
+    Given I have sources with mixed permissions
+    When I validate source access
+    Then it should identify inaccessible sources
+    And it should report access issues
 ```
 
-### Tasks
-- [ ] Add directory validation
-- [ ] Implement target creation
-- [ ] Add target existence check
-- [ ] Add storage integration
+## M4: File Copy
+```gherkin
+Feature: File Copy Operation
+  As a developer
+  I want to copy files from sources
+  So that they are replicated in target directory
 
-## M4: Relation Creation ⏳
-> Implement relation management and error handling
+  Scenario: Copy source files
+    Given I have valid source directories
+    When I copy the files
+    Then they should be in target directory
+    And should maintain directory structure
+    And should show progress bar
 
-### Tests
-```dart
-group('Scenario: Create new relation', () {
-  test('GIVEN valid tag and target exist', () async {
-    // WHEN the system checks for an existing relation
-    final result = await commandService.run(['tag', 'target', 'my-tag']);
-    expect(result, equals(ExitCode.success.code));
+  Scenario: Handle copy errors
+    Given I have problematic source files
+    When I attempt to copy them
+    Then it should collect error details
+    And should continue with remaining files
+    And should show error summary
 
-    // Wait for storage operations to complete
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    // AND no relation exists
-    // THEN it creates a new TurboRelationDto
-    final storage = storageService.localStorageDto;
-
-    // Verify tag was created
-    final tag = storage.turboTags.firstWhere(
-      (t) => t.id == 'my-tag',
-      orElse: () => throw Exception('Tag not found'),
-    );
-    expect(tag, isNotNull);
-    expect(tag.id, equals('my-tag'));
-
-    // Verify target was created
-    final target = storage.turboTargets.firstWhere(
-      (s) => s.id.startsWith('test_dir'),
-      orElse: () => throw Exception('Target not found'),
-    );
-    expect(target, isNotNull);
-    expect(target.id.startsWith('test_dir'), isTrue);
-
-    // Verify relation was created
-    final relation = storage.turboRelations.firstWhere(
-      (r) =>
-          r.turboTagId == 'my-tag' &&
-          r.turboTargetId == target.id &&
-          r.type == TurboRelationType.targetTag,
-      orElse: () => throw Exception('Relation not found'),
-    );
-
-    // AND stores it in local storage
-    expect(relation, isNotNull);
-    expect(relation.turboTagId, equals('my-tag'));
-    expect(relation.turboTargetId, equals(target.id));
-    expect(relation.type, equals(TurboRelationType.targetTag));
-    expect(relation.createdBy, isNotNull);
-    expect(relation.createdAt, isNotNull);
-    expect(relation.updatedAt, isNotNull);
-  });
-});
-
-group('Scenario: Handle existing relation', () {
-  test('GIVEN valid tag and target exist', () async {
-    // Setup existing relation
-    final now = DateTime.now();
-    final dirName = tempDir.path.split('/').last;
-    final relation = TurboRelationDto(
-      id: '$dirName-my-tag',
-      createdAt: now,
-      updatedAt: now,
-      createdBy: 'test-user',
-      turboTagId: 'my-tag',
-      turboTargetId: dirName,
-      type: TurboRelationType.targetTag,
-    );
-    await storageService.addRelation(turboRelation: relation);
-
-    // WHEN the system checks for an existing relation
-    final result = await commandService.run(['tag', 'target', 'my-tag']);
-    expect(result, equals(ExitCode.success.code));
-
-    // Wait for storage operations to complete
-    await Future.delayed(const Duration(milliseconds: 200));
-
-    // AND a relation already exists
-    final storage = storageService.localStorageDto;
-    final relations = storage.turboRelations.where((r) =>
-        r.turboTagId == 'my-tag' &&
-        r.turboTargetId == dirName &&
-        r.type == TurboRelationType.targetTag);
-
-    // THEN it shows "already exists" message
-    expect(result, equals(ExitCode.success.code));
-
-    // AND does not create duplicate relation
-    expect(relations.length, equals(1));
-    expect(relations.first.id, equals('$dirName-my-tag'));
-    expect(relations.first.createdAt, equals(now));
-    expect(relations.first.createdBy, equals('test-user'));
-  });
-});
-
-group('Scenario: Handle invalid directory', () {
-  test('GIVEN the user runs the command', () async {
-    // Setup invalid directory
-    IOOverrides.global = _TestIOOverrides(tempDir, simulateInvalidDir: true);
-
-    // WHEN the system checks the current directory
-    final result = await commandService.run(['tag', 'target', 'my-tag']);
-
-    // THEN it shows an error message
-    expect(result, equals(ExitCode.software.code));
-
-    // Reset IOOverrides for subsequent tests
-    IOOverrides.global = _TestIOOverrides(tempDir);
-  });
-});
-
-group('Scenario: Show operation success', () {
-  test('GIVEN the user runs the command', () async {
-    // WHEN the system completes all operations
-    final result = await commandService.run(['tag', 'target', 'my-tag']);
-
-    // THEN it shows a success message
-    expect(result, equals(ExitCode.success.code));
-  });
-});
+  Scenario: Handle existing files
+    Given target has existing files
+    When I copy without --force
+    Then it should skip existing files
+    And should report skipped files
+    
+  Scenario: Force overwrite
+    Given target has existing files
+    When I copy with --force
+    Then it should overwrite existing files
+    And should report overwritten files
 ```
 
-### Tasks
-- [ ] Add `targetTag` to `TurboRelationType` enum
-- [ ] Implement relation creation
-- [ ] Add relation existence check
-- [ ] Add error handling
-- [ ] Add success messages
+## Dependencies
+- dart:io for file operations
+- mason_logger for progress reporting
+- LocalStorageService for tag lookup
+- TurboCommand for CLI integration
+
+## Technical Details
+- File copy uses recursive directory traversal
+- Progress bar updates per file
+- Error collection in CopyResult objects
+- Summary generation in CopySummary
+
+## Progress Tracking
+- [ ] M1: Command Layer
+  - [ ] Add enum value
+  - [ ] Register command
+  - [ ] Add help text
+  
+- [ ] M2: Tag Validation
+  - [ ] Add tag lookup
+  - [ ] Validate format
+  - [ ] Handle errors
+  
+- [ ] M3: Source Lookup
+  - [ ] Query relations
+  - [ ] Validate paths
+  - [ ] Check access
+  
+- [ ] M4: File Copy
+  - [ ] Implement copy
+  - [ ] Add progress
+  - [ ] Handle errors

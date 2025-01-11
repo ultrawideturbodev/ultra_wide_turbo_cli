@@ -165,3 +165,148 @@ None - we can mirror the source command implementation exactly.
     - [ ] Add target directory validation
     - [ ] Create/reuse tag and target entries
     - [ ] Create relation between tag and target
+
+# 📝 Requirements for Turbo Clone Command
+
+## Feature: Clone Tag Command
+- [ ] M1: Command Layer Implementation
+    - [ ] Scenario: Register new clone command
+        - GIVEN the CLI application is running
+        - WHEN the system initializes commands
+        - THEN the "clone" command is registered
+        - AND it accepts a tag parameter
+        - AND it shows in help text
+
+    - [ ] Scenario: Validate tag parameter
+        - GIVEN the user runs "turbo clone"
+        - WHEN no tag parameter is provided
+        - THEN the system shows an error message
+
+- [ ] M2: Tag Validation
+    - [ ] Scenario: Validate existing tag
+        - GIVEN the user runs "turbo clone <existing-tag>"
+        - WHEN the system checks local storage
+        - THEN it finds the tag
+        - AND proceeds with source lookup
+
+    - [ ] Scenario: Handle non-existent tag
+        - GIVEN the user runs "turbo clone <non-existent-tag>"
+        - WHEN the system checks local storage
+        - AND doesn't find the tag
+        - THEN it shows an error message
+        - AND exits with appropriate code
+
+- [ ] M3: Source Lookup
+    - [ ] Scenario: Find tag sources
+        - GIVEN the command has a valid tag
+        - WHEN the system looks up sources
+        - THEN it finds all sources linked to the tag
+        - AND validates source directories still exist
+
+    - [ ] Scenario: Handle no sources
+        - GIVEN the command has a valid tag
+        - WHEN the system looks up sources
+        - AND finds no sources
+        - THEN it shows an error message
+        - AND exits with appropriate code
+
+- [ ] M4: File Copy
+    - [ ] Scenario: Copy source files
+        - GIVEN valid sources are found
+        - WHEN the system copies files
+        - THEN it creates target directories
+        - AND copies all files preserving structure
+        - AND shows progress
+
+    - [ ] Scenario: Handle copy errors
+        - GIVEN the system is copying files
+        - WHEN an error occurs
+        - THEN it shows error message
+        - AND continues with remaining files
+        - AND reports failed copies at end
+
+    - [ ] Scenario: Handle existing files
+        - GIVEN target files already exist
+        - WHEN the system attempts to copy
+        - THEN it skips existing files
+        - AND shows skip message
+        - UNLESS force flag is used
+
+# 📝 Properties
+---
+
+- [ ] [[Tag Name]]
+    - [ ] Length: 2-50 characters
+    - [ ] Pattern: letters, numbers, hyphens, underscores
+    - [ ] Cannot start/end with hyphen or underscore
+
+- [ ] [[Source Directories]]
+    - [ ] Must be accessible
+    - [ ] Must still exist
+    - [ ] Must be readable
+
+- [ ] [[Target Directory]]
+    - [ ] Must be writable
+    - [ ] Must have sufficient space
+    - [ ] Must handle existing files
+
+# 🛠️ Behaviours
+---
+
+- [ ] [[Command Actions]]
+    - [ ] Show error if tag parameter missing
+    - [ ] Display usage instructions on error
+    - [ ] Show help text with --help flag
+    - [ ] Support force flag for overwriting
+
+- [ ] [[Tag Actions]]
+    - [ ] Validate tag exists
+    - [ ] Find all linked sources
+    - [ ] Show appropriate messages
+
+- [ ] [[Copy Actions]]
+    - [ ] Create target directories
+    - [ ] Copy files preserving structure
+    - [ ] Skip/overwrite existing files
+    - [ ] Show progress
+    - [ ] Handle errors gracefully
+
+# 💡 Ideas & 🪵 Backlog
+---
+
+- [ ] Add dry-run flag to preview changes
+- [ ] Add filter option for specific files/patterns
+- [ ] Add exclude option for files/patterns
+- [ ] Add parallel copy for large operations
+- [ ] Add checksum verification option
+
+# ❓ Questions
+---
+
+1. Should we support symlinks?
+2. How should we handle file permissions?
+3. Should we add a size limit?
+4. Should we add a confirmation prompt?
+
+# 🎯 Roles & 📝 Tasks
+---
+
+1. Command Layer
+   - Add clone command to TurboCommandType
+   - Implement command registration
+   - Add help text and documentation
+
+2. Tag Validation
+   - Implement tag lookup
+   - Add error handling for missing tags
+   - Add source relation lookup
+
+3. File System
+   - Implement directory validation
+   - Add file copy functionality
+   - Handle errors and permissions
+
+4. Progress Reporting
+   - Add progress indicators
+   - Implement error collection
+   - Show summary at end

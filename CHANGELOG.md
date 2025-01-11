@@ -1,15 +1,26 @@
 # Changelog
 
+All notable changes to this project will be documented in this file.
+
+## 0.1.14
+
+### Added
+- `turbo clone` command for copying files from tagged sources
+  - Clone files from all sources associated with a tag
+  - Force flag to overwrite existing files
+  - Progress reporting with file counts
+  - Error handling and summaries
+  - Comprehensive test coverage
+
 ## 0.1.13
 
-### ✨ Features:
-- New `turbo tag target` command for linking directories as targets for tags
+### Added
+- `turbo tag target` command for linking directories as tag targets
   - Tag validation and automatic creation
-  - Target management from current directory
-  - Relation creation and validation
-  - Comprehensive error handling and user feedback
-- Enhanced test coverage with BDD-style tests
-- Improved directory validation in tests
+  - Target management with validation
+  - Relation creation and error handling
+  - Enhanced test coverage
+  - Improved directory validation in tests
 
 ## 0.1.12
 

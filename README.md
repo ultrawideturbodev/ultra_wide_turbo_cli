@@ -5,6 +5,8 @@ A command-line tool for managing Ultra Wide Turbo development workflows.
 ## Features
 
 - 🏷️ **Tag Management**: Link directories to tags for easy organization and reference
+  - Tag sources: Link source directories to tags
+  - Tag targets: Link target directories to tags
 - 🔄 **Auto Updates**: Automatic version checking and seamless updates
 
 ## Installation
@@ -30,6 +32,23 @@ turbo tag source my-project
 
 # Link current directory to "frontend_v2" tag
 turbo tag source frontend_v2
+```
+
+### Tag Target Command
+
+Link the current directory as a target for a tag:
+
+```bash
+turbo tag target <tag>
+```
+
+Example:
+```bash
+# Link current directory as target for "my-project" tag
+turbo tag target my-project
+
+# Link current directory as target for "frontend_v2" tag
+turbo tag target frontend_v2
 ```
 
 Tag names must:

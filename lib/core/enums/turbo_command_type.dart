@@ -4,7 +4,8 @@ import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 enum TurboCommandType {
   update,
   tag,
-  tagSource;
+  tagSource,
+  tagTarget;
 
   List<String> bashCommands() {
     switch (this) {
@@ -13,6 +14,8 @@ enum TurboCommandType {
       case TurboCommandType.tag:
         return [];
       case TurboCommandType.tagSource:
+        return [];
+      case TurboCommandType.tagTarget:
         return [];
     }
   }
@@ -25,6 +28,8 @@ enum TurboCommandType {
         return name;
       case TurboCommandType.tagSource:
         return 'source';
+      case TurboCommandType.tagTarget:
+        return 'target';
     }
   }
 
@@ -36,6 +41,8 @@ enum TurboCommandType {
         return 'Manage tags and their associations.';
       case TurboCommandType.tagSource:
         return 'Link current directory to a tag.';
+      case TurboCommandType.tagTarget:
+        return 'Link current directory as a target for a tag.';
     }
   }
 
@@ -57,10 +64,11 @@ Manage tags and their associations.
 
 Available subcommands:
   source    Link current directory to a tag
+  target    Link current directory as a target for a tag
   
 Examples:
   turbo tag source my-project     # Link current directory to "my-project" tag
-  turbo tag source frontend_v2    # Link current directory to "frontend_v2" tag
+  turbo tag target frontend_v2    # Link current directory as target for "frontend_v2" tag
 
 For more information, visit: https://docs.turbo.build/tags''';
       case TurboCommandType.tagSource:
@@ -82,6 +90,25 @@ Common errors:
 - Tag already linked: The directory is already linked to this tag
 
 For more information, visit: https://docs.turbo.build/tags''';
+      case TurboCommandType.tagTarget:
+        return '''
+Links the current directory as a target for a tag.
+
+The tag name must:
+- Be between 2 and 50 characters
+- Contain only letters, numbers, hyphens, and underscores
+- Not start or end with a hyphen or underscore
+
+Examples:
+  turbo tag target my-project     # Link current directory as target for "my-project" tag
+  turbo tag target frontend_v2    # Link current directory as target for "frontend_v2" tag
+
+Common errors:
+- Invalid tag name format: Use only allowed characters and follow naming rules
+- Directory not accessible: Ensure you have read permissions
+- Target already linked: The directory is already linked to this tag
+
+For more information, visit: https://docs.turbo.build/tags''';
     }
   }
 
@@ -92,6 +119,8 @@ For more information, visit: https://docs.turbo.build/tags''';
       case TurboCommandType.tag:
         return [];
       case TurboCommandType.tagSource:
+        return [];
+      case TurboCommandType.tagTarget:
         return [];
     }
   }
@@ -104,6 +133,8 @@ For more information, visit: https://docs.turbo.build/tags''';
         return [];
       case TurboCommandType.tagSource:
         return [];
+      case TurboCommandType.tagTarget:
+        return [];
     }
   }
 
@@ -115,6 +146,8 @@ For more information, visit: https://docs.turbo.build/tags''';
         return [];
       case TurboCommandType.tagSource:
         return [];
+      case TurboCommandType.tagTarget:
+        return [];
     }
   }
 
@@ -125,6 +158,8 @@ For more information, visit: https://docs.turbo.build/tags''';
       case TurboCommandType.tag:
         return null;
       case TurboCommandType.tagSource:
+        return null;
+      case TurboCommandType.tagTarget:
         return null;
     }
   }

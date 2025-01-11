@@ -7,6 +7,7 @@ import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_relation_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_source_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/turbo_target_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_relation_type.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/string_extension.dart';
@@ -23,6 +24,7 @@ class TurboCommand extends Command<int> with TurboLogger {
     // Add subcommands for parent commands
     if (type == TurboCommandType.tag) {
       addSubcommand(TurboCommand(type: TurboCommandType.tagSource));
+      addSubcommand(TurboCommand(type: TurboCommandType.tagTarget));
     }
   }
 
@@ -190,6 +192,127 @@ class TurboCommand extends Command<int> with TurboLogger {
         log.info('✅ Successfully linked tag to directory');
 
         return ExitCode.success.code;
+      case TurboCommandType.tagTarget:
+        // Validate tag parameter
+        if (argResults?.rest.isEmpty ?? true) {
+          log.err('❌ Tag name is required');
+          log.info('');
+          log.info('Usage: turbo tag target <tag>');
+          log.info('Example: turbo tag target my-project');
+          return ExitCode.usage.code;
+        }
+
+        final tagName = argResults!.rest.first.normalize();
+
+        // Validate tag name format
+        if (!_isValidTagName(tagName)) {
+          log.err('❌ Invalid tag name format');
+          log.info('');
+          log.info('Tag name requirements:');
+          log.info('- Must be between 2 and 50 characters');
+          log.info('- Can only contain letters, numbers, hyphens, and underscores');
+          log.info('- Cannot start or end with a hyphen or underscore');
+          log.info('');
+          log.info('Example: my-project-123');
+          return ExitCode.usage.code;
+        }
+
+        log.info('🔍 Linking current directory as target for tag: $tagName');
+
+        // Get current storage state
+        final storage = LocalStorageService.locate.localStorageDto;
+
+        // Check if tag exists
+        final existingTag = storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
+        TurboTagDto tag;
+        if (existingTag == null) {
+          // Create new tag
+          final now = gNow;
+          tag = TurboTagDto(
+            id: tagName,
+            createdAt: now,
+            updatedAt: now,
+            createdBy: gUserId,
+            parentId: null,
+          );
+          try {
+            await LocalStorageService.locate.addTag(turboTag: tag);
+            log.info('✅ Created new tag: $tagName');
+          } catch (e) {
+            log.err('❌ Failed to create tag: $e');
+            return ExitCode.software.code;
+          }
+        } else {
+          tag = existingTag;
+          log.info('ℹ️ Using existing tag: $tagName');
+        }
+
+        // Get current directory
+        final currentDir = Directory.current;
+        final dirName = path.basename(currentDir.path);
+        log.info('🔍 Using directory: $dirName');
+
+        // Refresh storage state after tag creation
+        final updatedStorage = LocalStorageService.locate.localStorageDto;
+
+        // Check if target exists
+        final existingTarget =
+            updatedStorage.turboTargets.where((target) => target.id == dirName).firstOrNull;
+        TurboTargetDto target;
+        if (existingTarget == null) {
+          // Create new target
+          final now = gNow;
+          target = TurboTargetDto(
+            id: dirName,
+            createdAt: now,
+            updatedAt: now,
+            createdBy: gUserId,
+          );
+          try {
+            await LocalStorageService.locate.addTarget(turboTarget: target);
+            log.info('✅ Created new target: $dirName');
+          } catch (e) {
+            log.err('❌ Failed to create target: $e');
+            return ExitCode.software.code;
+          }
+        } else {
+          target = existingTarget;
+          log.info('ℹ️ Using existing target: $dirName');
+        }
+
+        // Check if relation exists
+        final existingRelation = updatedStorage.turboRelations
+            .where((relation) =>
+                relation.turboTagId == tag.id &&
+                relation.turboTargetId == target.id &&
+                relation.type == TurboRelationType.targetTag)
+            .firstOrNull;
+
+        if (existingRelation != null) {
+          log.info('ℹ️ Tag is already linked to this directory');
+          return ExitCode.success.code;
+        }
+
+        // Create new relation
+        final now = gNow;
+        final relation = TurboRelationDto(
+          id: '${target.id}-${tag.id}',
+          createdAt: now,
+          updatedAt: now,
+          createdBy: gUserId,
+          turboTagId: tag.id,
+          turboTargetId: target.id,
+          type: TurboRelationType.targetTag,
+        );
+
+        try {
+          await LocalStorageService.locate.addRelation(turboRelation: relation);
+          log.info('✅ Successfully linked tag to directory');
+          return ExitCode.success.code;
+        } catch (e) {
+          log.err('❌ Failed to create relation: $e');
+          return ExitCode.software.code;
+        }
     }
   }
 

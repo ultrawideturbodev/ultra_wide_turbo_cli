@@ -1,3 +1,4 @@
 enum TurboRelationType {
-    sourceTag,
+  sourceTag,
+  targetTag,
 }

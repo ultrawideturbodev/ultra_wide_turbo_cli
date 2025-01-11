@@ -13,6 +13,7 @@ import 'package:ultra_wide_turbo_cli/core/dtos/local_storage_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_relation_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_source_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/turbo_target_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_adapters.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_box.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_auth.dart';
@@ -383,6 +384,29 @@ class LocalStorageService extends Initialisable with TurboLogger {
   Future<TurboResponse> clearRelations() async => await _updateLocalStorage(
         (current) => current.copyWith(
           turboRelations: (current) => current..clear(),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> addTarget({required TurboTargetDto turboTarget}) async =>
+      await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboTargets: (current) => current..add(turboTarget),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> removeTarget({required TurboTargetDto turboTarget}) async =>
+      await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboTargets: (current) => current..remove(turboTarget),
+        ),
+        userId: gUserId,
+      );
+
+  Future<TurboResponse> clearTargets() async => await _updateLocalStorage(
+        (current) => current.copyWith(
+          turboTargets: (current) => current..clear(),
         ),
         userId: gUserId,
       );

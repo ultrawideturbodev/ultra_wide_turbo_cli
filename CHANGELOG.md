@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.1.13
+
+### ✨ Features:
+- New `turbo tag target` command for linking directories as targets for tags
+  - Tag validation and automatic creation
+  - Target management from current directory
+  - Relation creation and validation
+  - Comprehensive error handling and user feedback
+- Enhanced test coverage with BDD-style tests
+- Improved directory validation in tests
+
 ## 0.1.12
 
 ### Added

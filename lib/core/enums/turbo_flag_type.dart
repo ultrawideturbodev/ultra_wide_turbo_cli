@@ -15,6 +15,8 @@ enum TurboFlagType {
         return [];
       case TurboCommandType.tagSource:
         return [];
+      case TurboCommandType.tagTarget:
+        return [];
     }
   }
 

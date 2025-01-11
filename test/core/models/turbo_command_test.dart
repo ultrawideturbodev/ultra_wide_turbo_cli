@@ -30,4 +30,30 @@ void main() {
       expect(result, equals(ExitCode.success.code));
     });
   });
+
+  group('tag target command', () {
+    late CommandService commandService;
+
+    setUpAll(() async {
+      await AppSetup.initialise();
+      commandService = CommandService.locate;
+      await commandService.isReady;
+      await LocalStorageService.locate.isReady;
+    });
+
+    test('has correct help text', () async {
+      final result = await commandService.run(['tag', 'target', '--help']);
+      expect(result, equals(ExitCode.success.code));
+    });
+
+    test('requires tag parameter', () async {
+      final result = await commandService.run(['tag', 'target']);
+      expect(result, equals(ExitCode.usage.code));
+    });
+
+    test('accepts tag parameter', () async {
+      final result = await commandService.run(['tag', 'target', 'my-tag']);
+      expect(result, equals(ExitCode.success.code));
+    });
+  });
 }

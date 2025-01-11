@@ -2,18 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-## 0.1.15
-
-- 🐛 Fixed update service to correctly handle package paths in both local and global installations
-- ✨ Improved error messages for missing configuration files
-- 🔧 Added fallback path resolution for global packages
-
 ## 0.1.14 - 2024-01-09
 
 ### 🐛 Bug fixes:
 - Fixed Hive database location to store in user's home directory for better persistence
 - Fixed source path storage to use full paths instead of just directory names
 - Fixed clone feature to correctly find and copy files using absolute paths
+
+* test: add integration test for tag source and clone workflow
+* test: improve test coverage for multi-directory operations
 
 ## 0.1.12
 

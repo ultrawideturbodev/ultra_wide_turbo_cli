@@ -1,13 +1,48 @@
 # IDE files
 .idea/
-*.iml
+.vscode/
 
 # Build files
 build/
+*.iml
+
+# Dart/Flutter specific
 .dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
 
-# Lock files
-pubspec.lock
+# Test files
+coverage/
+test/
+test_*/
+test-*/
+validation_test/
 
-# OS files
+# Documentation
+doc/
+docs/
+insights/
+prompts/
+protocols/
+templates/
+wiki/
+workflows/
+
+# Project specific
+workspace/
+your-*.md
+*.hive
+*.lock
+
+# Miscellaneous
 .DS_Store
+*.log
+*.pyc
+*.swp
+.atom/
+.buildlog/
+.history/
+.svn/
+
+.obsidian/

@@ -20,3 +20,6 @@ pubspec.lock
 # Local storage files
 *.hive
 *.lock
+
+# macOS system files
+.DS_Store

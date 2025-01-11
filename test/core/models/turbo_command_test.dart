@@ -78,12 +78,45 @@ void main() {
       tempDir = await Directory.systemTemp.createTemp('turbo_test_');
       sourceDir = await Directory('${tempDir.path}/source').create();
 
-      // Create test files in source directory
+      // Create source directory with test files
       await File('${sourceDir.path}/file1.txt').writeAsString('Test file 1');
       await File('${sourceDir.path}/file2.txt').writeAsString('Test file 2');
       await Directory('${sourceDir.path}/subdir').create();
-      await File('${sourceDir.path}/subdir/file3.txt')
-          .writeAsString('Test file 3');
+      await File('${sourceDir.path}/subdir/file3.txt').writeAsString('Test file 3');
+
+      // Setup tag and source
+      final now = DateTime.now();
+      final tag = TurboTagDto(
+        id: 'test-tag',
+        createdAt: now,
+        updatedAt: now,
+        createdBy: 'test-user',
+        parentId: null,
+      );
+      await LocalStorageService.locate.addTag(turboTag: tag);
+
+      final source = TurboSourceDto(
+        id: sourceDir.path,
+        createdAt: now,
+        updatedAt: now,
+        createdBy: 'test-user',
+      );
+      await LocalStorageService.locate.addSource(turboSource: source);
+
+      final relation = TurboRelationDto(
+        id: '${sourceDir.path}-test-tag',
+        createdAt: now,
+        updatedAt: now,
+        createdBy: 'test-user',
+        turboTagId: 'test-tag',
+        turboSourceId: sourceDir.path,
+        type: TurboRelationType.sourceTag,
+      );
+      await LocalStorageService.locate.addRelation(turboRelation: relation);
+
+      // Create target directory
+      final targetDir = await Directory('${tempDir.path}/target').create();
+      Directory.current = targetDir;
     });
 
     tearDownAll(() async {
@@ -181,8 +214,7 @@ void main() {
 
     test('respects force flag', () async {
       // Create target directory with existing file
-      final targetDir =
-          await Directory('${tempDir.path}/target_force').create();
+      final targetDir = await Directory('${tempDir.path}/target_force').create();
       await File('${targetDir.path}/file1.txt').writeAsString('Existing file');
       Directory.current = targetDir;
 

@@ -73,13 +73,11 @@ void main() {
         expect(result, equals(ExitCode.success.code));
 
         // AND it accepts a tag parameter
-        final resultWithParam =
-            await commandService.run(['tag', 'source', 'test-tag']);
+        final resultWithParam = await commandService.run(['tag', 'source', 'test-tag']);
         expect(resultWithParam, equals(ExitCode.success.code));
 
         // AND it shows in help text
-        final helpResult =
-            await commandService.run(['tag', 'source', '--help']);
+        final helpResult = await commandService.run(['tag', 'source', '--help']);
         expect(helpResult, equals(ExitCode.success.code));
       });
     });
@@ -109,13 +107,11 @@ void main() {
         await storageService.addTag(turboTag: tag);
 
         // WHEN the system checks local storage
-        final result =
-            await commandService.run(['tag', 'source', 'existing-tag']);
+        final result = await commandService.run(['tag', 'source', 'existing-tag']);
 
         // THEN it finds the tag
         final storage = storageService.localStorageDto;
-        final foundTag =
-            storage.turboTags.where((t) => t.id == 'existing-tag').firstOrNull;
+        final foundTag = storage.turboTags.where((t) => t.id == 'existing-tag').firstOrNull;
         expect(foundTag, isNotNull);
 
         // AND proceeds with source linking
@@ -131,8 +127,7 @@ void main() {
         // AND doesn't find the tag
         // THEN it creates a new TurboTagDto
         final storage = storageService.localStorageDto;
-        final newTag =
-            storage.turboTags.where((t) => t.id == 'new-tag').firstOrNull;
+        final newTag = storage.turboTags.where((t) => t.id == 'new-tag').firstOrNull;
         expect(newTag, isNotNull);
 
         // AND stores it in local storage
@@ -158,14 +153,13 @@ void main() {
 
         // THEN it creates a new TurboSourceDto
         final source = storage.turboSources.firstWhere(
-          (s) => s.id.toLowerCase().startsWith('test_dir'),
-          orElse: () =>
-              throw Exception('Source not found with pattern test_dir*'),
+          (s) => s.id == tempDir.path,
+          orElse: () => throw Exception('Source not found with path ${tempDir.path}'),
         );
         expect(source, isNotNull);
 
         // AND stores it in local storage
-        expect(source.id.toLowerCase().startsWith('test_dir'), isTrue);
+        expect(source.id, equals(tempDir.path));
         expect(source.createdBy, isNotNull);
         expect(source.createdAt, isNotNull);
         expect(source.updatedAt, isNotNull);
@@ -227,11 +221,11 @@ void main() {
 
         // Verify source was created
         final source = storage.turboSources.firstWhere(
-          (s) => s.id.startsWith('test_dir'),
+          (s) => s.id == tempDir.path,
           orElse: () => throw Exception('Source not found'),
         );
         expect(source, isNotNull);
-        expect(source.id.startsWith('test_dir'), isTrue);
+        expect(source.id, equals(tempDir.path));
 
         // Verify relation was created
         final relation = storage.turboRelations.firstWhere(
@@ -299,8 +293,7 @@ void main() {
     group('Scenario: Handle invalid directory', () {
       test('GIVEN the user runs the command', () async {
         // Setup invalid directory
-        IOOverrides.global =
-            _TestIOOverrides(tempDir, simulateInvalidDir: true);
+        IOOverrides.global = _TestIOOverrides(tempDir, simulateInvalidDir: true);
 
         // WHEN the system checks the current directory
         final result = await commandService.run(['tag', 'source', 'my-tag']);

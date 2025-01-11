@@ -13,8 +13,9 @@ class TurboRelationDto extends LocalStorageValue {
     required this.createdAt,
     required this.updatedAt,
     required this.createdBy,
-    required this.turboTagId,
-    required this.turboSourceId,
+    this.turboTagId,
+    this.turboSourceId,
+    this.turboTargetId,
     required this.type,
   });
 
@@ -24,6 +25,7 @@ class TurboRelationDto extends LocalStorageValue {
   final String createdBy;
   final String? turboTagId;
   final String? turboSourceId;
+  final String? turboTargetId;
   final TurboRelationType type;
 
   static const fromJsonFactory = _$TurboRelationDtoFromJson;
@@ -38,8 +40,9 @@ class TurboRelationDto extends LocalStorageValue {
         'createdAt: $createdAt, '
         'updatedAt: $updatedAt, '
         'createdBy: $createdBy, '
-        'tagId: $turboTagId, '
-        'sourceId: $turboSourceId'
+        'turboTagId: $turboTagId, '
+        'turboSourceId: $turboSourceId, '
+        'turboTargetId: $turboTargetId, '
         'type: $type'
         '}';
   }

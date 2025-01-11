@@ -14,6 +14,7 @@ TurboRelationDto _$TurboRelationDtoFromJson(Map<String, dynamic> json) =>
       createdBy: json['createdBy'] as String,
       turboTagId: json['turboTagId'] as String?,
       turboSourceId: json['turboSourceId'] as String?,
+      turboTargetId: json['turboTargetId'] as String?,
       type: $enumDecode(_$TurboRelationTypeEnumMap, json['type']),
     );
 
@@ -25,9 +26,11 @@ Map<String, dynamic> _$TurboRelationDtoToJson(TurboRelationDto instance) =>
       'createdBy': instance.createdBy,
       'turboTagId': instance.turboTagId,
       'turboSourceId': instance.turboSourceId,
+      'turboTargetId': instance.turboTargetId,
       'type': _$TurboRelationTypeEnumMap[instance.type]!,
     };
 
 const _$TurboRelationTypeEnumMap = {
   TurboRelationType.sourceTag: 'sourceTag',
+  TurboRelationType.targetTag: 'targetTag',
 };

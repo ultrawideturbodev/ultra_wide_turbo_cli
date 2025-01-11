@@ -20,6 +20,10 @@ LocalStorageDto _$LocalStorageDtoFromJson(Map<String, dynamic> json) =>
               ?.map((e) => TurboSourceDto.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           {},
+      turboTargets: (json['turboTargets'] as List<dynamic>?)
+              ?.map((e) => TurboTargetDto.fromJson(e as Map<String, dynamic>))
+              .toSet() ??
+          {},
       turboRelations: (json['turboRelations'] as List<dynamic>?)
               ?.map((e) => TurboRelationDto.fromJson(e as Map<String, dynamic>))
               .toSet() ??
@@ -34,5 +38,6 @@ Map<String, dynamic> _$LocalStorageDtoToJson(LocalStorageDto instance) =>
       'createdBy': instance.createdBy,
       'turboTags': instance.turboTags.map((e) => e.toJson()).toList(),
       'turboSources': instance.turboSources.map((e) => e.toJson()).toList(),
+      'turboTargets': instance.turboTargets.map((e) => e.toJson()).toList(),
       'turboRelations': instance.turboRelations.map((e) => e.toJson()).toList(),
     };

@@ -1,43 +1,84 @@
 ---
 document_type: agent work document
-goal: track tasks for current milestone
-gpt_action: maintain organized atomic task list for current milestone
+goal: track atomic development tasks and progress
+gpt_action: use as a reference for current tasks and next steps
 ---
 
-# 🔥 User Added (Do These First! - Don't Remove This Section!!)
-> - User may, at any time, add tasks with high priority to your todo, which you can find here. Complete these first above all other tasks.
+# ⚡ High Priority Tasks
+> Tasks added by user that must be done first
 ---
-- [ ] None at the moment
 
-# 🚀 Current Milestone: [M5] Error Handling and Feedback
-> - Tasks for improving error handling and user feedback
-> - Higher level milestones are tracked in [[your-milestones]].
+None
+
+# 📋 Current Tasks (M3: Target Management)
+> Tasks for the current milestone
 ---
-- [x] Enhance error handling
-  - [x] Add input validation for tag name format
-  - [x] Add directory path validation
-  - [x] Add descriptive error messages for each failure case
 
-- [x] Improve user feedback
-  - [x] Add color-coded status messages
-  - [x] Add progress indicators for operations
-  - [x] Add help text for command usage
-
-- [x] Add command documentation
-  - [x] Add detailed command description
-  - [x] Add usage examples
-  - [x] Add error message explanations
+All tasks completed! Ready to move on to the next milestone.
 
 # ✅ Completed Tasks
-> - Completed tasks for reference and context refresh.
+> Tasks that have been completed
 ---
-- [x] Created TurboCommandType entry for "tag source" command with parameter requirements
-- [x] Implemented tag source command handling in TurboCommand
-- [x] Command automatically registered through CommandService._initCommands()
-- [x] Added integration tests for command functionality
-- [x] Added LocalStorageService integration to TurboCommand
-- [x] Implemented tag validation and creation logic
-- [x] Added directory handling and source management
-- [x] Added relation creation and validation
-- [x] Enhanced error handling and user feedback
-- [x] Added comprehensive command documentation
+
+1. ✅ Add `tagTarget` to `TurboCommandType` enum
+   - Added enum value and implemented all required methods
+   - Mirrored `tagSource` command structure
+   - Added comprehensive help text and descriptions
+   - Set up command arguments and options
+
+2. ✅ Register command under `tag` parent
+   - Updated `TurboCommand` constructor to include `tagTarget`
+   - Added subcommand registration under `tag` parent
+   - Implemented basic command structure
+
+3. ✅ Implement tag parameter validation
+   - Added tag parameter validation
+   - Added error messages and usage instructions
+   - Implemented name format validation
+   - Added example commands
+
+4. ✅ Implement tag name validation
+   - Added format validation using _isValidTagName
+   - Added length checks (2-50 characters)
+   - Added pattern matching for allowed characters
+   - Added clear error messages
+
+5. ✅ Add tag existence check
+   - Added local storage query
+   - Added handling for existing tags
+   - Added handling for missing tags
+
+6. ✅ Implement tag creation logic
+   - Added tag DTO creation
+   - Added metadata setting
+   - Prepared for storage integration
+
+7. ✅ Add storage integration
+   - Added storage service calls for tags and targets
+   - Added error handling for storage operations
+   - Added success messages for each operation
+   - Added failure handling with appropriate exit codes
+
+8. ✅ Create new target from directory
+   - Added directory validation using _isValidDirectoryPath
+   - Added target DTO creation with metadata
+   - Added storage integration with LocalStorageService
+   - Added success and error messages
+
+9. ✅ Use existing target
+   - Added local storage query for existing targets
+   - Added handling for existing targets
+   - Added metadata updates when needed
+   - Added appropriate logging messages
+
+10. ✅ Handle invalid directory
+    - Added directory validation checks
+    - Added clear error messages
+    - Added helpful feedback for users
+    - Added proper error handling and exit codes
+
+# 📝 Next Up
+> Tasks from the next milestone
+---
+
+All milestones completed! The `turbo tag target` command is now fully implemented and tested.

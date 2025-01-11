@@ -5,6 +5,7 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_relation_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_source_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/turbo_target_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_date_times.dart';
 import 'package:ultra_wide_turbo_cli/core/typedefs/update_current_def.dart';
 
@@ -19,6 +20,7 @@ class LocalStorageDto extends LocalStorageValue {
     required this.createdBy,
     required this.turboTags,
     required this.turboSources,
+    required this.turboTargets,
     required this.turboRelations,
   });
 
@@ -31,6 +33,7 @@ class LocalStorageDto extends LocalStorageValue {
       createdBy: userId,
       turboTags: {},
       turboSources: {},
+      turboTargets: {},
       turboRelations: {},
     );
   }
@@ -43,6 +46,8 @@ class LocalStorageDto extends LocalStorageValue {
   final Set<TurboTagDto> turboTags;
   @JsonKey(defaultValue: {})
   final Set<TurboSourceDto> turboSources;
+  @JsonKey(defaultValue: {})
+  final Set<TurboTargetDto> turboTargets;
   @JsonKey(defaultValue: {})
   final Set<TurboRelationDto> turboRelations;
 
@@ -60,6 +65,7 @@ class LocalStorageDto extends LocalStorageValue {
         'createdBy: $createdBy, '
         'turboTags: $turboTags, '
         'turboSources: $turboSources, '
+        'turboTargets: $turboTargets, '
         'turboRelations: $turboRelations'
         '}';
   }
@@ -70,6 +76,7 @@ class LocalStorageDto extends LocalStorageValue {
   LocalStorageDto copyWith({
     UpdateCurrentDef<Set<TurboTagDto>>? turboTags,
     UpdateCurrentDef<Set<TurboSourceDto>>? turboSources,
+    UpdateCurrentDef<Set<TurboTargetDto>>? turboTargets,
     UpdateCurrentDef<Set<TurboRelationDto>>? turboRelations,
   }) =>
       LocalStorageDto(
@@ -79,6 +86,7 @@ class LocalStorageDto extends LocalStorageValue {
         createdBy: createdBy,
         turboTags: turboTags?.call(this.turboTags) ?? this.turboTags,
         turboSources: turboSources?.call(this.turboSources) ?? this.turboSources,
+        turboTargets: turboTargets?.call(this.turboTargets) ?? this.turboTargets,
         turboRelations: turboRelations?.call(this.turboRelations) ?? this.turboRelations,
       );
 }

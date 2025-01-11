@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.15 - 2024-01-09
+
+### 🐛 Bug fixes:
+- Fixed update service to correctly handle global package paths
+- Added fallback path resolution for global packages
+- Improved error messages for missing configuration files
+
+### 🧪 Tests:
+- Added integration test for tag source and clone workflow
+- Added test coverage for multi-directory operations
+- Fixed test setup for global package scenarios
+
 ## 0.1.14 - 2024-01-09
 
 ### 🐛 Bug fixes:

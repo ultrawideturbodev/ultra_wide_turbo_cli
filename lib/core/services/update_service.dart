@@ -38,8 +38,15 @@ class UpdateService with TurboLogger {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
   String? _cachedVersion;
+  String? _testPubspecPath;
 
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
+
+  /// Sets a test pubspec path for testing purposes.
+  @visibleForTesting
+  void setTestPubspecPath(String path) {
+    _testPubspecPath = path;
+  }
 
   /// Gets the current package version from pubspec.yaml.
   ///
@@ -53,36 +60,40 @@ class UpdateService with TurboLogger {
     String? pubspecPath;
 
     try {
-      // First try local package directory
-      final scriptPath = Platform.script.toFilePath();
-      final packageDir = path.dirname(path.dirname(scriptPath));
-      pubspecPath = path.join(packageDir, 'pubspec.yaml');
-      pubspecFile = File(pubspecPath);
-
-      // If not found locally, try global pub cache
-      if (!await pubspecFile.exists()) {
-        final home =
-            Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
-        if (home == null) {
-          throw Exception('Could not determine home directory');
-        }
-
-        // Check in global pub cache
-        pubspecPath = path.join(
-          home,
-          '.pub-cache',
-          'global_packages',
-          Environment.packageName,
-          'pubspec.yaml',
-        );
+      if (_testPubspecPath != null) {
+        pubspecFile = File(_testPubspecPath!);
+        pubspecPath = _testPubspecPath;
+      } else {
+        // First try local package directory
+        final scriptPath = Platform.script.toFilePath();
+        final packageDir = path.dirname(path.dirname(scriptPath));
+        pubspecPath = path.join(packageDir, 'pubspec.yaml');
         pubspecFile = File(pubspecPath);
 
+        // If not found locally, try global pub cache
         if (!await pubspecFile.exists()) {
-          throw Exception(
-            'pubspec.yaml not found in either:\n'
-            '1. Local package: $packageDir/pubspec.yaml\n'
-            '2. Global cache: $pubspecPath',
+          final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+          if (home == null) {
+            throw Exception('Could not determine home directory');
+          }
+
+          // Check in global pub cache
+          pubspecPath = path.join(
+            home,
+            '.pub-cache',
+            'global_packages',
+            Environment.packageName,
+            'pubspec.yaml',
           );
+          pubspecFile = File(pubspecPath);
+
+          if (!await pubspecFile.exists()) {
+            throw Exception(
+              'pubspec.yaml not found in either:\n'
+              '1. Local package: $packageDir/pubspec.yaml\n'
+              '2. Global cache: $pubspecPath',
+            );
+          }
         }
       }
 
@@ -113,8 +124,7 @@ class UpdateService with TurboLogger {
     try {
       log.detail('Checking for updates...');
       final currentVersion = await getCurrentVersion();
-      final latestVersion =
-          await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);
@@ -169,8 +179,7 @@ class UpdateService with TurboLogger {
       final currentVersion = await getCurrentVersion();
       log.info('Current version: $currentVersion');
 
-      final latestVersion =
-          await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);

@@ -15,6 +15,7 @@ pubspec.lock
 # IDE directories
 .idea/
 .vscode/
+.obsidian/
 
 # Local storage files
 *.hive

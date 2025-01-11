@@ -8,6 +8,7 @@ A powerful CLI tool for managing and organizing your development workspace.
   - Link directories to tags for easy reference
   - Create and manage tag targets
   - Clone files from tagged sources
+  - Persistent storage in user's home directory
 - 🔄 Auto Updates
   - Automatic version checks
   - Seamless update process
@@ -71,4 +72,4 @@ turbo clone frontend_v2 --force
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU License - see the [LICENSE](LICENSE) file for details.

@@ -43,61 +43,71 @@ version: $testVersion
   group('checkForUpdates', () {
     test('returns false when on latest version', () async {
       // Arrange
-      when(() => mockPubUpdater.getLatestVersion(any())).thenAnswer((_) async => testVersion);
+      when(() => mockPubUpdater.getLatestVersion(any()))
+          .thenAnswer((_) async => testVersion);
 
       // Act
       final result = await service.checkForUpdates();
 
       // Assert
       expect(result.when(success: (r) => r.result, fail: (_) => false), false);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
     });
 
     test('returns true when newer version available', () async {
       // Arrange
       const newVersion = '0.2.0';
-      when(() => mockPubUpdater.getLatestVersion(any())).thenAnswer((_) async => newVersion);
+      when(() => mockPubUpdater.getLatestVersion(any()))
+          .thenAnswer((_) async => newVersion);
 
       // Act
       final result = await service.checkForUpdates();
 
       // Assert
       expect(result.when(success: (r) => r.result, fail: (_) => false), true);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
     });
 
     test('returns false when older version available', () async {
       // Arrange
       const olderVersion = '0.0.9';
-      when(() => mockPubUpdater.getLatestVersion(any())).thenAnswer((_) async => olderVersion);
+      when(() => mockPubUpdater.getLatestVersion(any()))
+          .thenAnswer((_) async => olderVersion);
 
       // Act
       final result = await service.checkForUpdates();
 
       // Assert
       expect(result.when(success: (r) => r.result, fail: (_) => false), false);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
     });
   });
 
   group('manualUpdate', () {
     test('returns success when already on latest version', () async {
       // Arrange
-      when(() => mockPubUpdater.getLatestVersion(any())).thenAnswer((_) async => testVersion);
+      when(() => mockPubUpdater.getLatestVersion(any()))
+          .thenAnswer((_) async => testVersion);
 
       // Act
       final result = await service.manualUpdate();
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), true);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verifyNever(() => mockPubUpdater.update(packageName: any(named: 'packageName')));
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verifyNever(
+          () => mockPubUpdater.update(packageName: any(named: 'packageName')));
     });
 
     test('updates successfully when newer version available', () async {
       // Arrange
       const newVersion = '999.999.999';
-      when(() => mockPubUpdater.getLatestVersion(any())).thenAnswer((_) async => newVersion);
+      when(() => mockPubUpdater.getLatestVersion(any()))
+          .thenAnswer((_) async => newVersion);
       when(() => mockPubUpdater.update(packageName: any(named: 'packageName')))
           .thenAnswer((_) async => ProcessResult(0, 0, '', ''));
 
@@ -106,14 +116,17 @@ version: $testVersion
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), true);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verify(() => mockPubUpdater.update(packageName: Environment.packageName)).called(1);
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verify(() => mockPubUpdater.update(packageName: Environment.packageName))
+          .called(1);
     });
 
     test('returns failure when update fails', () async {
       // Arrange
       const newVersion = '999.999.999';
-      when(() => mockPubUpdater.getLatestVersion(any())).thenAnswer((_) async => newVersion);
+      when(() => mockPubUpdater.getLatestVersion(any()))
+          .thenAnswer((_) async => newVersion);
       when(() => mockPubUpdater.update(packageName: any(named: 'packageName')))
           .thenThrow(Exception('Update failed'));
 
@@ -122,8 +135,10 @@ version: $testVersion
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), false);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verify(() => mockPubUpdater.update(packageName: Environment.packageName)).called(1);
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verify(() => mockPubUpdater.update(packageName: Environment.packageName))
+          .called(1);
     });
 
     test('returns failure when version check fails', () async {
@@ -136,8 +151,10 @@ version: $testVersion
 
       // Assert
       expect(result.when(success: (_) => true, fail: (_) => false), false);
-      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName)).called(1);
-      verifyNever(() => mockPubUpdater.update(packageName: any(named: 'packageName')));
+      verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
+          .called(1);
+      verifyNever(
+          () => mockPubUpdater.update(packageName: any(named: 'packageName')));
     });
   });
 }

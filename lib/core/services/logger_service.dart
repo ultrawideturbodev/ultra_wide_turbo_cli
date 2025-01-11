@@ -18,8 +18,8 @@ import 'package:mason_logger/mason_logger.dart';
 /// ```
 class LoggerService {
   static LoggerService get locate => GetIt.I.get();
-  static void registerSingleton() =>
-      GetIt.I.registerSingleton<LoggerService>(LoggerService());
+  static void registerLazySingleton() =>
+      GetIt.I.registerLazySingleton(LoggerService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
@@ -39,7 +39,7 @@ class LoggerService {
   /// final progress = log.progress('Processing...');
   /// progress.complete('Done!');
   /// ```
-  final Logger log = Logger();
+  final Logger log = Logger(level: Level.verbose);
 
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\

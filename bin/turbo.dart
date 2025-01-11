@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:mason_logger/mason_logger.dart';
-import 'package:pub_semver/pub_semver.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
 import 'package:ultra_wide_turbo_cli/core/services/command_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/logger_service.dart';

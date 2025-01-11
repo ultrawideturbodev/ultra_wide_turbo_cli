@@ -95,7 +95,8 @@ class TurboCommand extends Command<int> with TurboLogger {
     final storage = LocalStorageService.locate.localStorageDto;
 
     // Check if tag exists
-    final existingTag = storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
+    final existingTag =
+        storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
     if (existingTag == null) {
       log.err('❌ Tag not found: $tagName');
       return ExitCode.software.code;
@@ -105,7 +106,9 @@ class TurboCommand extends Command<int> with TurboLogger {
 
     // Find all source relations for the tag
     final sourceRelations = storage.turboRelations.where(
-      (relation) => relation.turboTagId == tagName && relation.type == TurboRelationType.sourceTag,
+      (relation) =>
+          relation.turboTagId == tagName &&
+          relation.type == TurboRelationType.sourceTag,
     );
 
     if (sourceRelations.isEmpty) {
@@ -226,7 +229,8 @@ class TurboCommand extends Command<int> with TurboLogger {
     final storage = LocalStorageService.locate.localStorageDto;
 
     // Check if tag exists
-    final existingTag = storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
+    final existingTag =
+        storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
     if (existingTag == null) {
       // Create new tag
       final now = gNow;
@@ -238,7 +242,8 @@ class TurboCommand extends Command<int> with TurboLogger {
         parentId: null,
       );
 
-      final response = await LocalStorageService.locate.addTag(turboTag: newTag);
+      final response =
+          await LocalStorageService.locate.addTag(turboTag: newTag);
       if (response.isFail) {
         log.err('❌ Failed to create tag: ${response.error}');
         return ExitCode.software.code;
@@ -273,19 +278,21 @@ class TurboCommand extends Command<int> with TurboLogger {
     final updatedStorage = LocalStorageService.locate.localStorageDto;
 
     // Check if source exists
-    final existingSource =
-        updatedStorage.turboSources.where((source) => source.id == dirName).firstOrNull;
+    final existingSource = updatedStorage.turboSources
+        .where((source) => source.id == currentDir.path)
+        .firstOrNull;
     if (existingSource == null) {
       // Create new source
       final now = gNow;
       final newSource = TurboSourceDto(
-        id: dirName,
+        id: currentDir.path,
         createdAt: now,
         updatedAt: now,
         createdBy: gUserId,
       );
 
-      final response = await LocalStorageService.locate.addSource(turboSource: newSource);
+      final response =
+          await LocalStorageService.locate.addSource(turboSource: newSource);
       if (response.isFail) {
         log.err('❌ Failed to create source: ${response.error}');
         return ExitCode.software.code;
@@ -300,10 +307,12 @@ class TurboCommand extends Command<int> with TurboLogger {
 
     // Check if relation exists
     final existingRelation = finalStorage.turboRelations
-        .where((relation) =>
-            relation.turboTagId == tagName &&
-            relation.turboSourceId == dirName &&
-            relation.type == TurboRelationType.sourceTag)
+        .where(
+          (relation) =>
+              relation.turboTagId == tagName &&
+              relation.turboSourceId == currentDir.path &&
+              relation.type == TurboRelationType.sourceTag,
+        )
         .firstOrNull;
 
     if (existingRelation == null) {
@@ -315,11 +324,12 @@ class TurboCommand extends Command<int> with TurboLogger {
         updatedAt: now,
         createdBy: gUserId,
         turboTagId: tagName,
-        turboSourceId: dirName,
+        turboSourceId: currentDir.path,
         type: TurboRelationType.sourceTag,
       );
 
-      final response = await LocalStorageService.locate.addRelation(turboRelation: newRelation);
+      final response = await LocalStorageService.locate
+          .addRelation(turboRelation: newRelation);
       if (response.isFail) {
         log.err('❌ Failed to create relation: ${response.error}');
         return ExitCode.software.code;
@@ -363,7 +373,8 @@ class TurboCommand extends Command<int> with TurboLogger {
     final storage = LocalStorageService.locate.localStorageDto;
 
     // Check if tag exists
-    final existingTag = storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
+    final existingTag =
+        storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
     TurboTagDto tag;
     if (existingTag == null) {
       // Create new tag
@@ -396,8 +407,9 @@ class TurboCommand extends Command<int> with TurboLogger {
     final updatedStorage = LocalStorageService.locate.localStorageDto;
 
     // Check if target exists
-    final existingTarget =
-        updatedStorage.turboTargets.where((target) => target.id == dirName).firstOrNull;
+    final existingTarget = updatedStorage.turboTargets
+        .where((target) => target.id == dirName)
+        .firstOrNull;
     TurboTargetDto target;
     if (existingTarget == null) {
       // Create new target
@@ -422,10 +434,12 @@ class TurboCommand extends Command<int> with TurboLogger {
 
     // Check if relation exists
     final existingRelation = updatedStorage.turboRelations
-        .where((relation) =>
-            relation.turboTagId == tag.id &&
-            relation.turboTargetId == target.id &&
-            relation.type == TurboRelationType.targetTag)
+        .where(
+          (relation) =>
+              relation.turboTagId == tag.id &&
+              relation.turboTargetId == target.id &&
+              relation.type == TurboRelationType.targetTag,
+        )
         .firstOrNull;
 
     if (existingRelation == null) {
@@ -442,7 +456,8 @@ class TurboCommand extends Command<int> with TurboLogger {
       );
 
       try {
-        await LocalStorageService.locate.addRelation(turboRelation: newRelation);
+        await LocalStorageService.locate
+            .addRelation(turboRelation: newRelation);
         log.info('✅ Successfully linked tag to directory');
       } catch (e) {
         log.err('❌ Failed to create relation: $e');
@@ -481,7 +496,8 @@ class TurboCommand extends Command<int> with TurboLogger {
     if (!path.isAbsolute(dirPath)) return false;
     try {
       final dir = Directory(dirPath);
-      return dir.existsSync() && dir.statSync().type == FileSystemEntityType.directory;
+      return dir.existsSync() &&
+          dir.statSync().type == FileSystemEntityType.directory;
     } catch (e) {
       return false;
     }

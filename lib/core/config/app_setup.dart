@@ -18,6 +18,7 @@ abstract class AppSetup {
     Locator._registerFactories();
     Locator._registerLazySingletons();
     Locator._registerSingletons();
+    await LocalStorageService.locate.initialise();
     _isInitialised = true;
   }
 }

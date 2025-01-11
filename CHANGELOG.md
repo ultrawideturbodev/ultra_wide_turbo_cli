@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## 0.1.14
+## 0.1.14 - 2024-01-09
+
+### 🐛 Bug fixes:
+- Fixed Hive database location to store in user's home directory for better persistence
+- Fixed source path storage to use full paths instead of just directory names
+- Fixed clone feature to correctly find and copy files using absolute paths
+
+## 0.1.12
 
 ### Added
 - `turbo clone` command for copying files from tagged sources
@@ -12,8 +19,6 @@ All notable changes to this project will be documented in this file.
   - Error handling and summaries
   - Comprehensive test coverage
 
-## 0.1.13
-
 ### Added
 - `turbo tag target` command for linking directories as tag targets
   - Tag validation and automatic creation
@@ -21,8 +26,6 @@ All notable changes to this project will be documented in this file.
   - Relation creation and error handling
   - Enhanced test coverage
   - Improved directory validation in tests
-
-## 0.1.12
 
 ### Added
 - New `turbo tag source` command for linking directories to tags

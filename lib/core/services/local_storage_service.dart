@@ -43,7 +43,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static LocalStorageService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(LocalStorageService.new);
+  static void registerLazySingleton() =>
+      GetIt.I.registerLazySingleton(LocalStorageService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -141,7 +142,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
       hiveBox: HiveBox.localStorageDto,
       userId: userId,
     );
-    return rLocalStorage == null ? null : LocalStorageDto.fromJson(rLocalStorage);
+    return rLocalStorage == null
+        ? null
+        : LocalStorageDto.fromJson(rLocalStorage);
   }
 
   /// Current local storage settings.
@@ -156,7 +159,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
     final localStorageDto = _localStorageDto;
     if (localStorageDto.id != userId) {
       final hasLocalStorage = _hasBox(hiveBox: HiveBox.localStorageDto);
-      final localStorageDto = hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
+      final localStorageDto =
+          hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
       if (localStorageDto == null) {
         await _updateLocalStorage(
           (current) => LocalStorageDto.defaultDto(userId: userId),
@@ -194,7 +198,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
     switch (hiveBox) {
       case HiveBox.localStorageDto:
         try {
-          final rLocalStorage = _getBoxContent(hiveBox: hiveBox, userId: userId);
+          final rLocalStorage =
+              _getBoxContent(hiveBox: hiveBox, userId: userId);
           if (rLocalStorage != null) {
             _localStorageDto = LocalStorageDto.fromJson(rLocalStorage);
           }
@@ -213,7 +218,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
   bool _hasBox({required HiveBox hiveBox}) => _boxes.containsKey(hiveBox.id);
 
   /// Gets an opened Hive box, assuming it exists.
-  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) => _boxes[hiveBox.id] as Box<T>;
+  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) =>
+      _boxes[hiveBox.id] as Box<T>;
 
   /// Opens a new Hive box.
   Future<Box<T>> _openBox<T>({required HiveBox hiveBox}) async {
@@ -263,7 +269,15 @@ class LocalStorageService extends Initialisable with TurboLogger {
   @CalledByMutex()
   Future<void> _tryInitDirAndAdapters() async {
     try {
-      final appDir = Directory.current;
+      final homeDir =
+          Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+      if (homeDir == null) {
+        throw Exception('Could not find home directory');
+      }
+      final appDir = Directory('$homeDir/.ultra_wide_turbo_cli');
+      if (!await appDir.exists()) {
+        await appDir.create(recursive: true);
+      }
       Hive.init(appDir.path);
       _registerAdapters();
     } catch (error, _) {
@@ -320,7 +334,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
 
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  Future<TurboResponse> addTag({required TurboTagDto turboTag}) async => await _updateLocalStorage(
+  Future<TurboResponse> addTag({required TurboTagDto turboTag}) async =>
+      await _updateLocalStorage(
         (current) => current.copyWith(
           turboTags: (current) => current..add(turboTag),
         ),
@@ -342,7 +357,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> addSource({required TurboSourceDto turboSource}) async =>
+  Future<TurboResponse> addSource(
+          {required TurboSourceDto turboSource}) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboSources: (current) => current..add(turboSource),
@@ -350,7 +366,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeSource({required TurboSourceDto turboSource}) async =>
+  Future<TurboResponse> removeSource(
+          {required TurboSourceDto turboSource}) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboSources: (current) => current..remove(turboSource),
@@ -365,7 +382,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> addRelation({required TurboRelationDto turboRelation}) async =>
+  Future<TurboResponse> addRelation(
+          {required TurboRelationDto turboRelation}) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboRelations: (current) => current..add(turboRelation),
@@ -373,7 +391,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeRelation({required TurboRelationDto turboRelation}) async =>
+  Future<TurboResponse> removeRelation(
+          {required TurboRelationDto turboRelation}) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboRelations: (current) => current..remove(turboRelation),
@@ -388,7 +407,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> addTarget({required TurboTargetDto turboTarget}) async =>
+  Future<TurboResponse> addTarget(
+          {required TurboTargetDto turboTarget}) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboTargets: (current) => current..add(turboTarget),
@@ -396,7 +416,8 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeTarget({required TurboTargetDto turboTarget}) async =>
+  Future<TurboResponse> removeTarget(
+          {required TurboTargetDto turboTarget}) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboTargets: (current) => current..remove(turboTarget),

@@ -29,7 +29,8 @@ class TurboRelationDto extends LocalStorageValue {
   final TurboRelationType type;
 
   static const fromJsonFactory = _$TurboRelationDtoFromJson;
-  factory TurboRelationDto.fromJson(Map<String, dynamic> json) => _$TurboRelationDtoFromJson(json);
+  factory TurboRelationDto.fromJson(Map<String, dynamic> json) =>
+      _$TurboRelationDtoFromJson(json);
   static const toJsonFactory = _$TurboRelationDtoToJson;
   Map<String, dynamic> toJson() => _$TurboRelationDtoToJson(this);
 
@@ -49,4 +50,14 @@ class TurboRelationDto extends LocalStorageValue {
 
   @override
   String get toJsonString => jsonEncode(toJson());
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TurboRelationDto &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

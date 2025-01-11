@@ -32,7 +32,8 @@ class ArchiveService with TurboLogger {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static ArchiveService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(ArchiveService._);
+  static void registerLazySingleton() =>
+      GetIt.I.registerLazySingleton(ArchiveService._);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -151,7 +152,8 @@ class ArchiveService with TurboLogger {
 
     await targetDir.create(recursive: true);
     await for (final entity in sourceDir.list(recursive: false)) {
-      final targetPath = path.join(targetDir.absolute.path, path.basename(entity.path));
+      final targetPath =
+          path.join(targetDir.absolute.path, path.basename(entity.path));
 
       if (entity is Directory) {
         await _copyDirectory(entity.path, targetPath);

@@ -82,7 +82,8 @@ void main() {
       await File('${sourceDir.path}/file1.txt').writeAsString('Test file 1');
       await File('${sourceDir.path}/file2.txt').writeAsString('Test file 2');
       await Directory('${sourceDir.path}/subdir').create();
-      await File('${sourceDir.path}/subdir/file3.txt').writeAsString('Test file 3');
+      await File('${sourceDir.path}/subdir/file3.txt')
+          .writeAsString('Test file 3');
     });
 
     tearDownAll(() async {
@@ -164,27 +165,34 @@ void main() {
       expect(File('${targetDir.path}/subdir/file3.txt').existsSync(), isTrue);
 
       // Verify file contents
-      expect(await File('${targetDir.path}/file1.txt').readAsString(), equals('Test file 1'));
-      expect(await File('${targetDir.path}/file2.txt').readAsString(), equals('Test file 2'));
+      expect(await File('${targetDir.path}/file1.txt').readAsString(),
+          equals('Test file 1'));
+      expect(await File('${targetDir.path}/file2.txt').readAsString(),
+          equals('Test file 2'));
       expect(
-          await File('${targetDir.path}/subdir/file3.txt').readAsString(), equals('Test file 3'));
+        await File('${targetDir.path}/subdir/file3.txt').readAsString(),
+        equals('Test file 3'),
+      );
     });
 
     test('respects force flag', () async {
       // Create target directory with existing file
-      final targetDir = await Directory('${tempDir.path}/target_force').create();
+      final targetDir =
+          await Directory('${tempDir.path}/target_force').create();
       await File('${targetDir.path}/file1.txt').writeAsString('Existing file');
       Directory.current = targetDir;
 
       // First attempt without force flag
       var result = await commandService.run(['clone', 'test-tag']);
       expect(result, equals(ExitCode.success.code));
-      expect(await File('${targetDir.path}/file1.txt').readAsString(), equals('Existing file'));
+      expect(await File('${targetDir.path}/file1.txt').readAsString(),
+          equals('Existing file'));
 
       // Second attempt with force flag
       result = await commandService.run(['clone', 'test-tag', '--force']);
       expect(result, equals(ExitCode.success.code));
-      expect(await File('${targetDir.path}/file1.txt').readAsString(), equals('Test file 1'));
+      expect(await File('${targetDir.path}/file1.txt').readAsString(),
+          equals('Test file 1'));
     });
   });
 }

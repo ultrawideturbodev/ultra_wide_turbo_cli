@@ -37,4 +37,14 @@ class TurboSourceDto extends LocalStorageValue {
 
   @override
   String get toJsonString => jsonEncode(toJson());
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TurboSourceDto &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

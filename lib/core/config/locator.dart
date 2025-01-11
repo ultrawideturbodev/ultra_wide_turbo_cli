@@ -14,6 +14,6 @@ abstract class Locator {
   }
 
   static void _registerSingletons() {
-    LoggerService.registerSingleton();
+    LoggerService.registerLazySingleton();
   }
 }

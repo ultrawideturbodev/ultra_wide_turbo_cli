@@ -20,7 +20,8 @@ class TurboTargetDto extends LocalStorageValue {
   final String createdBy;
 
   static const fromJsonFactory = _$TurboTargetDtoFromJson;
-  factory TurboTargetDto.fromJson(Map<String, dynamic> json) => _$TurboTargetDtoFromJson(json);
+  factory TurboTargetDto.fromJson(Map<String, dynamic> json) =>
+      _$TurboTargetDtoFromJson(json);
   static const toJsonFactory = _$TurboTargetDtoToJson;
   Map<String, dynamic> toJson() => _$TurboTargetDtoToJson(this);
 
@@ -36,4 +37,14 @@ class TurboTargetDto extends LocalStorageValue {
 
   @override
   String get toJsonString => jsonEncode(toJson());
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TurboTargetDto &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

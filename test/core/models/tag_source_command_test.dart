@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:test/test.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
-import 'package:ultra_wide_turbo_cli/core/enums/turbo_relation_type.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_relation_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_source_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
+import 'package:ultra_wide_turbo_cli/core/enums/turbo_relation_type.dart';
 import 'package:ultra_wide_turbo_cli/core/services/command_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/local_storage_service.dart';
 
@@ -73,11 +73,13 @@ void main() {
         expect(result, equals(ExitCode.success.code));
 
         // AND it accepts a tag parameter
-        final resultWithParam = await commandService.run(['tag', 'source', 'test-tag']);
+        final resultWithParam =
+            await commandService.run(['tag', 'source', 'test-tag']);
         expect(resultWithParam, equals(ExitCode.success.code));
 
         // AND it shows in help text
-        final helpResult = await commandService.run(['tag', 'source', '--help']);
+        final helpResult =
+            await commandService.run(['tag', 'source', '--help']);
         expect(helpResult, equals(ExitCode.success.code));
       });
     });
@@ -107,11 +109,13 @@ void main() {
         await storageService.addTag(turboTag: tag);
 
         // WHEN the system checks local storage
-        final result = await commandService.run(['tag', 'source', 'existing-tag']);
+        final result =
+            await commandService.run(['tag', 'source', 'existing-tag']);
 
         // THEN it finds the tag
         final storage = storageService.localStorageDto;
-        final foundTag = storage.turboTags.where((t) => t.id == 'existing-tag').firstOrNull;
+        final foundTag =
+            storage.turboTags.where((t) => t.id == 'existing-tag').firstOrNull;
         expect(foundTag, isNotNull);
 
         // AND proceeds with source linking
@@ -127,7 +131,8 @@ void main() {
         // AND doesn't find the tag
         // THEN it creates a new TurboTagDto
         final storage = storageService.localStorageDto;
-        final newTag = storage.turboTags.where((t) => t.id == 'new-tag').firstOrNull;
+        final newTag =
+            storage.turboTags.where((t) => t.id == 'new-tag').firstOrNull;
         expect(newTag, isNotNull);
 
         // AND stores it in local storage
@@ -154,7 +159,8 @@ void main() {
         // THEN it creates a new TurboSourceDto
         final source = storage.turboSources.firstWhere(
           (s) => s.id.toLowerCase().startsWith('test_dir'),
-          orElse: () => throw Exception('Source not found with pattern test_dir*'),
+          orElse: () =>
+              throw Exception('Source not found with pattern test_dir*'),
         );
         expect(source, isNotNull);
 
@@ -272,10 +278,12 @@ void main() {
 
         // AND a relation already exists
         final storage = storageService.localStorageDto;
-        final relations = storage.turboRelations.where((r) =>
-            r.turboTagId == 'my-tag' &&
-            r.turboSourceId == dirName &&
-            r.type == TurboRelationType.sourceTag);
+        final relations = storage.turboRelations.where(
+          (r) =>
+              r.turboTagId == 'my-tag' &&
+              r.turboSourceId == dirName &&
+              r.type == TurboRelationType.sourceTag,
+        );
 
         // THEN it shows "already exists" message
         expect(result, equals(ExitCode.success.code));
@@ -291,7 +299,8 @@ void main() {
     group('Scenario: Handle invalid directory', () {
       test('GIVEN the user runs the command', () async {
         // Setup invalid directory
-        IOOverrides.global = _TestIOOverrides(tempDir, simulateInvalidDir: true);
+        IOOverrides.global =
+            _TestIOOverrides(tempDir, simulateInvalidDir: true);
 
         // WHEN the system checks the current directory
         final result = await commandService.run(['tag', 'source', 'my-tag']);

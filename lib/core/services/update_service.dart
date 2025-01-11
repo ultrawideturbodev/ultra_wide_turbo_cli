@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:meta/meta.dart';
+import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:pub_updater/pub_updater.dart';
 import 'package:turbo_response/turbo_response.dart';
@@ -46,9 +47,14 @@ class UpdateService with TurboLogger {
   Future<String> getCurrentVersion() async {
     if (_cachedVersion != null) return _cachedVersion!;
 
-    final pubspecFile = File('pubspec.yaml');
+    // Get the package installation directory
+    final scriptPath = Platform.script.toFilePath();
+    final packageDir = path.dirname(path.dirname(scriptPath));
+    final pubspecFile = File(path.join(packageDir, 'pubspec.yaml'));
+
     if (!await pubspecFile.exists()) {
-      throw Exception('pubspec.yaml not found');
+      throw Exception(
+          'pubspec.yaml not found in package directory: ${pubspecFile.path}');
     }
 
     final content = await pubspecFile.readAsString();
@@ -72,7 +78,8 @@ class UpdateService with TurboLogger {
     try {
       log.detail('Checking for updates...');
       final currentVersion = await getCurrentVersion();
-      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion =
+          await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);
@@ -127,7 +134,8 @@ class UpdateService with TurboLogger {
       final currentVersion = await getCurrentVersion();
       log.info('Current version: $currentVersion');
 
-      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion =
+          await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);

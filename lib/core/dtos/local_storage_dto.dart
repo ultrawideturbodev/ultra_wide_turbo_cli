@@ -52,7 +52,8 @@ class LocalStorageDto extends LocalStorageValue {
   final Set<TurboRelationDto> turboRelations;
 
   static const fromJsonFactory = _$LocalStorageDtoFromJson;
-  factory LocalStorageDto.fromJson(Map<String, dynamic> json) => _$LocalStorageDtoFromJson(json);
+  factory LocalStorageDto.fromJson(Map<String, dynamic> json) =>
+      _$LocalStorageDtoFromJson(json);
   static const toJsonFactory = _$LocalStorageDtoToJson;
   Map<String, dynamic> toJson() => _$LocalStorageDtoToJson(this);
 
@@ -85,8 +86,11 @@ class LocalStorageDto extends LocalStorageValue {
         updatedAt: gNow,
         createdBy: createdBy,
         turboTags: turboTags?.call(this.turboTags) ?? this.turboTags,
-        turboSources: turboSources?.call(this.turboSources) ?? this.turboSources,
-        turboTargets: turboTargets?.call(this.turboTargets) ?? this.turboTargets,
-        turboRelations: turboRelations?.call(this.turboRelations) ?? this.turboRelations,
+        turboSources:
+            turboSources?.call(this.turboSources) ?? this.turboSources,
+        turboTargets:
+            turboTargets?.call(this.turboTargets) ?? this.turboTargets,
+        turboRelations:
+            turboRelations?.call(this.turboRelations) ?? this.turboRelations,
       );
 }

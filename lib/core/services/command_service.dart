@@ -9,7 +9,7 @@ import 'package:ultra_wide_turbo_cli/core/enums/turbo_command_type.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_flag_type.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
-import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 import 'package:ultra_wide_turbo_cli/core/models/turbo_command.dart';
 import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 
@@ -29,7 +29,7 @@ import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 /// // Get help
 /// await runner.run(['--help']);
 /// ```
-class CommandService extends CommandRunner<int> with TurboLogger {
+class CommandService extends CommandRunner<int> {
   CommandService() : super(Environment.packageName, Environment.packageTitle) {
     initialise();
   }

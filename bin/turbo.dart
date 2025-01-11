@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:mason_logger/mason_logger.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 import 'package:ultra_wide_turbo_cli/core/services/command_service.dart';
-import 'package:ultra_wide_turbo_cli/core/services/logger_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 
 Future<void> main(List<String> args) async {
@@ -34,7 +34,7 @@ Future<void> main(List<String> args) async {
     final exitCode = await turboCommandService.run(args);
     exit(exitCode);
   } catch (error) {
-    LoggerService.locate.log.err('$error');
+    log.err('$error');
     exit(ExitCode.software.code);
   }
 }

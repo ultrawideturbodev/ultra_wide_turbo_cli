@@ -4,7 +4,7 @@ import 'dart:io' as io;
 import 'package:get_it/get_it.dart';
 import 'package:mason_logger/mason_logger.dart';
 import 'package:turbo_response/turbo_response.dart';
-import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 
 /// Executes shell scripts and commands in a controlled environment.
 ///
@@ -17,7 +17,7 @@ import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 ///   print('Command executed successfully');
 /// }
 /// ```
-class ScriptService with TurboLogger {
+class ScriptService {
   /// Private constructor to enforce singleton pattern.
   ScriptService._();
 

@@ -6,14 +6,14 @@ import 'package:pub_semver/pub_semver.dart';
 import 'package:pub_updater/pub_updater.dart';
 import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
-import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 import 'package:yaml/yaml.dart';
 
 /// Service responsible for managing CLI updates.
 ///
 /// Uses [PubUpdater] to check for and apply updates from pub.dev.
 /// Implements the singleton pattern with a private constructor.
-class UpdateService with TurboLogger {
+class UpdateService {
   UpdateService._();
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 

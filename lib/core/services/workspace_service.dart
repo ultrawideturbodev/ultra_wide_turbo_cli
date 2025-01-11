@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:get_it/get_it.dart';
 import 'package:path/path.dart' as path;
 import 'package:turbo_response/turbo_response.dart';
-import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 
 /// Manages Ultra Wide Turbo workspace operations.
 ///
@@ -26,7 +26,7 @@ import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
 ///   force: true,
 /// );
 /// ```
-class WorkspaceService with TurboLogger {
+class WorkspaceService {
   WorkspaceService._();
 
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\

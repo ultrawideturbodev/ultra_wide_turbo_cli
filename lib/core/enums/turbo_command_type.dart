@@ -82,14 +82,15 @@ For more information, visit: https://docs.turbo.build/tags''';
         return '''
 Links the current directory to a tag for easy reference and organization.
 
+You will be prompted to select an existing tag or create a new one.
+
 The tag name must:
 - Be between 2 and 50 characters
 - Contain only letters, numbers, hyphens, and underscores
 - Not start or end with a hyphen or underscore
 
 Examples:
-  turbo tag source my-project     # Link current directory to "my-project" tag
-  turbo tag source frontend_v2    # Link current directory to "frontend_v2" tag
+  turbo tag source    # Select or create a tag for the current directory
 
 Common errors:
 - Invalid tag name format: Use only allowed characters and follow naming rules
@@ -101,14 +102,15 @@ For more information, visit: https://docs.turbo.build/tags''';
         return '''
 Links the current directory as a target for a tag.
 
+You will be prompted to select an existing tag or create a new one.
+
 The tag name must:
 - Be between 2 and 50 characters
 - Contain only letters, numbers, hyphens, and underscores
 - Not start or end with a hyphen or underscore
 
 Examples:
-  turbo tag target my-project     # Link current directory as target for "my-project" tag
-  turbo tag target frontend_v2    # Link current directory as target for "frontend_v2" tag
+  turbo tag target    # Select or create a tag for the current directory
 
 Common errors:
 - Invalid tag name format: Use only allowed characters and follow naming rules

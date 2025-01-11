@@ -13,11 +13,11 @@ import 'package:ultra_wide_turbo_cli/core/enums/turbo_relation_type.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/string_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_auth.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_date_times.dart';
-import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 import 'package:ultra_wide_turbo_cli/core/services/local_storage_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 
-class TurboCommand extends Command<int> with TurboLogger {
+class TurboCommand extends Command<int> {
   TurboCommand({
     required TurboCommandType type,
   }) : _type = type {
@@ -95,8 +95,7 @@ class TurboCommand extends Command<int> with TurboLogger {
     final storage = LocalStorageService.locate.localStorageDto;
 
     // Check if tag exists
-    final existingTag =
-        storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
+    final existingTag = storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
     if (existingTag == null) {
       log.err('❌ Tag not found: $tagName');
       return ExitCode.software.code;
@@ -106,9 +105,7 @@ class TurboCommand extends Command<int> with TurboLogger {
 
     // Find all source relations for the tag
     final sourceRelations = storage.turboRelations.where(
-      (relation) =>
-          relation.turboTagId == tagName &&
-          relation.type == TurboRelationType.sourceTag,
+      (relation) => relation.turboTagId == tagName && relation.type == TurboRelationType.sourceTag,
     );
 
     if (sourceRelations.isEmpty) {
@@ -199,38 +196,47 @@ class TurboCommand extends Command<int> with TurboLogger {
   }
 
   Future<int> _handleTagSource() async {
-    // Validate tag parameter
-    if (argResults?.rest.isEmpty ?? true) {
-      log.err('❌ Tag name is required');
-      log.info('');
-      log.info('Usage: turbo tag source <tag>');
-      log.info('Example: turbo tag source my-project');
-      return ExitCode.usage.code;
-    }
-
-    final tagName = argResults!.rest.first.normalize();
-
-    // Validate tag name format
-    if (!_isValidTagName(tagName)) {
-      log.err('❌ Invalid tag name format');
-      log.info('');
-      log.info('Tag name requirements:');
-      log.info('- Must be between 2 and 50 characters');
-      log.info('- Can only contain letters, numbers, hyphens, and underscores');
-      log.info('- Cannot start or end with a hyphen or underscore');
-      log.info('');
-      log.info('Example: my-project-123');
-      return ExitCode.usage.code;
-    }
-
-    log.info('🔍 Linking current directory to tag: $tagName');
+    log.info('🔍 Preparing to link current directory to a tag');
 
     // Get current storage state
     final storage = LocalStorageService.locate.localStorageDto;
 
+    // Get list of existing tags
+    final existingTags = storage.turboTags;
+    final tagOptions = ['new', ...existingTags.map((tag) => tag.id)];
+
+    // Prompt user to select a tag
+    final selectedTag = log.chooseOne(
+      'Select a tag:',
+      choices: tagOptions,
+      display: (tag) => tag,
+    );
+
+    String tagName;
+    if (selectedTag == 'new') {
+      // Prompt for new tag name
+      tagName = log.prompt('Enter a new tag name:').normalize();
+
+      // Validate tag name format
+      if (!_isValidTagName(tagName)) {
+        log.err('❌ Invalid tag name format');
+        log.info('');
+        log.info('Tag name requirements:');
+        log.info('- Must be between 2 and 50 characters');
+        log.info('- Can only contain letters, numbers, hyphens, and underscores');
+        log.info('- Cannot start or end with a hyphen or underscore');
+        log.info('');
+        log.info('Example: my-project-123');
+        return ExitCode.usage.code;
+      }
+    } else {
+      tagName = selectedTag;
+    }
+
+    log.info('🔍 Linking current directory to tag: $tagName');
+
     // Check if tag exists
-    final existingTag =
-        storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
+    final existingTag = storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
     if (existingTag == null) {
       // Create new tag
       final now = gNow;
@@ -242,8 +248,7 @@ class TurboCommand extends Command<int> with TurboLogger {
         parentId: null,
       );
 
-      final response =
-          await LocalStorageService.locate.addTag(turboTag: newTag);
+      final response = await LocalStorageService.locate.addTag(turboTag: newTag);
       if (response.isFail) {
         log.err('❌ Failed to create tag: ${response.error}');
         return ExitCode.software.code;
@@ -278,9 +283,8 @@ class TurboCommand extends Command<int> with TurboLogger {
     final updatedStorage = LocalStorageService.locate.localStorageDto;
 
     // Check if source exists
-    final existingSource = updatedStorage.turboSources
-        .where((source) => source.id == currentDir.path)
-        .firstOrNull;
+    final existingSource =
+        updatedStorage.turboSources.where((source) => source.id == currentDir.path).firstOrNull;
     if (existingSource == null) {
       // Create new source
       final now = gNow;
@@ -291,8 +295,7 @@ class TurboCommand extends Command<int> with TurboLogger {
         createdBy: gUserId,
       );
 
-      final response =
-          await LocalStorageService.locate.addSource(turboSource: newSource);
+      final response = await LocalStorageService.locate.addSource(turboSource: newSource);
       if (response.isFail) {
         log.err('❌ Failed to create source: ${response.error}');
         return ExitCode.software.code;
@@ -328,8 +331,7 @@ class TurboCommand extends Command<int> with TurboLogger {
         type: TurboRelationType.sourceTag,
       );
 
-      final response = await LocalStorageService.locate
-          .addRelation(turboRelation: newRelation);
+      final response = await LocalStorageService.locate.addRelation(turboRelation: newRelation);
       if (response.isFail) {
         log.err('❌ Failed to create relation: ${response.error}');
         return ExitCode.software.code;
@@ -343,38 +345,47 @@ class TurboCommand extends Command<int> with TurboLogger {
   }
 
   Future<int> _handleTagTarget() async {
-    // Validate tag parameter
-    if (argResults?.rest.isEmpty ?? true) {
-      log.err('❌ Tag name is required');
-      log.info('');
-      log.info('Usage: turbo tag target <tag>');
-      log.info('Example: turbo tag target my-project');
-      return ExitCode.usage.code;
-    }
-
-    final tagName = argResults!.rest.first.normalize();
-
-    // Validate tag name format
-    if (!_isValidTagName(tagName)) {
-      log.err('❌ Invalid tag name format');
-      log.info('');
-      log.info('Tag name requirements:');
-      log.info('- Must be between 2 and 50 characters');
-      log.info('- Can only contain letters, numbers, hyphens, and underscores');
-      log.info('- Cannot start or end with a hyphen or underscore');
-      log.info('');
-      log.info('Example: my-project-123');
-      return ExitCode.usage.code;
-    }
-
-    log.info('🔍 Linking current directory as target for tag: $tagName');
+    log.info('🔍 Preparing to link current directory as target');
 
     // Get current storage state
     final storage = LocalStorageService.locate.localStorageDto;
 
+    // Get list of existing tags
+    final existingTags = storage.turboTags;
+    final tagOptions = ['new', ...existingTags.map((tag) => tag.id)];
+
+    // Prompt user to select a tag
+    final selectedTag = log.chooseOne(
+      'Select a tag:',
+      choices: tagOptions,
+      display: (tag) => tag,
+    );
+
+    String tagName;
+    if (selectedTag == 'new') {
+      // Prompt for new tag name
+      tagName = log.prompt('Enter a new tag name:').normalize();
+
+      // Validate tag name format
+      if (!_isValidTagName(tagName)) {
+        log.err('❌ Invalid tag name format');
+        log.info('');
+        log.info('Tag name requirements:');
+        log.info('- Must be between 2 and 50 characters');
+        log.info('- Can only contain letters, numbers, hyphens, and underscores');
+        log.info('- Cannot start or end with a hyphen or underscore');
+        log.info('');
+        log.info('Example: my-project-123');
+        return ExitCode.usage.code;
+      }
+    } else {
+      tagName = selectedTag;
+    }
+
+    log.info('🔍 Linking current directory as target for tag: $tagName');
+
     // Check if tag exists
-    final existingTag =
-        storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
+    final existingTag = storage.turboTags.where((tag) => tag.id == tagName).firstOrNull;
     TurboTagDto tag;
     if (existingTag == null) {
       // Create new tag
@@ -407,9 +418,8 @@ class TurboCommand extends Command<int> with TurboLogger {
     final updatedStorage = LocalStorageService.locate.localStorageDto;
 
     // Check if target exists
-    final existingTarget = updatedStorage.turboTargets
-        .where((target) => target.id == dirName)
-        .firstOrNull;
+    final existingTarget =
+        updatedStorage.turboTargets.where((target) => target.id == dirName).firstOrNull;
     TurboTargetDto target;
     if (existingTarget == null) {
       // Create new target
@@ -456,8 +466,7 @@ class TurboCommand extends Command<int> with TurboLogger {
       );
 
       try {
-        await LocalStorageService.locate
-            .addRelation(turboRelation: newRelation);
+        await LocalStorageService.locate.addRelation(turboRelation: newRelation);
         log.info('✅ Successfully linked tag to directory');
       } catch (e) {
         log.err('❌ Failed to create relation: $e');
@@ -496,8 +505,7 @@ class TurboCommand extends Command<int> with TurboLogger {
     if (!path.isAbsolute(dirPath)) return false;
     try {
       final dir = Directory(dirPath);
-      return dir.existsSync() &&
-          dir.statSync().type == FileSystemEntityType.directory;
+      return dir.existsSync() && dir.statSync().type == FileSystemEntityType.directory;
     } catch (e) {
       return false;
     }

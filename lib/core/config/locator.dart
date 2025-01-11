@@ -13,7 +13,5 @@ abstract class Locator {
     WorkspaceService.registerLazySingleton();
   }
 
-  static void _registerSingletons() {
-    LoggerService.registerLazySingleton();
-  }
+  static void _registerSingletons() {}
 }

@@ -17,7 +17,7 @@ import 'package:ultra_wide_turbo_cli/core/dtos/turbo_target_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_adapters.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_box.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_auth.dart';
-import 'package:ultra_wide_turbo_cli/core/mixins/turbo_logger.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 import 'package:ultra_wide_turbo_cli/core/typedefs/update_current_def.dart';
 import 'package:ultra_wide_turbo_cli/core/util/mutex.dart';
 
@@ -39,7 +39,7 @@ import 'package:ultra_wide_turbo_cli/core/util/mutex.dart';
 /// // Clean up
 /// await localStorageService.dispose();
 /// ```
-class LocalStorageService extends Initialisable with TurboLogger {
+class LocalStorageService extends Initialisable  {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static LocalStorageService get locate => GetIt.I.get();

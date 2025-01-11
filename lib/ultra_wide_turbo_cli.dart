@@ -3,4 +3,3 @@ library ultra_wide_turbo_cli;
 
 export 'core/config/app_setup.dart';
 export 'core/services/command_service.dart';
-export 'core/services/logger_service.dart';

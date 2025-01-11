@@ -100,7 +100,8 @@ version: $testVersion
       verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
           .called(1);
       verifyNever(
-          () => mockPubUpdater.update(packageName: any(named: 'packageName')));
+        () => mockPubUpdater.update(packageName: any(named: 'packageName')),
+      );
     });
 
     test('updates successfully when newer version available', () async {
@@ -154,7 +155,8 @@ version: $testVersion
       verify(() => mockPubUpdater.getLatestVersion(Environment.packageName))
           .called(1);
       verifyNever(
-          () => mockPubUpdater.update(packageName: any(named: 'packageName')));
+        () => mockPubUpdater.update(packageName: any(named: 'packageName')),
+      );
     });
   });
 }

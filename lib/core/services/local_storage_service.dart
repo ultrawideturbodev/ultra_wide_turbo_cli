@@ -357,8 +357,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> addSource(
-          {required TurboSourceDto turboSource}) async =>
+  Future<TurboResponse> addSource({
+    required TurboSourceDto turboSource,
+  }) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboSources: (current) => current..add(turboSource),
@@ -366,8 +367,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeSource(
-          {required TurboSourceDto turboSource}) async =>
+  Future<TurboResponse> removeSource({
+    required TurboSourceDto turboSource,
+  }) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboSources: (current) => current..remove(turboSource),
@@ -382,8 +384,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> addRelation(
-          {required TurboRelationDto turboRelation}) async =>
+  Future<TurboResponse> addRelation({
+    required TurboRelationDto turboRelation,
+  }) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboRelations: (current) => current..add(turboRelation),
@@ -391,8 +394,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeRelation(
-          {required TurboRelationDto turboRelation}) async =>
+  Future<TurboResponse> removeRelation({
+    required TurboRelationDto turboRelation,
+  }) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboRelations: (current) => current..remove(turboRelation),
@@ -407,8 +411,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> addTarget(
-          {required TurboTargetDto turboTarget}) async =>
+  Future<TurboResponse> addTarget({
+    required TurboTargetDto turboTarget,
+  }) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboTargets: (current) => current..add(turboTarget),
@@ -416,8 +421,9 @@ class LocalStorageService extends Initialisable with TurboLogger {
         userId: gUserId,
       );
 
-  Future<TurboResponse> removeTarget(
-          {required TurboTargetDto turboTarget}) async =>
+  Future<TurboResponse> removeTarget({
+    required TurboTargetDto turboTarget,
+  }) async =>
       await _updateLocalStorage(
         (current) => current.copyWith(
           turboTargets: (current) => current..remove(turboTarget),

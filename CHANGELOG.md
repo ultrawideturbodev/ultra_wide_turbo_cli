@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.15
+
+- 🐛 Fixed update service to correctly handle package paths in both local and global installations
+- ✨ Improved error messages for missing configuration files
+- 🔧 Added fallback path resolution for global packages
+
 ## 0.1.14 - 2024-01-09
 
 ### 🐛 Bug fixes:

@@ -1,6 +1,6 @@
 name: ultra_wide_turbo_cli
 description: A CLI tool for managing Ultra Wide Turbo workspaces.
-version: 0.1.14
+version: 0.1.15
 repository: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli
 homepage: https://ultrawideturbodev.com
 documentation: https://github.com/ultrawideturbodev/ultra_wide_turbo_cli/tree/main/turbo_docs

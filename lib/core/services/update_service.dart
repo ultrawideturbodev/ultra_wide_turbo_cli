@@ -43,30 +43,65 @@ class UpdateService with TurboLogger {
 
   /// Gets the current package version from pubspec.yaml.
   ///
+  /// First tries to find pubspec.yaml in the local package directory.
+  /// If not found, attempts to find it in the global pub cache.
   /// Returns the version string or throws if version cannot be found.
   Future<String> getCurrentVersion() async {
     if (_cachedVersion != null) return _cachedVersion!;
 
-    // Get the package installation directory
-    final scriptPath = Platform.script.toFilePath();
-    final packageDir = path.dirname(path.dirname(scriptPath));
-    final pubspecFile = File(path.join(packageDir, 'pubspec.yaml'));
+    File? pubspecFile;
+    String? pubspecPath;
 
-    if (!await pubspecFile.exists()) {
-      throw Exception(
-          'pubspec.yaml not found in package directory: ${pubspecFile.path}');
+    try {
+      // First try local package directory
+      final scriptPath = Platform.script.toFilePath();
+      final packageDir = path.dirname(path.dirname(scriptPath));
+      pubspecPath = path.join(packageDir, 'pubspec.yaml');
+      pubspecFile = File(pubspecPath);
+
+      // If not found locally, try global pub cache
+      if (!await pubspecFile.exists()) {
+        final home =
+            Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+        if (home == null) {
+          throw Exception('Could not determine home directory');
+        }
+
+        // Check in global pub cache
+        pubspecPath = path.join(
+          home,
+          '.pub-cache',
+          'global_packages',
+          Environment.packageName,
+          'pubspec.yaml',
+        );
+        pubspecFile = File(pubspecPath);
+
+        if (!await pubspecFile.exists()) {
+          throw Exception(
+            'pubspec.yaml not found in either:\n'
+            '1. Local package: $packageDir/pubspec.yaml\n'
+            '2. Global cache: $pubspecPath',
+          );
+        }
+      }
+
+      final content = await pubspecFile.readAsString();
+      final yaml = loadYaml(content) as Map;
+      final version = yaml['version'] as String?;
+
+      if (version == null) {
+        throw Exception(
+          'Version not found in pubspec.yaml at: $pubspecPath',
+        );
+      }
+
+      _cachedVersion = version;
+      return version;
+    } catch (e) {
+      log.err('Error reading version: ${e.toString()}');
+      rethrow;
     }
-
-    final content = await pubspecFile.readAsString();
-    final yaml = loadYaml(content) as Map;
-    final version = yaml['version'] as String?;
-
-    if (version == null) {
-      throw Exception('Version not found in pubspec.yaml');
-    }
-
-    _cachedVersion = version;
-    return version;
   }
 
   /// Checks if a newer version of the CLI is available on pub.dev.

@@ -87,7 +87,8 @@ class WorkspaceService with TurboLogger {
         final hasConflicts = await _checkForConflicts(sourceDir, targetDir);
         if (hasConflicts && !force) {
           log.err(
-              'Target directory contains existing files. Use --force to overwrite.');
+            'Target directory contains existing files. Use --force to overwrite.',
+          );
           return const TurboResponse.failAsBool();
         }
       } else {

@@ -165,10 +165,14 @@ void main() {
       expect(File('${targetDir.path}/subdir/file3.txt').existsSync(), isTrue);
 
       // Verify file contents
-      expect(await File('${targetDir.path}/file1.txt').readAsString(),
-          equals('Test file 1'));
-      expect(await File('${targetDir.path}/file2.txt').readAsString(),
-          equals('Test file 2'));
+      expect(
+        await File('${targetDir.path}/file1.txt').readAsString(),
+        equals('Test file 1'),
+      );
+      expect(
+        await File('${targetDir.path}/file2.txt').readAsString(),
+        equals('Test file 2'),
+      );
       expect(
         await File('${targetDir.path}/subdir/file3.txt').readAsString(),
         equals('Test file 3'),
@@ -185,14 +189,18 @@ void main() {
       // First attempt without force flag
       var result = await commandService.run(['clone', 'test-tag']);
       expect(result, equals(ExitCode.success.code));
-      expect(await File('${targetDir.path}/file1.txt').readAsString(),
-          equals('Existing file'));
+      expect(
+        await File('${targetDir.path}/file1.txt').readAsString(),
+        equals('Existing file'),
+      );
 
       // Second attempt with force flag
       result = await commandService.run(['clone', 'test-tag', '--force']);
       expect(result, equals(ExitCode.success.code));
-      expect(await File('${targetDir.path}/file1.txt').readAsString(),
-          equals('Test file 1'));
+      expect(
+        await File('${targetDir.path}/file1.txt').readAsString(),
+        equals('Test file 1'),
+      );
     });
   });
 }

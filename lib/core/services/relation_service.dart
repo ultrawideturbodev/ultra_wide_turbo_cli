@@ -45,6 +45,7 @@ class RelationService {
   Future<void> dispose() async {
     _sourcesPerTagId.clear();
     _targetsPerTagId.clear();
+    _relationsPerId.clear();
     _isReady = Completer();
   }
 

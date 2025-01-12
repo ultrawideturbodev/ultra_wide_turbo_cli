@@ -8,20 +8,20 @@ import 'package:path/path.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/string_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 import 'package:ultra_wide_turbo_cli/core/services/relation_service.dart';
-import 'package:ultra_wide_turbo_cli/core/services/source_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/tag_service.dart';
-import 'package:ultra_wide_turbo_cli/core/services/target_service.dart';
 
 class CloneService {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static CloneService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(CloneService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        CloneService.new,
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
-  late final _tagService = TagService.locate;
-  late final _relationService = RelationService.locate;
+  final _tagService = TagService.locate;
+  final _relationService = RelationService.locate;
 
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
@@ -32,9 +32,8 @@ class CloneService {
 
   Future get isReady => Future.wait(
         [
-          TargetService.locate.isReady,
-          SourceService.locate.isReady,
-          TagService.locate.isReady,
+          _tagService.isReady,
+          _relationService.isReady,
         ],
       );
 

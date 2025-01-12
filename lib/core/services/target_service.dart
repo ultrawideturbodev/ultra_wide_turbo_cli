@@ -25,8 +25,8 @@ class TargetService extends Initialisable {
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
-  late final _tagService = TagService.locate;
-  late final _relationService = RelationService.locate;
+  final _tagService = TagService.locate;
+  final _relationService = RelationService.locate;
   final _localStorageService = LocalStorageService.locate;
 
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -41,6 +41,17 @@ class TargetService extends Initialisable {
 
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
   // ⚡️ OVERRIDES ----------------------------------------------------------------------------- \\
+
+  @override
+  Future get isReady => Future.wait(
+        [
+          isReadyCompleter.future,
+          _localStorageService.isReady,
+          _relationService.isReady,
+          _tagService.isReady,
+        ],
+      );
+
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
   final Map<String, TargetDto> _targetPerId = {};

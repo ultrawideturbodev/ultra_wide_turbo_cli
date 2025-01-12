@@ -36,6 +36,16 @@ class TagService extends Initialisable {
 
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
   // ⚡️ OVERRIDES ----------------------------------------------------------------------------- \\
+
+  @override
+  Future get isReady => Future.wait(
+    [
+      isReadyCompleter.future,
+      _localStorageService.isReady,
+    ],
+  );
+
+
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
   final Map<String, TagDto> _tagsPerId = {};

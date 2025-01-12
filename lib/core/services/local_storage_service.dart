@@ -39,7 +39,10 @@ class LocalStorageService extends Initialisable {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static LocalStorageService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(LocalStorageService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        LocalStorageService.new,
+        dispose: (service) => service.dispose(),
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\

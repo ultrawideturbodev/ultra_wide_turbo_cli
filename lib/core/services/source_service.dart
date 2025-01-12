@@ -27,7 +27,7 @@ class SourceService extends Initialisable {
 
   final _localStorageService = LocalStorageService.locate;
   final _relationService = RelationService.locate;
-  late final _tagService = TagService.locate;
+  final _tagService = TagService.locate;
 
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
 
@@ -41,11 +41,23 @@ class SourceService extends Initialisable {
 
   @override
   Future<void> dispose() async {
+    _sourcesPerId.clear();
     super.dispose();
   }
 
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
   // ⚡️ OVERRIDES ----------------------------------------------------------------------------- \\
+
+  @override
+  Future get isReady => Future.wait(
+        [
+          isReadyCompleter.future,
+          _localStorageService.isReady,
+          _relationService.isReady,
+          _tagService.isReady,
+        ],
+      );
+
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
   Map<String, SourceDto> _sourcesPerId = {};

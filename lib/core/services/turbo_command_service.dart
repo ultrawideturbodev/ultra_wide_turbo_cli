@@ -236,10 +236,13 @@ class TurboCommandService extends CommandRunner<int> {
         log.info(description);
         return ExitCode.success.code;
       case TurboCommandType.source:
+        await _sourceService.isReady;
         return await _sourceService.onTagSource();
       case TurboCommandType.target:
+        await _targetService.isReady;
         return await _targetService.onTagTarget();
       case TurboCommandType.clone:
+        await _turboCloneService.isReady;
         return await _turboCloneService.onClone(
           argResults: argResults,
         );

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:meta/meta.dart';
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 
 /// An abstract class that provides initialization and disposal mechanisms.
@@ -49,7 +50,7 @@ abstract class Initialisable {
   /// Disposes of the instance, resetting its state.
   void dispose() {
     _isInitialised = false;
-    _isReady = Completer();
+    isReadyCompleter = Completer();
   }
 
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
@@ -57,7 +58,8 @@ abstract class Initialisable {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
   var _isInitialised = false;
-  var _isReady = Completer();
+  @protected
+  var isReadyCompleter = Completer();
 
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
   // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
@@ -65,7 +67,7 @@ abstract class Initialisable {
   /// A [Future] that completes when the instance is ready.
   ///
   /// This can be awaited and is mostly used by outside classes that need to wait until this instance is ready.
-  Future get isReady => _isReady.future;
+  Future get isReady => isReadyCompleter.future;
 
   /// Indicates whether the instance is initialized.
   ///
@@ -75,12 +77,12 @@ abstract class Initialisable {
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  /// Completes the [_isReady] completer if it is not already complete.
+  /// Completes the [isReadyCompleter] completer if it is not already complete.
   ///
   /// This method is used to mark the instance as ready.
   void markAsReady() {
     _isInitialised = true;
-    _isReady.completeIfNotComplete();
+    isReadyCompleter.completeIfNotComplete();
   }
 
   /// Asserts that the instance is initialized.

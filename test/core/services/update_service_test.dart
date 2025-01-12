@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:mocktail/mocktail.dart';
 import 'package:path/path.dart' as path;
+import 'package:pub_updater/pub_updater.dart';
 import 'package:test/test.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
 import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
-import 'package:pub_updater/pub_updater.dart';
 
 class MockPubUpdater extends Mock implements PubUpdater {}
 
@@ -17,7 +17,7 @@ void main() {
   late String pubspecPath;
 
   setUpAll(() async {
-    await AppSetup.initialise();
+    await AppSetup.initialise([]);
   });
 
   setUp(() async {

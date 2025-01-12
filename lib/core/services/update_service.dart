@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:get_it/get_it.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
@@ -7,6 +8,7 @@ import 'package:pub_updater/pub_updater.dart';
 import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
+import 'package:ultra_wide_turbo_cli/core/typedefs/wrap_defs.dart';
 import 'package:yaml/yaml.dart';
 
 /// Service responsible for managing CLI updates.
@@ -14,14 +16,10 @@ import 'package:yaml/yaml.dart';
 /// Uses [PubUpdater] to check for and apply updates from pub.dev.
 /// Implements the singleton pattern with a private constructor.
 class UpdateService {
-  UpdateService._();
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
-  /// Singleton instance of [UpdateService].
-  static final UpdateService _instance = UpdateService._();
-
-  /// Access the singleton instance of [UpdateService].
-  static UpdateService get locate => _instance;
+  static UpdateService get locate => GetIt.I.get();
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(UpdateService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
@@ -120,7 +118,7 @@ class UpdateService {
   /// Compares the current version with the latest version from pub.dev.
   /// Returns a [TurboResponse] containing a boolean indicating if an update is available.
   /// Returns [TurboResponse.fail] if the version check fails.
-  Future<TurboResponse<bool>> checkForUpdates() async {
+  Future<TurboResponse<(ShouldUpdate, VersionNumber)>> checkForUpdates() async {
     try {
       log.detail('Checking for updates...');
       final currentVersion = await getCurrentVersion();
@@ -138,7 +136,7 @@ class UpdateService {
             ? 'Update available: $currentVersion -> $latestVersion'
             : 'Already on latest version: $currentVersion',
       );
-      return TurboResponse<bool>.success(result: shouldUpdate);
+      return TurboResponse.success(result: (shouldUpdate, latestVersion));
     } catch (error) {
       log.err('Failed to check for updates: $error');
       return TurboResponse.fail(error: error);

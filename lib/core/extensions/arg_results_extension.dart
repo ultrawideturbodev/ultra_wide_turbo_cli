@@ -34,16 +34,16 @@ extension ArgResultsExtension on ArgResults {
     }
   }
 
-  Set<TurboTagType> get activeTags {
+  Set<TagType> get activeTags {
     return {
-      for (final tag in TurboTagType.values)
+      for (final tag in TagType.values)
         if (hasTag(tag)) tag,
     };
   }
 
-  bool hasTag(TurboTagType turboTagType) {
+  bool hasTag(TagType tagType) {
     try {
-      return rest.contains(turboTagType.argument);
+      return rest.contains(tagType.argument);
     } catch (_) {
       return false;
     }

@@ -1,9 +1,9 @@
-enum TurboTagType {
+enum TagType {
   workspace;
 
   String get argument {
     switch (this) {
-      case TurboTagType.workspace:
+      case TagType.workspace:
         return name;
     }
   }

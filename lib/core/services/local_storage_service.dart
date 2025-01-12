@@ -10,10 +10,6 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
 import 'package:ultra_wide_turbo_cli/core/annotations/called_by_mutex.dart';
 import 'package:ultra_wide_turbo_cli/core/constants/k_values.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/local_storage_dto.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/turbo_relation_dto.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/turbo_source_dto.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/turbo_tag_dto.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/turbo_target_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_adapters.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/hive_box.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/g_auth.dart';
@@ -39,12 +35,11 @@ import 'package:ultra_wide_turbo_cli/core/util/mutex.dart';
 /// // Clean up
 /// await localStorageService.dispose();
 /// ```
-class LocalStorageService extends Initialisable  {
+class LocalStorageService extends Initialisable {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static LocalStorageService get locate => GetIt.I.get();
-  static void registerLazySingleton() =>
-      GetIt.I.registerLazySingleton(LocalStorageService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(LocalStorageService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
@@ -79,7 +74,7 @@ class LocalStorageService extends Initialisable  {
   Future<void> dispose() async {
     try {
       log.info('Disposing LocalStorageService');
-      _localStorageDto = LocalStorageDto.defaultDto(userId: kEmpty);
+      _localStorageDto = LocalStorageDto.defaultDto(userId: kValues.empty);
       await resetBoxes();
     } catch (error, _) {
       log.err(
@@ -142,9 +137,7 @@ class LocalStorageService extends Initialisable  {
       hiveBox: HiveBox.localStorageDto,
       userId: userId,
     );
-    return rLocalStorage == null
-        ? null
-        : LocalStorageDto.fromJson(rLocalStorage);
+    return rLocalStorage == null ? null : LocalStorageDto.fromJson(rLocalStorage);
   }
 
   /// Current local storage settings.
@@ -159,10 +152,9 @@ class LocalStorageService extends Initialisable  {
     final localStorageDto = _localStorageDto;
     if (localStorageDto.id != userId) {
       final hasLocalStorage = _hasBox(hiveBox: HiveBox.localStorageDto);
-      final localStorageDto =
-          hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
+      final localStorageDto = hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
       if (localStorageDto == null) {
-        await _updateLocalStorage(
+        await updateLocalStorage(
           (current) => LocalStorageDto.defaultDto(userId: userId),
           userId: userId,
           doSanityCheck: false,
@@ -198,8 +190,7 @@ class LocalStorageService extends Initialisable  {
     switch (hiveBox) {
       case HiveBox.localStorageDto:
         try {
-          final rLocalStorage =
-              _getBoxContent(hiveBox: hiveBox, userId: userId);
+          final rLocalStorage = _getBoxContent(hiveBox: hiveBox, userId: userId);
           if (rLocalStorage != null) {
             _localStorageDto = LocalStorageDto.fromJson(rLocalStorage);
           }
@@ -218,8 +209,7 @@ class LocalStorageService extends Initialisable  {
   bool _hasBox({required HiveBox hiveBox}) => _boxes.containsKey(hiveBox.id);
 
   /// Gets an opened Hive box, assuming it exists.
-  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) =>
-      _boxes[hiveBox.id] as Box<T>;
+  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) => _boxes[hiveBox.id] as Box<T>;
 
   /// Opens a new Hive box.
   Future<Box<T>> _openBox<T>({required HiveBox hiveBox}) async {
@@ -269,8 +259,7 @@ class LocalStorageService extends Initialisable  {
   @CalledByMutex()
   Future<void> _tryInitDirAndAdapters() async {
     try {
-      final homeDir =
-          Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+      final homeDir = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
       if (homeDir == null) {
         throw Exception('Could not find home directory');
       }
@@ -301,7 +290,7 @@ class LocalStorageService extends Initialisable  {
   ///
   /// Uses [dtoUpdater] to modify the current settings.
   /// Performs sanity checks unless disabled via parameters.
-  Future<TurboResponse> _updateLocalStorage(
+  Future<TurboResponse> updateLocalStorage(
     UpdateCurrentDef<LocalStorageDto> dtoUpdater, {
     required String userId,
     bool doSanityCheck = true,
@@ -333,108 +322,4 @@ class LocalStorageService extends Initialisable  {
   }
 
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
-
-  Future<TurboResponse> addTag({required TurboTagDto turboTag}) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboTags: (current) => current..add(turboTag),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> removeTag({required TurboTagDto turboTag}) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboTags: (current) => current..remove(turboTag),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> clearTags() async => await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboTags: (current) => current..clear(),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> addSource({
-    required TurboSourceDto turboSource,
-  }) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboSources: (current) => current..add(turboSource),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> removeSource({
-    required TurboSourceDto turboSource,
-  }) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboSources: (current) => current..remove(turboSource),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> clearSources() async => await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboSources: (current) => current..clear(),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> addRelation({
-    required TurboRelationDto turboRelation,
-  }) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboRelations: (current) => current..add(turboRelation),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> removeRelation({
-    required TurboRelationDto turboRelation,
-  }) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboRelations: (current) => current..remove(turboRelation),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> clearRelations() async => await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboRelations: (current) => current..clear(),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> addTarget({
-    required TurboTargetDto turboTarget,
-  }) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboTargets: (current) => current..add(turboTarget),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> removeTarget({
-    required TurboTargetDto turboTarget,
-  }) async =>
-      await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboTargets: (current) => current..remove(turboTarget),
-        ),
-        userId: gUserId,
-      );
-
-  Future<TurboResponse> clearTargets() async => await _updateLocalStorage(
-        (current) => current.copyWith(
-          turboTargets: (current) => current..clear(),
-        ),
-        userId: gUserId,
-      );
 }

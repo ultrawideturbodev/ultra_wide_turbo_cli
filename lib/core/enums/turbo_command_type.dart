@@ -4,9 +4,24 @@ import 'package:ultra_wide_turbo_cli/core/enums/turbo_option.dart';
 enum TurboCommandType {
   update,
   tag,
-  tagSource,
-  tagTarget,
+  source,
+  target,
   clone;
+
+  List<TurboCommandType> get subcommands {
+    switch (this) {
+      case TurboCommandType.update:
+        return [];
+      case TurboCommandType.tag:
+        return [TurboCommandType.source, TurboCommandType.target];
+      case TurboCommandType.source:
+        return [];
+      case TurboCommandType.target:
+        return [];
+      case TurboCommandType.clone:
+        return [];
+    }
+  }
 
   List<String> bashCommands() {
     switch (this) {
@@ -14,9 +29,9 @@ enum TurboCommandType {
         return [];
       case TurboCommandType.tag:
         return [];
-      case TurboCommandType.tagSource:
+      case TurboCommandType.source:
         return [];
-      case TurboCommandType.tagTarget:
+      case TurboCommandType.target:
         return [];
       case TurboCommandType.clone:
         return [];
@@ -26,13 +41,9 @@ enum TurboCommandType {
   String get argument {
     switch (this) {
       case TurboCommandType.update:
-        return name;
       case TurboCommandType.tag:
-        return name;
-      case TurboCommandType.tagSource:
-        return 'source';
-      case TurboCommandType.tagTarget:
-        return 'target';
+      case TurboCommandType.source:
+      case TurboCommandType.target:
       case TurboCommandType.clone:
         return name;
     }
@@ -44,9 +55,9 @@ enum TurboCommandType {
         return 'Manually check and update Ultra Wide Turbo CLI to the latest version.';
       case TurboCommandType.tag:
         return 'Manage tags and their associations.';
-      case TurboCommandType.tagSource:
+      case TurboCommandType.source:
         return 'Link current directory to a tag.';
-      case TurboCommandType.tagTarget:
+      case TurboCommandType.target:
         return 'Link current directory as a target for a tag.';
       case TurboCommandType.clone:
         return 'Clone files from all sources associated with a tag to the current directory.';
@@ -78,7 +89,7 @@ Examples:
   turbo tag target frontend_v2    # Link current directory as target for "frontend_v2" tag
 
 For more information, visit: https://docs.turbo.build/tags''';
-      case TurboCommandType.tagSource:
+      case TurboCommandType.source:
         return '''
 Links the current directory to a tag for easy reference and organization.
 
@@ -98,7 +109,7 @@ Common errors:
 - Tag already linked: The directory is already linked to this tag
 
 For more information, visit: https://docs.turbo.build/tags''';
-      case TurboCommandType.tagTarget:
+      case TurboCommandType.target:
         return '''
 Links the current directory as a target for a tag.
 
@@ -151,9 +162,9 @@ For more information, visit: https://docs.turbo.build/clone''';
         return [];
       case TurboCommandType.tag:
         return [];
-      case TurboCommandType.tagSource:
+      case TurboCommandType.source:
         return [];
-      case TurboCommandType.tagTarget:
+      case TurboCommandType.target:
         return [];
       case TurboCommandType.clone:
         return [];
@@ -166,9 +177,9 @@ For more information, visit: https://docs.turbo.build/clone''';
         return [];
       case TurboCommandType.tag:
         return [];
-      case TurboCommandType.tagSource:
+      case TurboCommandType.source:
         return [];
-      case TurboCommandType.tagTarget:
+      case TurboCommandType.target:
         return [];
       case TurboCommandType.clone:
         return [TurboFlagType.force];
@@ -181,9 +192,9 @@ For more information, visit: https://docs.turbo.build/clone''';
         return [];
       case TurboCommandType.tag:
         return [];
-      case TurboCommandType.tagSource:
+      case TurboCommandType.source:
         return [];
-      case TurboCommandType.tagTarget:
+      case TurboCommandType.target:
         return [];
       case TurboCommandType.clone:
         return [];
@@ -196,9 +207,9 @@ For more information, visit: https://docs.turbo.build/clone''';
         return null;
       case TurboCommandType.tag:
         return null;
-      case TurboCommandType.tagSource:
+      case TurboCommandType.source:
         return null;
-      case TurboCommandType.tagTarget:
+      case TurboCommandType.target:
         return null;
       case TurboCommandType.clone:
         return null;

@@ -1,4 +1,0 @@
-enum TurboScripts {
-  fix,
-  clean,
-}

@@ -2,32 +2,45 @@ import 'dart:convert';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/local_storage_value.dart';
+import 'package:ultra_wide_turbo_cli/core/globals/g_date_times.dart';
 
-part 'turbo_target_dto.g.dart';
+part 'target_dto.g.dart';
 
 @JsonSerializable(includeIfNull: true, explicitToJson: true)
-class TurboTargetDto extends LocalStorageValue {
-  TurboTargetDto({
+class TargetDto extends LocalStorageValue {
+  TargetDto({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
     required this.createdBy,
   });
 
+  factory TargetDto.create({
+    required String id,
+    required String userId,
+  }) {
+    final now = gNow;
+    return TargetDto(
+      id: id,
+      createdAt: now,
+      updatedAt: now,
+      createdBy: userId,
+    );
+  }
+
   final String id;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String createdBy;
 
-  static const fromJsonFactory = _$TurboTargetDtoFromJson;
-  factory TurboTargetDto.fromJson(Map<String, dynamic> json) =>
-      _$TurboTargetDtoFromJson(json);
-  static const toJsonFactory = _$TurboTargetDtoToJson;
-  Map<String, dynamic> toJson() => _$TurboTargetDtoToJson(this);
+  static const fromJsonFactory = _$TargetDtoFromJson;
+  factory TargetDto.fromJson(Map<String, dynamic> json) => _$TargetDtoFromJson(json);
+  static const toJsonFactory = _$TargetDtoToJson;
+  Map<String, dynamic> toJson() => _$TargetDtoToJson(this);
 
   @override
   String toString() {
-    return 'TurboTargetDto{'
+    return 'TargetDto{'
         'id: $id, '
         'createdAt: $createdAt, '
         'updatedAt: $updatedAt, '
@@ -41,9 +54,7 @@ class TurboTargetDto extends LocalStorageValue {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TurboTargetDto &&
-          runtimeType == other.runtimeType &&
-          id == other.id;
+      other is TargetDto && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;

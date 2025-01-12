@@ -6,11 +6,12 @@ abstract class Locator {
   static void _registerFactories() {}
 
   static void _registerLazySingletons() {
-    ArchiveService.registerLazySingleton();
-    CommandService.registerLazySingleton();
+    CloneService.registerLazySingleton();
     LocalStorageService.registerLazySingleton();
-    ScriptService.registerLazySingleton();
-    WorkspaceService.registerLazySingleton();
+    SourceService.registerLazySingleton();
+    TargetService.registerLazySingleton();
+    TurboCommandService.registerLazySingleton();
+    RelationService.registerLazySingleton();
   }
 
   static void _registerSingletons() {}

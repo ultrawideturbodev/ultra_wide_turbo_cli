@@ -12,20 +12,20 @@ LocalStorageDto _$LocalStorageDtoFromJson(Map<String, dynamic> json) =>
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
       createdBy: json['createdBy'] as String,
-      turboTags: (json['turboTags'] as List<dynamic>?)
-              ?.map((e) => TurboTagDto.fromJson(e as Map<String, dynamic>))
+      tags: (json['tags'] as List<dynamic>?)
+              ?.map((e) => TagDto.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           {},
-      turboSources: (json['turboSources'] as List<dynamic>?)
-              ?.map((e) => TurboSourceDto.fromJson(e as Map<String, dynamic>))
+      sources: (json['sources'] as List<dynamic>?)
+              ?.map((e) => SourceDto.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           {},
-      turboTargets: (json['turboTargets'] as List<dynamic>?)
-              ?.map((e) => TurboTargetDto.fromJson(e as Map<String, dynamic>))
+      targets: (json['targets'] as List<dynamic>?)
+              ?.map((e) => TargetDto.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           {},
-      turboRelations: (json['turboRelations'] as List<dynamic>?)
-              ?.map((e) => TurboRelationDto.fromJson(e as Map<String, dynamic>))
+      relations: (json['relations'] as List<dynamic>?)
+              ?.map((e) => RelationDto.fromJson(e as Map<String, dynamic>))
               .toSet() ??
           {},
     );
@@ -36,8 +36,8 @@ Map<String, dynamic> _$LocalStorageDtoToJson(LocalStorageDto instance) =>
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
       'createdBy': instance.createdBy,
-      'turboTags': instance.turboTags.map((e) => e.toJson()).toList(),
-      'turboSources': instance.turboSources.map((e) => e.toJson()).toList(),
-      'turboTargets': instance.turboTargets.map((e) => e.toJson()).toList(),
-      'turboRelations': instance.turboRelations.map((e) => e.toJson()).toList(),
+      'tags': instance.tags.map((e) => e.toJson()).toList(),
+      'sources': instance.sources.map((e) => e.toJson()).toList(),
+      'targets': instance.targets.map((e) => e.toJson()).toList(),
+      'relations': instance.relations.map((e) => e.toJson()).toList(),
     };

@@ -11,6 +11,9 @@ import 'package:ultra_wide_turbo_cli/core/extensions/arg_results_extension.dart'
 import 'package:ultra_wide_turbo_cli/core/extensions/completer_extension.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
 import 'package:ultra_wide_turbo_cli/core/models/turbo_command.dart';
+import 'package:ultra_wide_turbo_cli/core/services/clone_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/source_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/target_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 
 /// Handles CLI command registration, parsing, and execution.
@@ -29,18 +32,23 @@ import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 /// // Get help
 /// await runner.run(['--help']);
 /// ```
-class CommandService extends CommandRunner<int> {
-  CommandService() : super(Environment.packageName, Environment.packageTitle) {
+class TurboCommandService extends CommandRunner<int> {
+  TurboCommandService() : super(Environment.packageName, Environment.packageTitle) {
     initialise();
   }
 
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
-  static CommandService get locate => GetIt.I.get();
-  static void registerLazySingleton() =>
-      GetIt.I.registerLazySingleton(CommandService.new);
+  static TurboCommandService get locate => GetIt.I.get();
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(TurboCommandService.new);
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
+
+  late final _updateService = UpdateService.locate;
+  late final _sourceService = SourceService.locate;
+  late final _targetService = TargetService.locate;
+  late final _turboCloneService = CloneService.locate;
+
   // 🎬 INIT & DISPOSE ------------------------------------------------------------------------ \\
 
   /// Initializes the command service by setting up flags and commands.
@@ -60,10 +68,79 @@ class CommandService extends CommandRunner<int> {
     }
   }
 
-  /// Resets the service to its initial state.
-  void dispose() {
-    _isReady = Completer();
+  /// Initializes global flags available to all commands.
+  ///
+  /// Adds flags like --version and --verbose that can be used
+  /// with any command or directly with the CLI.
+  void _initGlobalFlags() {
+    for (final flag in TurboFlagType.globalValues) {
+      try {
+        argParser.addFlag(
+          flag.argument,
+          abbr: flag.abbr,
+          help: flag.help,
+          negatable: flag.negatable,
+        );
+      } catch (error, _) {
+        log.err(
+          '$error caught while trying to add flag ${flag.argument}!',
+        );
+      }
+    }
   }
+
+  /// Initializes all available commands from [TurboCommandType].
+  ///
+  /// Creates command instances and sets up their flags and options.
+  /// Each command is registered with the command runner.
+  void _initCommands() {
+    for (final command in TurboCommandType.values) {
+      try {
+        final turboCommand = TurboCommand(
+          type: command,
+          runCommand: _runCommand,
+        );
+
+        for (final subcommand in command.subcommands) {
+          final subCommand = TurboCommand(
+            type: subcommand,
+            runCommand: _runCommand,
+          );
+          turboCommand.addSubcommand(subCommand);
+        }
+
+        // Add command-specific flags
+        for (final flag in command.flags) {
+          turboCommand.argParser.addFlag(
+            flag.argument,
+            help: flag.help,
+            abbr: flag.abbr,
+            negatable: flag.negatable,
+          );
+        }
+
+        // Add command-specific options
+        for (final option in command.options) {
+          turboCommand.argParser.addOption(
+            option.argument,
+            abbr: option.abbr,
+            help: option.help,
+            defaultsTo: option.defaultsTo,
+            valueHelp: option.valueHelp,
+          );
+        }
+
+        addCommand(turboCommand);
+      } catch (error, _) {
+        log.err(
+          '$error caught while trying to initialise command ${command.argument}!',
+        );
+      }
+    }
+  }
+
+  /// Resets the service to its initial state.
+  void dispose() => _isReady = Completer();
 
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
   // ⚡️ OVERRIDES ----------------------------------------------------------------------------- \\
@@ -143,65 +220,29 @@ class CommandService extends CommandRunner<int> {
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  /// Initializes global flags available to all commands.
-  ///
-  /// Adds flags like --version and --verbose that can be used
-  /// with any command or directly with the CLI.
-  void _initGlobalFlags() {
-    for (final flag in TurboFlagType.globalValues) {
-      try {
-        argParser.addFlag(
-          flag.argument,
-          abbr: flag.abbr,
-          help: flag.help,
-          negatable: flag.negatable,
+  Future<int> _runCommand(
+    TurboCommandType type,
+    ArgResults? argResults,
+  ) async {
+    switch (type) {
+      case TurboCommandType.update:
+        return await _updateService.manualUpdate().then(
+              (response) => response.when(
+                success: (_) => ExitCode.success.code,
+                fail: (_) => ExitCode.software.code,
+              ),
+            );
+      case TurboCommandType.tag:
+        log.info(description);
+        return ExitCode.success.code;
+      case TurboCommandType.source:
+        return await _sourceService.onTagSource();
+      case TurboCommandType.target:
+        return await _targetService.onTagTarget();
+      case TurboCommandType.clone:
+        return await _turboCloneService.onClone(
+          argResults: argResults,
         );
-      } catch (error, _) {
-        log.err(
-          '$error caught while trying to add flag ${flag.argument}!',
-        );
-      }
-    }
-  }
-
-  /// Initializes all available commands from [TurboCommandType].
-  ///
-  /// Creates command instances and sets up their flags and options.
-  /// Each command is registered with the command runner.
-  void _initCommands() {
-    for (final command in TurboCommandType.values) {
-      try {
-        final turboCommand = TurboCommand(
-          type: command,
-        );
-
-        // Add command-specific flags
-        for (final flag in command.flags) {
-          turboCommand.argParser.addFlag(
-            flag.argument,
-            help: flag.help,
-            abbr: flag.abbr,
-            negatable: flag.negatable,
-          );
-        }
-
-        // Add command-specific options
-        for (final option in command.options) {
-          turboCommand.argParser.addOption(
-            option.argument,
-            abbr: option.abbr,
-            help: option.help,
-            defaultsTo: option.defaultsTo,
-            valueHelp: option.valueHelp,
-          );
-        }
-
-        addCommand(turboCommand);
-      } catch (error, _) {
-        log.err(
-          '$error caught while trying to initialise command ${command.argument}!',
-        );
-      }
     }
   }
 }

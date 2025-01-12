@@ -1,4 +1,5 @@
 enum EnvironmentType {
   emulators,
-  prod;
+  prod,
+  test;
 }

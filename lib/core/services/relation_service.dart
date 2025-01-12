@@ -95,6 +95,8 @@ class RelationService {
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
 
   void _addLocalRelation(TurboRelation relation) {
+    _relationsPerId[relation.id] = relation;
+
     switch (relation) {
       case SourceTagRelation():
         _sourcesPerTagId.putIfAbsent(relation.tagId, () => []).add(relation);

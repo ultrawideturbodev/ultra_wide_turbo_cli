@@ -1,207 +1,70 @@
 ---
 document_type: agent work document
-goal: define technical implementation details for turbo tag target command
-gpt_action: use as a reference for implementation details and technical specifications
+goal: document and track implementation details, requirements, and acceptance criteria
+gpt_action: use as reference for documenting details and defining acceptance criteria
 ---
 
-# 🎯 User Story
-> As a CLI user, I want to link the current directory to a tag using the `turbo tag target` command, so that I can organize my directories by their purpose.
+# 🔖 Description
+> 💡 *A short and descriptive introduction of the problem we are going to solve.*
+---
 
-# 🔍 Technical Analysis
+# 🗣 User Story
+> 💡 ***As a*** *ROLE* ***I want*** *BEHAVIOUR* ***so that*** *REASON.*
+---
 
-## Command Structure
-- Parent command: `tag`
-- Subcommand: `target`
-- Usage: `turbo tag target <tag>`
-- Example: `turbo tag target my-project`
+# ⚙️ Requirements
+> 💡 *Add a link to your-requirements.md here*
+---
 
-## Implementation Details
+# 💾 Data Model
+> 💡 *Old and new data models that will be created and/or altered when this feature is added.*
+---
 
-### Command Layer
-- Add `tagTarget` to `TurboCommandType` enum
-- Mirror `tagSource` command structure
-- Register under `tag` parent command
-- Implement help text and descriptions
+# 🔒 Security Rules
+> 💡 *Old and new security rules with roles and access that should be created and/or altered. Include create, read, update and delete.*
+---
 
-### Data Models
-- Use existing DTOs:
-  - `TurboTagDto` for tag management
-  - `TurboTargetDto` for target management
-  - `TurboRelationDto` for relations
-- Add `targetTag` to `TurboRelationType` enum
+# 🐒 API
+> 💡 *Old and new API calls that should be created and/or altered.*
+---
 
-### Storage Operations
-- Use `LocalStorageService` for persistence
-- Manage tags, targets, and relations
-- Handle concurrent storage operations
+# 📊 Analytics
+> 💡 *Old and new analytics that should be created and/or altered when this feature is added. Include a name, when it’s fired and optional properties.*
+---
 
-### Validation Rules
-- Tag name format:
-  - Length: 2-50 characters
-  - Pattern: `^[a-zA-Z0-9\-_]+$`
-  - No hyphen/underscore at start/end
-- Directory validation:
-  - Must exist
-  - Must be accessible
-  - Must be absolute path
+# ☎️ Impact Communication
+> 💡 *Who / which teams should we inform about the impact of releasing this ticket? Sales, marketing, data, CS, other?*
+---
 
-# 🔒 Security Considerations
-- Validate directory permissions
-- Sanitize tag name input
-- Handle file system errors gracefully
+# 🧪 Tests
+> 💡 *Components/flows/code that would benefit from tests and which scenario's should be tested.*
+---
 
-# 🧪 Testing Strategy
-- Follow existing BDD test patterns
-- Test all scenarios from requirements
-- Use temporary directories for testing
-- Mock file system operations
+# 🤝 Acceptance Test
+> 💡 *Which scenario’s should we test in the acceptance test? So that we can make sure that this ticket does what it is supposed to do without any unexpected errors.*
+---
 
-# 📋 Implementation Steps
-1. Add enum values and command registration
-2. Implement command validation logic
-3. Add tag management functionality
-4. Add target management functionality
-5. Implement relation creation
-6. Add error handling and messages
-7. Write comprehensive tests
+# 🎨 UI/UX Behaviour
+> 💡 *Anything to take note of regarding the behaviour of UI/UX elements (if applicable). Think of position, behaviour when elements do not fit the screen, feedback on elements and properties of animations.*
+---
 
-# 🎨 Design Patterns
-- Follow Command pattern for CLI structure
-- Use Repository pattern for storage
-- Implement Builder pattern for DTOs
-- Follow existing service patterns
+# 📝 Suggested Approach
+> 💡 *With knowledge of the current codebase, try to define a best suggested approach. Think of current components used, flow of data and UI elements.*
+---
 
-# 📚 Documentation
-- Update README.md with new command
-- Add usage examples
-- Document error messages
-- Include troubleshooting guide
+# 👉️ Final Remarks
+> 💡 *Anything to take note off that is not properly defined yet. Think of out of scope notes, dependencies, anything to be extra cautious about and/or information about related issues.*
+---
 
-# 🎫 Turbo Clone Command Implementation
+# ✅ Pull Request Checklist
+> 💡 *Before submitting your PR make sure you've gone through this checklist carefully. Each item represents a crucial aspect of code quality and reliability. Take your time to verify each point - your thoroughness here helps maintain our high standards and makes the review process smoother.*
+---
 
-## User Story
-As a developer, I want to clone all files from sources tagged with a specific tag to my current directory, so I can quickly replicate tagged file structures.
-
-## Technical Specifications
-
-### Command Structure
-```bash
-turbo clone <tag> [options]
-```
-
-### Options
-- `--force, -f`: Overwrite existing files
-- `--help, -h`: Show help text
-
-### Implementation Details
-
-1. Command Layer
-   - Add `clone` to `TurboCommandType` enum
-   - Implement command registration in `TurboCommand`
-   - Add help text and usage examples
-
-2. Tag Validation
-   - Use `LocalStorageService` to find tag
-   - Query `turboRelations` for source links
-   - Validate source directories exist
-
-3. File System Operations
-   - Use `dart:io` for file operations
-   - Implement recursive directory copy
-   - Handle file existence checks
-   - Manage file permissions
-
-4. Progress Reporting
-   - Use `mason_logger` for progress bars
-   - Implement error collection
-   - Show operation summary
-
-### Data Models
-
-```dart
-// Command registration
-enum TurboCommandType {
-  clone,
-  // ... existing values
-}
-
-// File copy result
-class CopyResult {
-  final String sourcePath;
-  final String targetPath;
-  final bool success;
-  final String? error;
-}
-
-// Copy summary
-class CopySummary {
-  final int totalFiles;
-  final int successCount;
-  final int skipCount;
-  final int errorCount;
-  final List<CopyResult> errors;
-}
-```
-
-### Process Flow
-1. Validate command input
-2. Find tag in storage
-3. Query related sources
-4. Validate source directories
-5. Create target directories
-6. Copy files with progress
-7. Show operation summary
-
-### Error Handling
-- Missing tag parameter
-- Non-existent tag
-- Invalid source directories
-- File system errors
-- Permission issues
-- Space constraints
-
-### Validation Rules
-- Tag name format:
-  - Length: 2-50 characters
-  - Pattern: `^[a-zA-Z0-9\-_]+$`
-  - No hyphen/underscore at start/end
-- Source directories:
-  - Must exist
-  - Must be readable
-- Target directory:
-  - Must be writable
-  - Must have space
-
-# 🔒 Security Considerations
-- Validate all paths
-- Check file permissions
-- Handle symlinks safely
-- Prevent directory traversal
-- Respect file system limits
-
-# 🧪 Testing Strategy
-- Unit tests for command layer
-- Integration tests for file operations
-- Mock file system for tests
-- Test error scenarios
-- Test large file structures
-
-# 📋 Implementation Steps
-1. Add command registration
-2. Implement tag validation
-3. Add source lookup
-4. Implement file copy
-5. Add progress reporting
-6. Write comprehensive tests
-
-# 🎨 Design Patterns
-- Command pattern for CLI
-- Repository pattern for storage
-- Strategy pattern for copy operations
-- Observer pattern for progress
-
-# 📚 Documentation
-- Update README.md
-- Add command examples
-- Document error messages
-- Include troubleshooting guide
+- [ ] I have read the 'Description' and 'Requirements'/'Expected Result' one last time and confirm to have tested the functionality/fix of this ticket thoroughly, and everything is working exactly as described in those sections.
+- [ ] I have tested the functionality on both Android and iOS.
+- [ ] I have double-checked the design file and confirm that the current implementation is a pixel-perfect clone of the original design.
+- [ ] I considered any security risks and took the appropriate actions accordingly, such as placing the right security tag and defining and/or implementing any actions under the heading 'Security'.
+- [ ] I have added short, descriptive, and maintainable documentation to all new classes and methods.
+- [ ] I have added short, descriptive, and maintainable logging to each new piece of code where it seems logical to do so for debugging/crash reporting purposes.
+- [ ] I have added sensible error handling using try/catch statements and optional custom exceptions where needed.
+- [ ] I did a full round of QA of my own code and can confirm that the upcoming PR contains my best possible version of this ticket.

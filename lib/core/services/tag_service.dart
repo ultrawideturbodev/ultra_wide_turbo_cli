@@ -47,11 +47,12 @@ class TagService extends Initialisable {
       _tagsPerId.values.toList()..sort((a, b) => a.id.compareTo(b.id));
   bool exists({required String name}) => _tagsPerId[name.normalize()] != null;
 
+  TagDto? getTagById({required String id}) => _tagsPerId[id];
+
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  Future<TurboResponse> createTag({required TagDto tag}) async =>
-      (await _localStorageService.updateLocalStorage(
+  Future<TurboResponse> createTag({required TagDto tag}) async => (await _localStorageService.updateLocalStorage(
         (current) => current.copyWith(
           tags: (current) => current..add(tag),
         ),

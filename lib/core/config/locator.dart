@@ -12,6 +12,8 @@ abstract class Locator {
     TargetService.registerLazySingleton();
     TurboCommandService.registerLazySingleton();
     RelationService.registerLazySingleton();
+    TagService.registerLazySingleton();
+    UpdateService.registerLazySingleton();
   }
 
   static void _registerSingletons() {}

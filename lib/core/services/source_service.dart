@@ -168,7 +168,7 @@ class SourceService extends Initialisable {
       sourceId: sourceId,
     );
 
-    if (sourceTagRelationExists) {
+    if (!sourceTagRelationExists) {
       final response = await _relationService.addSourceTagRelation(
         sourceId: sourceId,
         tagId: tagName,

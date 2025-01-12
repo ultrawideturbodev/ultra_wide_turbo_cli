@@ -11,6 +11,7 @@ abstract class Environment {
   static EnvironmentType? _environmentOverride;
   static const String _emulators = 'emulators';
   static const String _prod = 'prod';
+  static const String _test = 'test';
   static const argumentKey = 'env';
   static const packageName = 'ultra_wide_turbo_cli';
   static const packageTitle = 'Ultra Wide Turbo CLI';
@@ -26,6 +27,8 @@ abstract class Environment {
       )) {
         case _emulators:
           return EnvironmentType.emulators;
+        case _test:
+          return EnvironmentType.test;
         case _prod:
         default:
           return EnvironmentType.prod;
@@ -36,6 +39,17 @@ abstract class Environment {
 
   static bool get isEmulators => current == EnvironmentType.emulators;
   static bool get isProd => current == EnvironmentType.prod;
+  static bool get isTest => current == EnvironmentType.test;
+
+  static bool get shouldUpdate {
+    switch (current) {
+      case EnvironmentType.emulators:
+      case EnvironmentType.prod:
+        return true;
+      case EnvironmentType.test:
+        return false;
+    }
+  }
 
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\

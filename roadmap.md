@@ -1,0 +1,6 @@
+- annotations
+  - replace with
+  - pull
+  - push
+- clone sub tabs
+- put all turbo in the turbo mono repo

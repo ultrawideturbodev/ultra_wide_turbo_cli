@@ -163,7 +163,7 @@ class TargetService extends Initialisable {
       targetId: targetId,
     );
 
-    if (targetTagRelationExists) {
+    if (!targetTagRelationExists) {
       final response = await _relationService.addTargetTagRelation(
         targetId: targetId,
         tagId: tagName,

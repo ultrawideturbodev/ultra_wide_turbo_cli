@@ -18,7 +18,10 @@ class RelationService {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static RelationService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(RelationService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        RelationService.new,
+    dispose: (service) => service.dispose(),
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 

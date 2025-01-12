@@ -40,7 +40,10 @@ class TurboCommandService extends CommandRunner<int> {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static TurboCommandService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(TurboCommandService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        TurboCommandService.new,
+    dispose: (service) => service.dispose(),
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
@@ -140,7 +143,9 @@ class TurboCommandService extends CommandRunner<int> {
   }
 
   /// Resets the service to its initial state.
-  void dispose() => _isReady = Completer();
+  void dispose() {
+    _isReady = Completer();
+  }
 
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
   // ⚡️ OVERRIDES ----------------------------------------------------------------------------- \\

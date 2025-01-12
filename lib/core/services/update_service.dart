@@ -19,7 +19,10 @@ class UpdateService {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static UpdateService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(UpdateService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        UpdateService.new,
+        dispose: (service) => service.dispose(),
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
@@ -31,6 +34,12 @@ class UpdateService {
   set pubUpdater(PubUpdater updater) => _pubUpdater = updater;
 
   // 🛠 INIT & DISPOSE ------------------------------------------------------------------------ \\
+
+  Future<void> dispose() async {
+    _cachedVersion = null;
+    _testPubspecPath = null;
+  }
+
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\
   // ⚡️ OVERRIDES ----------------------------------------------------------------------------- \\
   // 🎩 STATE --------------------------------------------------------------------------------- \\

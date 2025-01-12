@@ -21,7 +21,10 @@ class TargetService extends Initialisable {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static TargetService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(TargetService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        TargetService.new,
+        dispose: (service) => service.dispose(),
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
@@ -37,6 +40,12 @@ class TargetService extends Initialisable {
       _localStorageService.localStorageDto.targets.toIdMap((element) => element.id),
     );
     super.initialise();
+  }
+
+  @override
+  Future<void> dispose() async {
+    _targetPerId.clear();
+    super.dispose();
   }
 
   // 👂 LISTENERS ----------------------------------------------------------------------------- \\

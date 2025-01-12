@@ -14,7 +14,10 @@ class TagService extends Initialisable {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static TagService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(TagService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        TagService.new,
+        dispose: (service) => service.dispose(),
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 
@@ -39,12 +42,11 @@ class TagService extends Initialisable {
 
   @override
   Future get isReady => Future.wait(
-    [
-      isReadyCompleter.future,
-      _localStorageService.isReady,
-    ],
-  );
-
+        [
+          isReadyCompleter.future,
+          _localStorageService.isReady,
+        ],
+      );
 
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
@@ -62,7 +64,8 @@ class TagService extends Initialisable {
   // 🏗️ HELPERS ------------------------------------------------------------------------------- \\
   // 🪄 MUTATORS ------------------------------------------------------------------------------ \\
 
-  Future<TurboResponse> createTag({required TagDto tag}) async => (await _localStorageService.updateLocalStorage(
+  Future<TurboResponse> createTag({required TagDto tag}) async =>
+      (await _localStorageService.updateLocalStorage(
         (current) => current.copyWith(
           tags: (current) => current..add(tag),
         ),

@@ -21,7 +21,10 @@ class SourceService extends Initialisable {
   // 📍 LOCATOR ------------------------------------------------------------------------------- \\
 
   static SourceService get locate => GetIt.I.get();
-  static void registerLazySingleton() => GetIt.I.registerLazySingleton(SourceService.new);
+  static void registerLazySingleton() => GetIt.I.registerLazySingleton(
+        SourceService.new,
+        dispose: (service) => service.dispose(),
+      );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\
 

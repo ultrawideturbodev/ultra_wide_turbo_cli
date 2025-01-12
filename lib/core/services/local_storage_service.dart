@@ -78,7 +78,6 @@ class LocalStorageService extends Initialisable {
     try {
       log.info('Disposing LocalStorageService');
       _localStorageDto = LocalStorageDto.defaultDto(userId: kValues.empty);
-      await resetBoxes();
     } catch (error, _) {
       log.err(
         '$error caught while disposing LocalStorageService',
@@ -86,35 +85,6 @@ class LocalStorageService extends Initialisable {
     } finally {
       super.dispose();
     }
-  }
-
-  /// Clears all Hive boxes and their in-memory references.
-  ///
-  /// Uses mutex to ensure thread-safe box clearing.
-  Future<void> resetBoxes() async {
-    log.info('Resetting boxes');
-    await _mutex.lockAndRun(
-      run: (unlock) async {
-        try {
-          for (final box in _boxes.values) {
-            try {
-              await box.clear();
-            } catch (error, _) {
-              log.err(
-                '$error caught while clearing box',
-              );
-            }
-          }
-          _boxes.clear();
-        } catch (error, _) {
-          log.err(
-            'Exception caught while resetting boxes',
-          );
-        } finally {
-          unlock();
-        }
-      },
-    );
   }
 
   // 🎩 STATE --------------------------------------------------------------------------------- \\

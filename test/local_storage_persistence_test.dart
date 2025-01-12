@@ -49,6 +49,10 @@ void main() {
       await tagService.createTag(tag: tag);
       print('✅ Created tag: $tagId');
 
+      // Verify data is saved
+      final storageBeforeReset = localStorageService.localStorageDto;
+      print('📦 Storage before reset: ${storageBeforeReset.toJsonString}');
+
       // Act - Reset services and reinitialize
       await AppSetup.reset([]);
       await AppSetup.initialise([]);
@@ -77,6 +81,10 @@ void main() {
       await sourceService.addSource(source: source);
       print('✅ Created source: $sourceId');
 
+      // Verify data is saved
+      final storageBeforeReset = localStorageService.localStorageDto;
+      print('📦 Storage before reset: ${storageBeforeReset.toJsonString}');
+
       // Act - Reset services and reinitialize
       await AppSetup.reset([]);
       await AppSetup.initialise([]);
@@ -101,6 +109,10 @@ void main() {
       );
       await targetService.addTarget(target: target);
       print('✅ Created target: $targetId');
+
+      // Verify data is saved
+      final storageBeforeReset = localStorageService.localStorageDto;
+      print('📦 Storage before reset: ${storageBeforeReset.toJsonString}');
 
       // Act - Reset services and reinitialize
       await AppSetup.reset([]);
@@ -158,6 +170,10 @@ void main() {
         tagId: tagId,
       );
       print('✅ Created target-tag relation');
+
+      // Verify data is saved
+      final storageBeforeReset = localStorageService.localStorageDto;
+      print('📦 Storage before reset: ${storageBeforeReset.toJsonString}');
 
       // Act - Reset services and reinitialize
       await AppSetup.reset([]);

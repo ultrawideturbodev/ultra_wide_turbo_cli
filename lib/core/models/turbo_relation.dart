@@ -80,6 +80,11 @@ sealed class TurboRelation {
 
   static String genId({required String tagId, required String otherId}) =>
       [otherId, tagId].join('-');
+
+  @override
+  String toString() {
+    return 'TurboRelation{id: $id, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy}';
+  }
 }
 
 /// Represents a relationship between a tag and a source directory
@@ -107,6 +112,11 @@ class SourceTagRelation extends TurboRelation {
 
   /// ID of the associated source directory
   final String sourceId;
+
+  @override
+  String toString() {
+    return '${super.toString()}\nSourceTagRelation{tagId: $tagId, sourceId: $sourceId}';
+  }
 }
 
 /// Represents a relationship between a tag and a target directory
@@ -134,4 +144,9 @@ class TargetTagRelation extends TurboRelation {
 
   /// ID of the associated target directory
   final String targetId;
+
+  @override
+  String toString() {
+    return '${super.toString()}\nTargetTagRelation{tagId: $tagId, targetId: $targetId}';
+  }
 }

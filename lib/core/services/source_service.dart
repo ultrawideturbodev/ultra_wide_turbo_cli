@@ -183,6 +183,8 @@ class SourceService extends Initialisable {
       sourceId: sourceId,
     );
 
+    print('''[🐛] [PRINT] [🌟] [SourceService.onTagSource] [📞] sourceTagRelationExists: ${sourceTagRelationExists}''');
+
     if (!sourceTagRelationExists) {
       final response = await _relationService.addSourceTagRelation(
         sourceId: sourceId,

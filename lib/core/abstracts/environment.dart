@@ -9,7 +9,6 @@ abstract class Environment {
   // 🎩 STATE --------------------------------------------------------------------------------- \\
 
   static EnvironmentType? _environmentOverride;
-  static const String _emulators = 'emulators';
   static const String _prod = 'prod';
   static const String _test = 'test';
   static const argumentKey = 'env';
@@ -25,8 +24,6 @@ abstract class Environment {
         Environment.argumentKey,
         defaultValue: _prod,
       )) {
-        case _emulators:
-          return EnvironmentType.emulators;
         case _test:
           return EnvironmentType.test;
         case _prod:
@@ -37,13 +34,11 @@ abstract class Environment {
     return _environmentOverride!;
   }
 
-  static bool get isEmulators => current == EnvironmentType.emulators;
   static bool get isProd => current == EnvironmentType.prod;
   static bool get isTest => current == EnvironmentType.test;
 
   static bool get shouldUpdate {
     switch (current) {
-      case EnvironmentType.emulators:
       case EnvironmentType.prod:
         return true;
       case EnvironmentType.test:

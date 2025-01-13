@@ -75,19 +75,23 @@ class UpdateService {
         final possiblePaths = <String>[];
 
         // 1. Try global pub cache first for global installs
-        final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+        final home =
+            Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
         if (home != null) {
           // Main global package location
-          possiblePaths.add(path.join(
-            home,
-            '.pub-cache',
-            'global_packages',
-            Environment.packageName,
-            'pubspec.yaml',
-          ));
+          possiblePaths.add(
+            path.join(
+              home,
+              '.pub-cache',
+              'global_packages',
+              Environment.packageName,
+              'pubspec.yaml',
+            ),
+          );
 
           // Versioned global package location
-          final cacheDir = Directory(path.join(home, '.pub-cache', 'hosted', 'pub.dev'));
+          final cacheDir =
+              Directory(path.join(home, '.pub-cache', 'hosted', 'pub.dev'));
           if (await cacheDir.exists()) {
             try {
               await for (final entry in cacheDir.list(recursive: true)) {
@@ -123,7 +127,8 @@ class UpdateService {
         if (pubspecFile == null) {
           // If we can't find pubspec.yaml, try to get version from pub.dev
           try {
-            final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+            final latestVersion =
+                await _pubUpdater.getLatestVersion(Environment.packageName);
             _cachedVersion = latestVersion;
             return latestVersion;
           } catch (e) {
@@ -163,7 +168,8 @@ class UpdateService {
     try {
       log.detail('Checking for updates...');
       final currentVersion = await getCurrentVersion();
-      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion =
+          await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);
@@ -218,7 +224,8 @@ class UpdateService {
       final currentVersion = await getCurrentVersion();
       log.info('Current version: $currentVersion');
 
-      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion =
+          await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);

@@ -15,7 +15,7 @@ find . -name "*.dart" \
     ! -name "*l10n.dart" \
     ! -name "*.mocks.dart" \
     ! -name "*.freezed.dart" \
-    -exec dart format --line-length 100 --indent 0 {} +
+    -exec dart format --indent 0 {} +
 
 # Apply fixes
 dart fix --apply
@@ -29,7 +29,7 @@ find . -name "*.dart" \
     ! -name "*l10n.dart" \
     ! -name "*.mocks.dart" \
     ! -name "*.freezed.dart" \
-    -exec dart format --line-length 100 --indent 0 {} +
+    -exec dart format --indent 0 {} +
 
 echo "Formatting completed!"
 
@@ -45,7 +45,7 @@ find . -name "*.dart" \
     ! -name "*l10n.dart" \
     ! -name "*.mocks.dart" \
     ! -name "*.freezed.dart" \
-    -exec dart format --line-length 100 --indent 0 {} +
+    -exec dart format --indent 0 {} +
 
 # Apply fixes
 dart fix --apply
@@ -59,6 +59,6 @@ find . -name "*.dart" \
     ! -name "*l10n.dart" \
     ! -name "*.mocks.dart" \
     ! -name "*.freezed.dart" \
-    -exec dart format --line-length 100 --indent 0 {} +
+    -exec dart format --indent 0 {} +
 
 echo "Formatting completed!"

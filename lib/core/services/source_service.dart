@@ -102,7 +102,8 @@ class SourceService extends Initialisable {
         log.info('Tag name requirements:');
         log.info('- Must be between 2 and 50 characters');
         log.info(
-            '- Can only contain letters, numbers, hyphens, and underscores');
+          '- Can only contain letters, numbers, hyphens, and underscores',
+        );
         log.info('- Cannot start or end with a hyphen or underscore');
         log.info('');
         log.info('Example: my-project-123');

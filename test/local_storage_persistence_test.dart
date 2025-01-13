@@ -66,8 +66,11 @@ void main() {
 
       final reloadedTag = reloadedTagService.getTagById(id: tagId);
       print('🔍 Reloaded tag: $reloadedTag');
-      expect(reloadedTag?.id, equals(tagId),
-          reason: 'Tag ID should match after reload');
+      expect(
+        reloadedTag?.id,
+        equals(tagId),
+        reason: 'Tag ID should match after reload',
+      );
     });
 
     test('Sources persist after service reset', () async {
@@ -217,13 +220,19 @@ void main() {
       // Check if we can list relations
       final sources = reloadedRelationService.listSourcesByTagId(tagId);
       print('🔍 Sources for tag after reload: ${sources.length}');
-      expect(sources, isNotEmpty,
-          reason: 'Should be able to list sources after reload');
+      expect(
+        sources,
+        isNotEmpty,
+        reason: 'Should be able to list sources after reload',
+      );
 
       final targets = reloadedRelationService.listTargetsByTagId(tagId);
       print('🔍 Targets for tag after reload: ${targets.length}');
-      expect(targets, isNotEmpty,
-          reason: 'Should be able to list targets after reload');
+      expect(
+        targets,
+        isNotEmpty,
+        reason: 'Should be able to list targets after reload',
+      );
     });
   });
 }

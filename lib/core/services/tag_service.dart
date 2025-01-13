@@ -27,8 +27,10 @@ class TagService extends Initialisable {
 
   @override
   Future<void> initialise() async {
-    _tagsPerId.addAll(_localStorageService.localStorageDto.tags
-        .toIdMap((element) => element.id));
+    _tagsPerId.addAll(
+      _localStorageService.localStorageDto.tags
+          .toIdMap((element) => element.id),
+    );
     super.initialise();
   }
 

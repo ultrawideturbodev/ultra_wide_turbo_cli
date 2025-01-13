@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.16 - 2024-01-09
+
+### 🧪 Tests:
+- Cleaned up test files for better readability and maintainability
+- Improved test organization and structure
+- Removed unused imports and variables
+
 ## 0.1.15 - 2024-01-09
 
 ### 🐛 Bug fixes:

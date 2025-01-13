@@ -7,7 +7,6 @@ import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/environment_type.dart';
 import 'package:ultra_wide_turbo_cli/core/globals/log.dart';
-import 'package:ultra_wide_turbo_cli/core/services/relation_service.dart';
 import 'package:ultra_wide_turbo_cli/core/services/turbo_command_service.dart';
 
 void main() {
@@ -18,7 +17,6 @@ void main() {
     late Directory sourceDir2;
     late File sourceFile1;
     late File sourceFile2;
-    late RelationService relationService;
 
     setUpAll(() async {
       // Create test workspace
@@ -46,7 +44,6 @@ void main() {
       IOOverrides.global = _TestIOOverrides(currentDir);
 
       await AppSetup.initialise([]);
-      relationService = RelationService.locate;
 
       // Tag both source directories with test-tag
       when(
@@ -80,7 +77,8 @@ void main() {
 
     test('Successfully clones files from all tagged folders', () async {
       // Act
-      final result = await TurboCommandService.locate.run(['clone', 'test-tag']);
+      final result =
+          await TurboCommandService.locate.run(['clone', 'test-tag']);
 
       // Assert
       expect(result, ExitCode.success.code);
@@ -104,7 +102,8 @@ void main() {
       await existingFile2.writeAsString('old content 2');
 
       // Act
-      final result = await TurboCommandService.locate.run(['clone', 'test-tag', '--force']);
+      final result = await TurboCommandService.locate
+          .run(['clone', 'test-tag', '--force']);
 
       // Assert
       expect(result, ExitCode.success.code);

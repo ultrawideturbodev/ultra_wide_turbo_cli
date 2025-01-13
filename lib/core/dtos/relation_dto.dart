@@ -50,7 +50,8 @@ class RelationDto extends LocalStorageValue {
   final RelationType type;
 
   static const fromJsonFactory = _$RelationDtoFromJson;
-  factory RelationDto.fromJson(Map<String, dynamic> json) => _$RelationDtoFromJson(json);
+  factory RelationDto.fromJson(Map<String, dynamic> json) =>
+      _$RelationDtoFromJson(json);
   static const toJsonFactory = _$RelationDtoToJson;
   Map<String, dynamic> toJson() => _$RelationDtoToJson(this);
 
@@ -74,7 +75,9 @@ class RelationDto extends LocalStorageValue {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RelationDto && runtimeType == other.runtimeType && id == other.id;
+      other is RelationDto &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
 
   @override
   int get hashCode => id.hashCode;

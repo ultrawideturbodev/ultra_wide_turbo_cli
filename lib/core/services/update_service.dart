@@ -79,7 +79,8 @@ class UpdateService {
 
         // If not found locally, try global pub cache
         if (!await pubspecFile.exists()) {
-          final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+          final home = Platform.environment['HOME'] ??
+              Platform.environment['USERPROFILE'];
           if (home == null) {
             throw Exception('Could not determine home directory');
           }
@@ -131,7 +132,8 @@ class UpdateService {
     try {
       log.detail('Checking for updates...');
       final currentVersion = await getCurrentVersion();
-      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion =
+          await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);
@@ -186,7 +188,8 @@ class UpdateService {
       final currentVersion = await getCurrentVersion();
       log.info('Current version: $currentVersion');
 
-      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion =
+          await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);

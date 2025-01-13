@@ -25,12 +25,13 @@ abstract class AppSetup {
     _initLocator();
     await _initEssentials();
     // Skip update check if we're already running an update command
-    if (Environment.shouldUpdate && !args.contains(TurboCommandType.update.argument)) {
+    if (Environment.shouldUpdate &&
+        !args.contains(TurboCommandType.update.argument)) {
       // Check for updates
       final updateService = UpdateService.locate;
       final response = await updateService.checkForUpdates();
       response.whenSuccess(
-            (response) {
+        (response) {
           if (response.result.$1) {
             log.info('Current version: ${response.result.$2}');
             log.info('An update is available! Run `turbo update` to update.');

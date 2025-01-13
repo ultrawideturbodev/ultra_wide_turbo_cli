@@ -31,8 +31,8 @@ class RelationService {
 
   Future<void> initialise() async {
     try {
-      final relations =
-          _localStorageService.localStorageDto.relations.map((e) => TurboRelation.fromDto(e));
+      final relations = _localStorageService.localStorageDto.relations
+          .map((e) => TurboRelation.fromDto(e));
       for (final relation in relations) {
         _addLocalRelation(relation);
       }
@@ -67,8 +67,10 @@ class RelationService {
   // 🛠 UTIL ---------------------------------------------------------------------------------- \\
   // 🧲 FETCHERS ------------------------------------------------------------------------------ \\
 
-  List<SourceTagRelation> listSourcesByTagId(String tagId) => _sourcesPerTagId[tagId] ?? [];
-  List<TargetTagRelation> listTargetsByTagId(String tagId) => _targetsPerTagId[tagId] ?? [];
+  List<SourceTagRelation> listSourcesByTagId(String tagId) =>
+      _sourcesPerTagId[tagId] ?? [];
+  List<TargetTagRelation> listTargetsByTagId(String tagId) =>
+      _targetsPerTagId[tagId] ?? [];
 
   TurboRelation? getRelationById(String id) => _relationsPerId[id];
 

@@ -78,7 +78,8 @@ class SourceService extends Initialisable {
     log.info('🔍 Preparing to link current directory to a tag');
 
     // Get list of existing tags
-    final existingTags = _tagService.tagsSortedById.toList()..sort((a, b) => a.id.compareTo(b.id));
+    final existingTags = _tagService.tagsSortedById.toList()
+      ..sort((a, b) => a.id.compareTo(b.id));
     final tagOptions = [kValues.pNew, ...existingTags.map((tag) => tag.id)];
 
     // Prompt user to select a tag
@@ -100,7 +101,8 @@ class SourceService extends Initialisable {
         log.info('');
         log.info('Tag name requirements:');
         log.info('- Must be between 2 and 50 characters');
-        log.info('- Can only contain letters, numbers, hyphens, and underscores');
+        log.info(
+            '- Can only contain letters, numbers, hyphens, and underscores');
         log.info('- Cannot start or end with a hyphen or underscore');
         log.info('');
         log.info('Example: my-project-123');
@@ -158,8 +160,9 @@ class SourceService extends Initialisable {
     final updatedStorage = LocalStorageService.locate.localStorageDto;
 
     // Check if source exists
-    final existingSource =
-        updatedStorage.sources.where((source) => source.id == sourceId).firstOrNull;
+    final existingSource = updatedStorage.sources
+        .where((source) => source.id == sourceId)
+        .firstOrNull;
     if (existingSource == null) {
       // Create new source
       final newSource = SourceDto.create(
@@ -182,8 +185,6 @@ class SourceService extends Initialisable {
       tagId: tagName,
       sourceId: sourceId,
     );
-
-    print('''[🐛] [PRINT] [🌟] [SourceService.onTagSource] [📞] sourceTagRelationExists: ${sourceTagRelationExists}''');
 
     if (!sourceTagRelationExists) {
       final response = await _relationService.addSourceTagRelation(

@@ -34,7 +34,8 @@ class SourceDto extends LocalStorageValue {
   final String createdBy;
 
   static const fromJsonFactory = _$SourceDtoFromJson;
-  factory SourceDto.fromJson(Map<String, dynamic> json) => _$SourceDtoFromJson(json);
+  factory SourceDto.fromJson(Map<String, dynamic> json) =>
+      _$SourceDtoFromJson(json);
   static const toJsonFactory = _$SourceDtoToJson;
   Map<String, dynamic> toJson() => _$SourceDtoToJson(this);
 

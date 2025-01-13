@@ -33,7 +33,8 @@ import 'package:ultra_wide_turbo_cli/core/services/update_service.dart';
 /// await runner.run(['--help']);
 /// ```
 class TurboCommandService extends CommandRunner<int> {
-  TurboCommandService() : super(Environment.packageName, Environment.packageTitle) {
+  TurboCommandService()
+      : super(Environment.packageName, Environment.packageTitle) {
     initialise();
   }
 
@@ -42,7 +43,7 @@ class TurboCommandService extends CommandRunner<int> {
   static TurboCommandService get locate => GetIt.I.get();
   static void registerLazySingleton() => GetIt.I.registerLazySingleton(
         TurboCommandService.new,
-    dispose: (service) => service.dispose(),
+        dispose: (service) => service.dispose(),
       );
 
   // 🧩 DEPENDENCIES -------------------------------------------------------------------------- \\

@@ -37,7 +37,8 @@ class TargetService extends Initialisable {
   @override
   Future<void> initialise() async {
     _targetPerId.addAll(
-      _localStorageService.localStorageDto.targets.toIdMap((element) => element.id),
+      _localStorageService.localStorageDto.targets
+          .toIdMap((element) => element.id),
     );
     super.initialise();
   }
@@ -78,7 +79,8 @@ class TargetService extends Initialisable {
     log.info('🔍 Preparing to link current directory to a tag');
 
     // Get list of existing tags
-    final existingTags = _tagService.tagsSortedById.toList()..sort((a, b) => a.id.compareTo(b.id));
+    final existingTags = _tagService.tagsSortedById.toList()
+      ..sort((a, b) => a.id.compareTo(b.id));
     final tagOptions = [kValues.pNew, ...existingTags.map((tag) => tag.id)];
 
     // Prompt user to select a tag
@@ -100,7 +102,8 @@ class TargetService extends Initialisable {
         log.info('');
         log.info('Tag name requirements:');
         log.info('- Must be between 2 and 50 characters');
-        log.info('- Can only contain letters, numbers, hyphens, and underscores');
+        log.info(
+            '- Can only contain letters, numbers, hyphens, and underscores');
         log.info('- Cannot start or end with a hyphen or underscore');
         log.info('');
         log.info('Example: my-project-123');
@@ -158,8 +161,9 @@ class TargetService extends Initialisable {
     final updatedStorage = LocalStorageService.locate.localStorageDto;
 
     // Check if target exists
-    final existingTarget =
-        updatedStorage.targets.where((target) => target.id == targetId).firstOrNull;
+    final existingTarget = updatedStorage.targets
+        .where((target) => target.id == targetId)
+        .firstOrNull;
     if (existingTarget == null) {
       // Create new target
       final newTarget = TargetDto.create(

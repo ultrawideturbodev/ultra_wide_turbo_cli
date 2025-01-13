@@ -36,7 +36,8 @@ extension StringExtension on String {
     if (!isAbsolute(this)) return false;
     try {
       final dir = Directory(this);
-      return dir.existsSync() && dir.statSync().type == FileSystemEntityType.directory;
+      return dir.existsSync() &&
+          dir.statSync().type == FileSystemEntityType.directory;
     } catch (e) {
       return false;
     }

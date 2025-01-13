@@ -110,7 +110,9 @@ class LocalStorageService extends Initialisable {
       hiveBox: HiveBox.localStorageDto,
       userId: userId,
     );
-    return rLocalStorage == null ? null : LocalStorageDto.fromJson(rLocalStorage);
+    return rLocalStorage == null
+        ? null
+        : LocalStorageDto.fromJson(rLocalStorage);
   }
 
   /// Current local storage settings.
@@ -125,7 +127,8 @@ class LocalStorageService extends Initialisable {
     final localStorageDto = _localStorageDto;
     if (localStorageDto.id != userId) {
       final hasLocalStorage = _hasBox(hiveBox: HiveBox.localStorageDto);
-      final localStorageDto = hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
+      final localStorageDto =
+          hasLocalStorage ? _fetchLocalStorageDto(userId: userId) : null;
       if (localStorageDto == null) {
         await updateLocalStorage(
           (current) => LocalStorageDto.defaultDto(userId: userId),
@@ -163,7 +166,8 @@ class LocalStorageService extends Initialisable {
     switch (hiveBox) {
       case HiveBox.localStorageDto:
         try {
-          final rLocalStorage = _getBoxContent(hiveBox: hiveBox, userId: userId);
+          final rLocalStorage =
+              _getBoxContent(hiveBox: hiveBox, userId: userId);
           if (rLocalStorage != null) {
             _localStorageDto = LocalStorageDto.fromJson(rLocalStorage);
           }
@@ -182,7 +186,8 @@ class LocalStorageService extends Initialisable {
   bool _hasBox({required HiveBox hiveBox}) => _boxes.containsKey(hiveBox.id);
 
   /// Gets an opened Hive box, assuming it exists.
-  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) => _boxes[hiveBox.id] as Box<T>;
+  Box<T> _forceGetBox<T>({required HiveBox hiveBox}) =>
+      _boxes[hiveBox.id] as Box<T>;
 
   /// Opens a new Hive box.
   Future<Box<T>> _openBox<T>({required HiveBox hiveBox}) async {
@@ -232,7 +237,8 @@ class LocalStorageService extends Initialisable {
   @CalledByMutex()
   Future<void> _tryInitDirAndAdapters() async {
     try {
-      final homeDir = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+      final homeDir =
+          Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
       if (homeDir == null) {
         throw Exception('Could not find home directory');
       }

@@ -2,16 +2,16 @@ import 'package:test/test.dart';
 import 'package:turbo_response/turbo_response.dart';
 import 'package:ultra_wide_turbo_cli/core/abstracts/environment.dart';
 import 'package:ultra_wide_turbo_cli/core/config/app_setup.dart';
+import 'package:ultra_wide_turbo_cli/core/dtos/relation_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/tag_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/dtos/target_dto.dart';
-import 'package:ultra_wide_turbo_cli/core/dtos/relation_dto.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/environment_type.dart';
-import 'package:ultra_wide_turbo_cli/core/services/target_service.dart';
-import 'package:ultra_wide_turbo_cli/core/services/tag_service.dart';
-import 'package:ultra_wide_turbo_cli/core/services/relation_service.dart';
-import 'package:ultra_wide_turbo_cli/core/services/local_storage_service.dart';
-import 'package:ultra_wide_turbo_cli/core/models/turbo_relation.dart';
 import 'package:ultra_wide_turbo_cli/core/enums/turbo_relation_type.dart';
+import 'package:ultra_wide_turbo_cli/core/models/turbo_relation.dart';
+import 'package:ultra_wide_turbo_cli/core/services/local_storage_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/relation_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/tag_service.dart';
+import 'package:ultra_wide_turbo_cli/core/services/target_service.dart';
 
 void main() {
   group('TurboTagTarget - Happy Flow', () {

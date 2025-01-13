@@ -66,7 +66,8 @@ void main() {
 
       final reloadedTag = reloadedTagService.getTagById(id: tagId);
       print('🔍 Reloaded tag: $reloadedTag');
-      expect(reloadedTag?.id, equals(tagId), reason: 'Tag ID should match after reload');
+      expect(reloadedTag?.id, equals(tagId),
+          reason: 'Tag ID should match after reload');
     });
 
     test('Sources persist after service reset', () async {
@@ -94,8 +95,11 @@ void main() {
       // Assert - Check if data is reloaded
       final reloadedSource = reloadedSourceService.getSourceById(sourceId);
       print('🔍 Reloaded source: $reloadedSource');
-      expect(reloadedSource?.id, equals(sourceId),
-          reason: 'Source should persist after service reset');
+      expect(
+        reloadedSource?.id,
+        equals(sourceId),
+        reason: 'Source should persist after service reset',
+      );
     });
 
     test('Targets persist after service reset', () async {
@@ -123,8 +127,11 @@ void main() {
       // Assert - Check if data is reloaded
       final reloadedTarget = reloadedTargetService.getTargetById(targetId);
       print('🔍 Reloaded target: $reloadedTarget');
-      expect(reloadedTarget?.id, equals(targetId),
-          reason: 'Target should persist after service reset');
+      expect(
+        reloadedTarget?.id,
+        equals(targetId),
+        reason: 'Target should persist after service reset',
+      );
     });
 
     test('Relations persist after service reset', () async {
@@ -183,30 +190,40 @@ void main() {
       print('🔄 Services reinitialized');
 
       // Assert - Check if relations are reloaded
-      final sourceRelationExists = reloadedRelationService.sourceTagRelationExists(
+      final sourceRelationExists =
+          reloadedRelationService.sourceTagRelationExists(
         sourceId: sourceId,
         tagId: tagId,
       );
       print('🔍 Source relation exists after reload: $sourceRelationExists');
-      expect(sourceRelationExists, isTrue,
-          reason: 'Source relation should persist after service reset');
+      expect(
+        sourceRelationExists,
+        isTrue,
+        reason: 'Source relation should persist after service reset',
+      );
 
-      final targetRelationExists = reloadedRelationService.targetTagRelationExists(
+      final targetRelationExists =
+          reloadedRelationService.targetTagRelationExists(
         targetId: targetId,
         tagId: tagId,
       );
       print('🔍 Target relation exists after reload: $targetRelationExists');
-      expect(targetRelationExists, isTrue,
-          reason: 'Target relation should persist after service reset');
+      expect(
+        targetRelationExists,
+        isTrue,
+        reason: 'Target relation should persist after service reset',
+      );
 
       // Check if we can list relations
       final sources = reloadedRelationService.listSourcesByTagId(tagId);
       print('🔍 Sources for tag after reload: ${sources.length}');
-      expect(sources, isNotEmpty, reason: 'Should be able to list sources after reload');
+      expect(sources, isNotEmpty,
+          reason: 'Should be able to list sources after reload');
 
       final targets = reloadedRelationService.listTargetsByTagId(tagId);
       print('🔍 Targets for tag after reload: ${targets.length}');
-      expect(targets, isNotEmpty, reason: 'Should be able to list targets after reload');
+      expect(targets, isNotEmpty,
+          reason: 'Should be able to list targets after reload');
     });
   });
 }

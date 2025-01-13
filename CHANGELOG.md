@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.17 - 2024-01-09
+
+### 🐛 Bug fixes:
+- Fixed version detection for global package installations
+- Added fallback to get version from pub.dev when pubspec.yaml not found
+- Improved error messages for version detection failures
+
 ## 0.1.16 - 2024-01-09
 
 ### 🧪 Tests:

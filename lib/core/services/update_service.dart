@@ -71,35 +71,66 @@ class UpdateService {
         pubspecFile = File(_testPubspecPath!);
         pubspecPath = _testPubspecPath;
       } else {
-        // First try local package directory
-        final scriptPath = Platform.script.toFilePath();
-        final packageDir = path.dirname(path.dirname(scriptPath));
-        pubspecPath = path.join(packageDir, 'pubspec.yaml');
-        pubspecFile = File(pubspecPath);
+        // Try multiple possible locations for pubspec.yaml
+        final possiblePaths = <String>[];
 
-        // If not found locally, try global pub cache
-        if (!await pubspecFile.exists()) {
-          final home = Platform.environment['HOME'] ??
-              Platform.environment['USERPROFILE'];
-          if (home == null) {
-            throw Exception('Could not determine home directory');
-          }
-
-          // Check in global pub cache
-          pubspecPath = path.join(
+        // 1. Try global pub cache first for global installs
+        final home = Platform.environment['HOME'] ?? Platform.environment['USERPROFILE'];
+        if (home != null) {
+          // Main global package location
+          possiblePaths.add(path.join(
             home,
             '.pub-cache',
             'global_packages',
             Environment.packageName,
             'pubspec.yaml',
-          );
-          pubspecFile = File(pubspecPath);
+          ));
 
-          if (!await pubspecFile.exists()) {
+          // Versioned global package location
+          final cacheDir = Directory(path.join(home, '.pub-cache', 'hosted', 'pub.dev'));
+          if (await cacheDir.exists()) {
+            try {
+              await for (final entry in cacheDir.list(recursive: true)) {
+                if (entry is File &&
+                    path.basename(entry.path) == 'pubspec.yaml' &&
+                    entry.path.contains(Environment.packageName)) {
+                  possiblePaths.add(entry.path);
+                }
+              }
+            } catch (_) {}
+          }
+        }
+
+        // 2. Try local development directory
+        final scriptPath = Platform.script.toFilePath();
+        final packageDir = path.dirname(path.dirname(scriptPath));
+        possiblePaths.add(path.join(packageDir, 'pubspec.yaml'));
+
+        // 3. Try executable directory's parent
+        final executableDir = path.dirname(Platform.resolvedExecutable);
+        possiblePaths.add(path.join(executableDir, '..', 'pubspec.yaml'));
+
+        // Try each path until we find the file
+        for (final path in possiblePaths) {
+          final file = File(path);
+          if (await file.exists()) {
+            pubspecFile = file;
+            pubspecPath = path;
+            break;
+          }
+        }
+
+        if (pubspecFile == null) {
+          // If we can't find pubspec.yaml, try to get version from pub.dev
+          try {
+            final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
+            _cachedVersion = latestVersion;
+            return latestVersion;
+          } catch (e) {
             throw Exception(
-              'pubspec.yaml not found in either:\n'
-              '1. Local package: $packageDir/pubspec.yaml\n'
-              '2. Global cache: $pubspecPath',
+              'Could not determine version. pubspec.yaml not found in any of these locations:\n'
+              '${possiblePaths.map((p) => '- $p').join('\n')}\n'
+              'And failed to get version from pub.dev: $e',
             );
           }
         }
@@ -132,8 +163,7 @@ class UpdateService {
     try {
       log.detail('Checking for updates...');
       final currentVersion = await getCurrentVersion();
-      final latestVersion =
-          await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);
@@ -188,8 +218,7 @@ class UpdateService {
       final currentVersion = await getCurrentVersion();
       log.info('Current version: $currentVersion');
 
-      final latestVersion =
-          await _pubUpdater.getLatestVersion(Environment.packageName);
+      final latestVersion = await _pubUpdater.getLatestVersion(Environment.packageName);
 
       // Parse versions to compare them properly
       final current = Version.parse(currentVersion);

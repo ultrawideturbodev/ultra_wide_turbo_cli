@@ -1,6 +1,14 @@
 # IDE files
-.idea/
-.vscode/
+.idea/.gitignore
+.idea/libraries/Dart_SDK.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/runConfigurations/Run_Tests.xml
+.idea/ultra_wide_turbo_cli.iml
+.idea/vcs.xml
+**/.DS_Store
+pubspec.lock
+workspace/workflows/.DS_Store
 
 # Build files
 build/
